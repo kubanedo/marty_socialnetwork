@@ -4,7 +4,7 @@
                 <a :href="postData.profile.url" class="profile-img" :style="{ backgroundImage: 'url(' + postData.profile.img + ')' }"></a>
                 <div class="post-wrapper">
                 <a :href="postData.profile.url" class="profile-name">{{postData.profile.name}}</a>
-                <div class="post-time">před 20 minutami {{postData.published}}</div>
+                <div class="post-time"><TimeAgo :time="postData.published"/></div>
                 </div>
                 <div class="post__menu"><i class="las la-ellipsis-v"></i></div>
         </div>
@@ -39,9 +39,13 @@
 </template>
 
 <script>
+import TimeAgo from "~/components/TimeAgo";
 export default {
     props: {
         postData: Object
+    },
+    components: {
+        TimeAgo
     }
 }
 </script>
