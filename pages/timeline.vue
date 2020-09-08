@@ -30,7 +30,7 @@
                     main content
                 </div>
                 <Post :postData="postData"/>
-                <Post :postData="postData"/> 
+                <Post :postData="postData2"/> 
                 <Post :postData="postData"/> 
                 <Post :postData="postData"/>                 
             </div>
@@ -59,7 +59,7 @@ export default {
                     img: "https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg",
                     url: "/profil/jakub-mary"
                 },
-                published: "2020-09-07T22:40:00",
+                published: "2020-09-08T22:10:00",
                 text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam ut molestiae exercitationem tenetur facilis odit neque iusto autem officia. Delectus dicta perferendis soluta quia ipsum autem saepe natus ut recusandae.",
                 extraContent: {
                     type: "video",
@@ -68,7 +68,24 @@ export default {
                 likes: 40,
                 comments: 38,
                 shares: 11
-            }   
+            },
+            postData2: {
+                profile: {
+                    id: 1,
+                    name: "Jakub Mary2",
+                    img: "https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg",
+                    url: "/profil/jakub-mary"
+                },
+                published: "2020-09-08T22:20:00",
+                text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam ut molestiae exercitationem tenetur facilis odit neque iusto autem officia. Delectus dicta perferendis soluta quia ipsum autem saepe natus ut recusandae.",
+                extraContent: {
+                    type: "video",
+                    url: "https://www.mall.tv/embed/s1-e1-martyisdead"
+                },
+                likes: 40,
+                comments: 38,
+                shares: 11
+            }                
         }
     }
 }

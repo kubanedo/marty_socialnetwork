@@ -6,7 +6,7 @@
                 <a :href="postData.profile.url" class="profile-name">{{postData.profile.name}}</a>
                 <div class="post-time"><TimeAgo :time="postData.published"/></div>
                 </div>
-                <div class="post__menu"><i class="las la-ellipsis-v"></i></div>
+                <div class="post__menu"><PostMenu /></div>
         </div>
         <div class="post__body">
             <div class="post__text">
@@ -40,12 +40,14 @@
 
 <script>
 import TimeAgo from "~/components/TimeAgo";
+import PostMenu from "~/components/PostMenu";
 export default {
     props: {
         postData: Object
     },
     components: {
-        TimeAgo
+        TimeAgo,
+        PostMenu
     }
 }
 </script>
