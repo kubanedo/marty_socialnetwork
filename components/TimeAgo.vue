@@ -23,11 +23,7 @@ export default {
                 if (delta < 90) return 'před hodinou';
                 if (delta < 1440) return 'před ' + Math.round(delta / 60) + ' hodinami';
                 if (delta < 2880) return 'včera';
-                if (delta < 43200) return 'před ' + Math.round(delta / 1440) + ' dny';
-                if (delta < 86400) return 'před měsícem';
-                if (delta < 525960) return 'před ' + Math.round(delta / 43200) + ' měsíci';
-                if (delta < 1051920) return 'před rokem';
-                return 'před ' + Math.round(delta / 525960) + ' lety';
+                return this.time;
             };
 
             var now = new Date();
