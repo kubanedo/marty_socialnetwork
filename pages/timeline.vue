@@ -76,7 +76,7 @@ export default {
                     img: "https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg",
                     url: "/profil/jakub-mary"
                 },
-                published: "2020-09-08T22:20:00",
+                published: "2020-09-03T22:20:00",
                 text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam ut molestiae exercitationem tenetur facilis odit neque iusto autem officia. Delectus dicta perferendis soluta quia ipsum autem saepe natus ut recusandae.",
                 extraContent: {
                     type: "video",
