@@ -2,17 +2,17 @@
   <div>
       <header>
           <div class="container">
-            <nav class="main-nav">  
+            <nav class="header__nav">  
                 <ul>
                     <li><a href="#">Úvod</a></li>
                     <li><a href="#">Zprávy</a></li> 
                     <li><a href="#">Upozornění</a></li>  
                 </ul>
             </nav>
-            <div class="main-logo">
-                <h1>#martyisdead</h1>
+            <div class="header__logo-wrapper">
+                <h1>fakebook</h1>
             </div>
-            <div class="logged-user">
+            <div class="header__user-panel">
                 Jakub Nedorost<br/>
                 <i class="las la-coins"></i> skore: 100
             </div>            
@@ -27,7 +27,7 @@
             </aside>
             <div class="main-content">
                 <div class="card card--noshadow">
-                    main content
+                    <CreateNewPost />
                 </div>
                 <Post :postData="postData"/>
                 <Post :postData="postData2"/> 
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import CreateNewPost from "~/components/CreateNewPost";
 import Post from "~/components/Post";
 export default {
     components: {
@@ -92,6 +93,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~/assets/variables.scss";
 body {
     color: #444444;
     line-height: 1.7;
@@ -101,7 +103,10 @@ body {
     font-family: "Roboto", sans-serif;   
 }
 a {
-   color: #dc4734; 
+   color: $primary-color; 
+}
+a:hover {
+   text-decoration: none; 
 }
 .container {
     max-width: 1430px;
@@ -117,13 +122,19 @@ header {
   z-index: 5;
 
   .container {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
   }
 
-  .main-nav ul li {
+  .header__nav ul li {
       display: inline-block;
       margin-right: 30px;
+  }
+  .header__user-panel {
+      text-align: right;
+  }
+  .header__logo-wrapper {
+      text-align: center;
   }
 }
 .main-wrapper {

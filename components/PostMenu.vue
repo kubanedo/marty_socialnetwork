@@ -23,6 +23,7 @@ export default {
     position: relative;
 }
 ul {
+    min-width: 150px;
     position: absolute;
     font-size: 12px;
     bottom: 0;
