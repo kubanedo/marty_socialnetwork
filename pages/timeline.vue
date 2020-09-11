@@ -13,8 +13,7 @@
                 <h1>fakebook</h1>
             </div>
             <div class="header__user-panel">
-                Jakub Nedorost<br/>
-                <i class="las la-coins"></i> skore: 100
+                <HeaderUserPanel />
             </div>            
           </div>     
       </header> 
@@ -22,8 +21,11 @@
           <div class="container">
             <aside class="left-sidebar">
                 <div class="card">
-                    left sidebar
+                    <h3>Profil</h3>
                 </div>
+
+                    <p style="position: fixed; bottom: 20px;">(c) 2020 Internet Mall, a.s.</p>
+               
             </aside>
             <div class="main-content">
                 <div class="card card--noshadow">
@@ -36,8 +38,11 @@
             </div>
             <aside class="right-sidebar">
                 <div class="card">
-                    right sidebar
+                    <h3>Kontakty</h3>
                 </div>
+                <div class="card">
+                    <h3>Stránky</h3>
+                </div>                
             </aside>
           </div>
       </div>
@@ -45,6 +50,7 @@
 </template>
 
 <script>
+import HeaderUserPanel from "~/components/HeaderUserPanel";
 import CreateNewPost from "~/components/CreateNewPost";
 import Post from "~/components/Post";
 export default {
@@ -149,7 +155,8 @@ header {
   background: white;  
   box-shadow: 0px 1px 15px 0px rgba(51, 51, 51, 0.2);
   padding: 20px;
-  margin-bottom: 30px;  
+  margin-bottom: 30px; 
+  border-radius: 5px; 
 }
 .card--noshadow {
     box-shadow: unset;
@@ -168,32 +175,6 @@ header {
     font-size: 15px;
     text-decoration: none;
     color: black;
-}
-.post {
-    .post__head {
-        display: grid;
-        grid-template-columns: 55px auto max-content;
-        margin-bottom: 20px;
-    }
-    .post__menu {
-        font-size: 25px;
-    }
-    .post__text {
-        margin-bottom: 10px;
-    }
-
-    .post__footer {
-        display: grid;
-        padding: 0 10px;
-        grid-template-columns: auto max-content;
-        margin-top: 20px;
-    }
-    .post__footer-right {
-        display: flex;
-    }
-    .post__comments {
-        margin-right: 10px;
-    }
 }
 .embed-wrapper {
     max-width: 800px;

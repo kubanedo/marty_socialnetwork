@@ -4,9 +4,17 @@
       <div class="profile-img" :style="{ backgroundImage: 'url(' + profileImg + ')' }"></div>
     </div>
     <div class="newpost__input">
-      <input type="text" placeholder="Co se vám honí hlavou?">
+      <input type="text" @click="showCreatePostInput = true" placeholder="Co se vám honí hlavou?">
     </div>
-    <button>Zveřejnit</button>
+
+    <div v-if="showCreatePostInput" class="overlay" @click.self.prevent="showCreatePostInput = false"> 
+       <div class="card overlay-content">
+         <h2>Vytvořte příspěvek</h2>
+         <button @click="showCreatePostInput = false"><i class="las la-times"></i></button>
+         <textarea></textarea>
+         <button>Zveřejnit</button>
+       </div>
+    </div>
   </div>  
 </template>
 
@@ -14,7 +22,8 @@
 export default {
   data() {
     return {
-      profileImg: 'https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg'
+      profileImg: 'https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg',
+      showCreatePostInput: false
     }
   }
 
@@ -30,18 +39,38 @@ export default {
     .newpost__profile-img-wrapper {
       margin-right: 10px;
     }
-    input {
+    input, textarea {
       width: 100%;
       padding: 10px;
       margin-right: 5px;
-      border: 1px silver solid;
-      background: silver;
-      border-radius: 5px;      
+      background: $grey-color;
+      border-radius: 20px;      
     }
     button {
       background: $primary-color;
       padding: 10px;
       color: white;
-      border-radius: 5px;
+      border-radius: 20px;
+    }
+    .overlay {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 12;      
+    }
+    .overlay-content {
+      background: white;
+      padding: 20px;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 50%;
     }
 </style>
