@@ -6,11 +6,13 @@
         </div>
         <div>
             <strong>Jakub Nedorost</strong><br/>
-            <i class="las la-coins"></i> skore: 100
+            <i class="las la-coins"></i> Skóre: 100
         </div>
     </div>
     <div v-if="showMenu" class="user-panel__menu">
-        Menu
+        <div class="card">
+            Menu
+        </div>
     </div>    
 </div>    
 </template>

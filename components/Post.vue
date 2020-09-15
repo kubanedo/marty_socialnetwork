@@ -13,19 +13,14 @@
                 {{postData.text}}                            
             </div>
             <div class="post__extra-content">
-
-                <div v-if="postData.extraContent.type=='video'" class="embed-wrapper">
-                    <div class="embed">
-                        <iframe scrolling="no" :src="postData.extraContent.url" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen=""></iframe>
-                    </div>
-                </div>   
-
+                <PostPhotos v-if="postData.extraContent.type=='photo'" :photosData="postData.extraContent.url"/> 
+                <PostVideo v-if="postData.extraContent.type=='video'" :embedURL="postData.extraContent.url"/>                   
             </div>
         </div>
         <div class="post__footer">
             <div class="post__footer-stats">
                 <div class="post__likes">
-                    <i class="lar la-thumbs-up"></i> Líbí se vám a {{postData.likes}} dalším uživatelům.
+                    <i class="las la-heart"></i> Líbí se vám a {{postData.likes}} dalším uživatelům.
                 </div>
                 <div class="post__footer-right">
                     <div class="post__comments">
@@ -37,9 +32,9 @@
                 </div>
             </div>
             <div class="post__footer-buttons">
-            To se mi líbí
-            Okomentovat
-            Sdílet
+                <button><i class="las la-heart"></i> To se mi líbí</button>
+                <button><i class="las la-comment"></i> Okomentovat</button>
+                <button><i class="las la-share-square"></i> Sdílet</button>
             </div>
         </div>
     </div>  
@@ -48,19 +43,26 @@
 <script>
 import TimeAgo from "~/components/TimeAgo";
 import PostMenu from "~/components/PostMenu";
+import PostVideo from "~/components/PostVideo";
+import PostPhotos from "~/components/PostPhotos";
+
 export default {
     props: {
         postData: Object
     },
     components: {
         TimeAgo,
-        PostMenu
+        PostMenu,
+        PostVideo,
+        PostPhotos
     }
 }
 </script>
 
 <style lang="scss" scoped>
 .post {
+    padding-bottom: 10px;
+
     .post__head {
         display: grid;
         grid-template-columns: 55px auto max-content;
@@ -77,19 +79,35 @@ export default {
         margin-left: -20px;
     }
     .post__footer-stats, .post__footer-buttons {
+        display: grid;
         padding: 10px;
         border-top: 1px silver solid;
-        margin-top: 20px;
     }
     .post__footer-stats {
-        display: grid;
+        margin-top: 20px;
         grid-template-columns: auto max-content;
     }
     .post__footer-right {
         display: flex;
     }
     .post__footer-buttons {
-                border-top: 1px silver solid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        text-align: center;
+        font-size: 18px;
+        padding-bottom: 0;
+        margin-left: -20px;
+        margin-right: -20px;
+        i.las {
+            font-size: 22px;
+        }
+        button {
+            padding: 5px;
+            border-radius: 5px;
+            &:hover {
+                background: #f7f7f7;
+            }
+        }        
     }
     .post__comments {
         margin-right: 10px;
