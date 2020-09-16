@@ -12,9 +12,16 @@ import Vuex from 'vuex'
 const createStore = () => {
     return new Vuex.Store({
         state: () => ({
-            isChatActive: false
+            isChatActive: false,
+            loggedUser: {}
         }),
         mutations: {
+            login: (state, payload) => {
+                state.loggedUser = {
+                    userId: 0,
+                    ...payload
+                }
+            },
             toggleChatActivness: state => {
                 state.isChatActive = !state.isChatActive
             }            

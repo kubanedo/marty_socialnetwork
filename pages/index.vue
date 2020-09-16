@@ -1,97 +1,221 @@
 <template>
-  <v-layout
-    column
-    justify-center
-    align-center
-  >
-    <v-flex
-      xs12
-      sm8
-      md6
-    >
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
+  <div>
+      <header>
+          <div class="container">
+            <nav class="header__nav">  
+                <ul>
+                    <li><a href="#">Úvod</a></li>
+                    <li><a href="#">Zprávy</a></li> 
+                    <li><a href="#">Upozornění</a></li>  
+                </ul>
+            </nav>
+            <div class="header__logo-wrapper">
+                <h1>fakebook</h1>
+            </div>
+            <div class="header__user-panel">
+                <HeaderUserPanel />
+            </div>            
+          </div>     
+      </header> 
+      <div class="main-wrapper">
+          <div class="container">
+            <aside class="left-sidebar">
+                <div class="card">
+                    <h3>Profil</h3>
+                    Počet přátel: 43<br/>
+                    Počet nevyřízených žádostí: 2
+
+                </div>
+
+                    <p style="position: fixed; bottom: 20px;">(c) 2020 Internet Mall, a.s.</p>
+               
+            </aside>
+            <div class="main-content">
+                <div class="card card--noshadow">
+                    <CreateNewPost />
+                </div>
+                <Post :postData="postData"/>
+                <Post :postData="postData2"/> 
+                <Post :postData="postData"/> 
+                <Post :postData="postData"/>                 
+            </div>
+            <aside class="right-sidebar">
+                <div class="card">
+                    <h3>Kontakty</h3>
+                    <Contacts />
+                </div>
+                <div class="card">
+                    <h3>Stránky</h3>
+                </div>                
+            </aside>
           </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            nuxt
-            to="/inspire"
-          >
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
-  </v-layout>
+      </div>
+      <Chat :isActive="isChatActive"/>
+  </div>  
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
+import HeaderUserPanel from "~/components/HeaderUserPanel";
+import CreateNewPost from "~/components/CreateNewPost";
+import Post from "~/components/Post";
+import Contacts from "~/components/Contacts";
+import Chat from "~/components/Chat";
 
 export default {
-  components: {
-    Logo,
-    VuetifyLogo
-  }
+    components: {
+        Post,
+        HeaderUserPanel,
+        CreateNewPost,
+        Contacts
+    },
+    data() {
+        return {
+            postData: {
+                profile: {
+                    id: 1,
+                    name: "Jakub Mary",
+                    img: "https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg",
+                    url: "/profil/jakub-mary"
+                },
+                published: "2020-09-10T21:10:00",
+                text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam ut molestiae exercitationem tenetur facilis odit neque iusto autem officia. Delectus dicta perferendis soluta quia ipsum autem saepe natus ut recusandae.",
+                extraContent: {
+                    type: "photo",
+                    url: [ 
+                        "https://www.irozhlas.cz/sites/default/files/styles/zpravy_otvirak_velky/public/uploader/jakub_nemcok_jako_pa_191018-093542_kro.JPG?itok=ZpzwVeCA",
+                        "https://img.blesk.cz/img/1/normal690/5994234-img-marty-is-dead-v0.jpg",
+                        "https://dehayf5mhw1h7.cloudfront.net/wp-content/uploads/sites/683/2020/01/03230000/Getty_Buckinghams630_010320.jpg"
+                    ]
+                },
+                likes: 40,
+                comments: 38,
+                shares: 11
+            },
+            postData2: {
+                profile: {
+                    id: 1,
+                    name: "Jakub Mary2",
+                    img: "https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg",
+                    url: "/profil/jakub-mary"
+                },
+                published: "2020-09-03T22:20:00",
+                text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam ut molestiae exercitationem tenetur facilis odit neque iusto autem officia. Delectus dicta perferendis soluta quia ipsum autem saepe natus ut recusandae.",
+                extraContent: {
+                    type: "video",
+                    url: "https://www.mall.tv/embed/s1-e1-martyisdead"
+                },
+                likes: 40,
+                comments: 38,
+                shares: 11
+            }                
+        }
+    },
+    computed: {
+        isChatActive() {
+            return this.$store.state.isChatActive;
+        }
+    }
 }
 </script>
+
+<style lang="scss">
+@import "~/assets/variables.scss";
+body {
+    color: #444444;
+    line-height: 1.7;
+    font-size: 14px;
+    font-weight: 400;
+    background-color: #f1f1f1; 
+    font-family: "Roboto", sans-serif;   
+}
+a {
+   color: $primary-color; 
+}
+a:hover {
+   text-decoration: none; 
+}
+.container {
+    max-width: 1430px;
+    width: 95%;
+    margin: 0 auto;
+}
+header {
+  width: 100%;
+  position: fixed;
+  box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  background: white;
+  z-index: 5;
+
+  .container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+  }
+
+  .header__nav ul li {
+      display: inline-block;
+      margin-right: 30px;
+  }
+  .header__user-panel {
+      text-align: right;
+  }
+  .header__logo-wrapper {
+      text-align: center;
+  }
+}
+.main-wrapper {
+    padding-top: 110px;
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr;
+        gap: 30px;
+    }
+}
+.card, .post {
+  background: white;  
+  box-shadow: 0px 1px 15px 0px rgba(51, 51, 51, 0.2);
+  padding: 20px;
+  margin-bottom: 30px; 
+  border-radius: 5px; 
+}
+.card--noshadow {
+    box-shadow: unset;
+}
+.profile-img {
+  display: block;  
+  width: 45px;
+  height: 45px;
+  background-color: silver;  
+  border-radius: 50%;
+  background-size: contain;
+  background-position: center;
+}
+.profile-name {
+    font-weight: bold;
+    font-size: 15px;
+    text-decoration: none;
+    color: black;
+}
+.embed-wrapper {
+    max-width: 800px;
+    max-height: 450px;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    margin: 0 auto;
+}
+.embed {
+    position: relative;
+    overflow: hidden;
+    padding-top: 56.25%;
+}
+.embed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    overflow: hidden;
+}
+</style>

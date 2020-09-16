@@ -9,12 +9,13 @@
       </div>
       <div class="chat__body" v-show="isChatOpened">
         <div class="chat__content">
-            <div class="chat__message chat__message--outgoing"><div class="message__body" @mouseover="hoverOver" @mouseleave="hoverLeave">Já nevím co tu kecám<div class="message__time"><small>10:15</small></div></div></div>
-            <div class="chat__message chat__message--incoming"><div class="profile-img" style="background-image: url(&quot;https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-37.jpg&quot;);"></div><div class="message__body">To nevím nevím nevím nevím prostě nevííííííííííím</div></div>
-            <div class="chat__message chat__message--outgoing"><div class="message__body">Já nevím co tu kecám</div></div>
-            <div class="chat__message chat__message--incoming"><div class="profile-img" style="background-image: url(&quot;https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-37.jpg&quot;);"></div><div class="message__body">To nevím nevím nevím nevím prostě nevííííííííííím</div></div>
+            <!--<div class="chat__message chat__message--outgoing"><div class="message__body" @mouseover="hoverOver" @mouseleave="hoverLeave">Já nevím co tu kecám<div class="message__time"><small>10:15</small></div></div></div> -->
+            <div v-for="(message, index) in messages" :key="index" :class="'chat__message chat__message--' + ((message.userId == 0) ? 'outgoing' : 'incoming')">
+                <div v-if="!message.userId == 0" class="profile-img" style="background-image: url(&quot;https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-37.jpg&quot;);"></div>
+                <div class="message__body">{{message.text}}</div>
+            </div>
         </div>
-        <div class="chat__input"><input type="text" /><UIButton text="Odeslat" /></div>
+        <div class="chat__input"><input type="text" v-model="newMessage" @keyup.enter="sendMessage()"/><UIButton text="Odeslat" @click.native="sendMessage()" /></div>
       </div>
   </div>    
 </template>
@@ -31,7 +32,19 @@ export default {
     data() {
         return {
             isChatOpened: true,
-            isChatActive: true
+            newMessage: '',
+            messages: [
+                {
+                    userId: 58,  
+                    time: '14.9.2020',
+                    text: 'Já nevím co tu kecám'  
+                },
+                {
+                    userId: 0,  
+                    time: '15.9.2020',
+                    text: 'Prd kecáš'  
+                }               
+            ]
         }
     },
     methods: {
@@ -39,11 +52,8 @@ export default {
             this.isChatOpened = !this.isChatOpened;
             this.scrollToEnd();
         },
-        activateChat() {
-            this.isChatActive = true;
-        },
         deactivateChat() {
-            this.isChatActive = false;
+            this.$store.state.isChatActive = false;
         },
         scrollToEnd() {
             if(this.isChatOpened) {   	
@@ -59,6 +69,14 @@ export default {
         hoverLeave(event) {
             /*let el = event.target.querySelector('.message__time');
             el.style="display: none";*/
+        },
+        sendMessage() {
+            this.messages.push({
+                userId: 0,
+                time: '16.9.2019',
+                text: this.newMessage
+            });
+            this.newMessage = '';
         }                                  
     },
     mounted() {
@@ -138,7 +156,6 @@ export default {
 
     &--outgoing .message__body {
         background: orange;
-        text-align: right;
     }
     &--incoming .message__body {
         background: silver;

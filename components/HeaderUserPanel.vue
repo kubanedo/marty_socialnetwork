@@ -5,7 +5,7 @@
             <div class="profile-img" :style="{ backgroundImage: 'url(' + profileImg + ')' }"></div>
         </div>
         <div>
-            <strong>Jakub Nedorost</strong><br/>
+            <strong>{{wholeUsername}}</strong><br/>
             <i class="las la-coins"></i> Skóre: 100
         </div>
     </div>
@@ -21,6 +21,7 @@
 export default {
   data() {
     return {
+      wholeUsername: this.$store.state.loggedUser.firstName + ' ' + this.$store.state.loggedUser.lastName,  
       profileImg: 'https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg',
       showMenu: false
     }
