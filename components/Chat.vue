@@ -50,8 +50,8 @@ export default {
             el.style="display: block";
         },
         hoverLeave(event) {
-            let el = event.target.querySelector('.message__time');
-            el.style="display: none";
+            /*let el = event.target.querySelector('.message__time');
+            el.style="display: none";*/
         }                                  
     },
     mounted() {
