@@ -50,7 +50,7 @@
             </aside>
           </div>
       </div>
-      <Chat />
+      <Chat :isActive="isChatActive"/>
   </div>  
 </template>
 
@@ -108,6 +108,11 @@ export default {
                 comments: 38,
                 shares: 11
             }                
+        }
+    },
+    computed: {
+        isChatActive() {
+            return this.$store.state.isChatActive;
         }
     }
 }

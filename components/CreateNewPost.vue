@@ -4,7 +4,7 @@
       <div class="profile-img" :style="{ backgroundImage: 'url(' + profileImg + ')' }"></div>
     </div>
     <div class="newpost__input">
-      <input type="text" @click="showCreatePostInput = true" placeholder="Co se vám honí hlavou?">
+      <div class="newpost__fakeinput" @click="showCreatePostInput = true">Co se vám honí hlavou?</div>
     </div>
 
     <div v-if="showCreatePostInput" class="overlay" @click.self.prevent="showCreatePostInput = false"> 
@@ -12,14 +12,18 @@
          <h2>Vytvořte příspěvek</h2>
          <button @click="showCreatePostInput = false"><i class="las la-times"></i></button>
          <textarea></textarea>
-         <button>Zveřejnit</button>
+         <UIButton text="Zveřejnit"/>
        </div>
     </div>
   </div>  
 </template>
 
 <script>
+import UIButton from "~/components/ui/UIButton";
 export default {
+  components: {
+    UIButton
+  },
   data() {
     return {
       profileImg: 'https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg',
@@ -39,18 +43,18 @@ export default {
     .newpost__profile-img-wrapper {
       margin-right: 10px;
     }
-    input, textarea {
+    .newpost__fakeinput, textarea {
       width: 100%;
       padding: 10px;
       margin-right: 5px;
       background: $grey-color;
       border-radius: 20px;      
     }
-    button {
-      background: $primary-color;
-      padding: 10px;
-      color: white;
-      border-radius: 20px;
+    .newpost__fakeinput {
+      cursor: pointer;
+      color: silver;
+      padding-top: 12px;
+      padding-left: 20px;
     }
     .overlay {
       display: flex;

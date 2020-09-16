@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="contact__wrapper" v-for="(contact, index) in contacts" :key="index" @click="openChat(contact.userId)">
+    <div class="contact__wrapper" v-for="(contact, index) in contacts" :key="index" @click="toggleChatActivness()">
         <div class="contact__img profile-img" :style="{ backgroundImage: 'url(' + contact.profileImg + ')' }">
             <div v-if="contact.status==1" :class="'contact__status status--' + contact.status"></div>
         </div>
@@ -30,8 +30,8 @@ export default {
         }
     },
     methods: {
-        openChat(id) {
-            console.log(id);
+        toggleChatActivness() {
+            this.$store.commit('toggleChatActivness');
         }
     }
     

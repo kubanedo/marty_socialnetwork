@@ -1,5 +1,5 @@
 <template>
-  <div class="chat__wrapper" v-if="isChatActive">
+  <div class="chat__wrapper" v-if="isActive">
       <div class="chat__header" @click="toggleChat()">
           <div class="chat__contact-info">
               <div class="profile-img" style="background-image: url(&quot;https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-37.jpg&quot;);"></div>
@@ -14,13 +14,20 @@
             <div class="chat__message chat__message--outgoing"><div class="message__body">Já nevím co tu kecám</div></div>
             <div class="chat__message chat__message--incoming"><div class="profile-img" style="background-image: url(&quot;https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-37.jpg&quot;);"></div><div class="message__body">To nevím nevím nevím nevím prostě nevííííííííííím</div></div>
         </div>
-        <div class="chat__input"><input type="text" /><button>Odeslat</button></div>
+        <div class="chat__input"><input type="text" /><UIButton text="Odeslat" /></div>
       </div>
   </div>    
 </template>
 
 <script>
+import UIButton from "~/components/ui/UIButton";
 export default {
+    components: {
+        UIButton
+    },
+    props: {
+        isActive: Boolean
+    },
     data() {
         return {
             isChatOpened: true,
@@ -40,8 +47,8 @@ export default {
         },
         scrollToEnd() {
             if(this.isChatOpened) {   	
-                let chatBody = this.$el.querySelector(".chat__content");
-                chatBody.scrollTop = chatBody.scrollHeight;
+                /*let chatBody = this.$el.querySelector(".chat__content");
+                chatBody.scrollTop = chatBody.scrollHeight;*/
             }
         },
         hoverOver(event) {
