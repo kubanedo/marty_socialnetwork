@@ -2,11 +2,11 @@
 <div style="position: relative;">
     <div class="user-panel" @click="showMenu = !showMenu">
         <div class="user-panel__profile-img-wrapper">
-            <div class="profile-img" :style="{ backgroundImage: 'url(' + profileImg + ')' }"></div>
+            <UIProfileImg :imgURL="profileImg" />
         </div>
         <div>
             <strong>{{wholeUsername}}</strong><br/>
-            <i class="las la-coins"></i> Skóre: 100
+            <i class="las la-coins"></i> Skóre: {{getPoints}}
         </div>
     </div>
     <div v-if="showMenu" class="user-panel__menu">
@@ -18,13 +18,22 @@
 </template>
 
 <script>
+import UIProfileImg from '~/components/ui/UIProfileImg'
 export default {
+  components: {
+      UIProfileImg
+  },
   data() {
     return {
-      wholeUsername: this.$store.state.loggedUser.firstName + ' ' + this.$store.state.loggedUser.lastName,  
+      wholeUsername: this.$store.getters.getloggedUserWholeName,  
       profileImg: 'https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg',
       showMenu: false
     }
+  },
+  computed: {
+     getPoints() {
+         return this.$store.state.loggedUser.points;
+     }
   }
 }
 </script>

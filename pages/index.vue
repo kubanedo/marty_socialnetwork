@@ -10,7 +10,7 @@
                 </ul>
             </nav>
             <div class="header__logo-wrapper">
-                <h1>fakebook</h1>
+                <h1 @click="changePoints(-5)">fakebook</h1>
             </div>
             <div class="header__user-panel">
                 <HeaderUserPanel />
@@ -113,7 +113,12 @@ export default {
     computed: {
         isChatActive() {
             return this.$store.state.isChatActive;
-        }
+        }        
+    },
+    methods: {
+        changePoints(points) {
+            this.$store.commit('changePoints', points);
+        }          
     }
 }
 </script>
@@ -180,15 +185,6 @@ header {
 }
 .card--noshadow {
     box-shadow: unset;
-}
-.profile-img {
-  display: block;  
-  width: 45px;
-  height: 45px;
-  background-color: silver;  
-  border-radius: 50%;
-  background-size: contain;
-  background-position: center;
 }
 .profile-name {
     font-weight: bold;

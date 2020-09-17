@@ -1,7 +1,7 @@
 <template>
     <div class="post">
         <div class="post__head">
-                <a :href="postData.profile.url" class="profile-img" :style="{ backgroundImage: 'url(' + postData.profile.img + ')' }"></a>
+                <UIProfileImg :imgURL="postData.profile.img"/>
                 <div class="post-wrapper">
                 <a :href="postData.profile.url" class="profile-name">{{postData.profile.name}}</a>
                 <div class="post-time"><TimeAgo :time="postData.published"/></div>
@@ -20,7 +20,8 @@
         <div class="post__footer">
             <div class="post__footer-stats">
                 <div class="post__likes">
-                    <i class="las la-heart"></i> Líbí se vám a {{postData.likes}} dalším uživatelům.
+                    <i class="las la-heart"></i> <span v-if="likes.fromloggedUser">Líbí se vám a {{likes.count}} dalším uživatelům.</span>
+                    <span v-else>Líbí se {{likes.count}} uživatelům.</span>
                 </div>
                 <div class="post__footer-right">
                     <div class="post__comments">
@@ -32,7 +33,7 @@
                 </div>
             </div>
             <div class="post__footer-buttons">
-                <button><i class="las la-heart"></i> To se mi líbí</button>
+                <button @click="likePost" :class="(likes.fromloggedUser) ? 'liked' : ''"><i class="las la-heart"></i> To se mi líbí</button>
                 <button><i class="las la-comment"></i> Okomentovat</button>
                 <button><i class="las la-share-square"></i> Sdílet</button>
             </div>
@@ -45,6 +46,7 @@ import TimeAgo from "~/components/TimeAgo";
 import PostMenu from "~/components/PostMenu";
 import PostVideo from "~/components/PostVideo";
 import PostPhotos from "~/components/PostPhotos";
+import UIProfileImg from '~/components/ui/UIProfileImg'
 
 export default {
     props: {
@@ -54,7 +56,27 @@ export default {
         TimeAgo,
         PostMenu,
         PostVideo,
-        PostPhotos
+        PostPhotos,
+        UIProfileImg
+    },
+    data() {
+        return {
+            likes: {
+                count: 50,
+                fromloggedUser: false
+            },
+            comments: {
+                count: 38
+            },
+            shares: {
+                count: 11
+            }
+        }
+    },
+    methods: {
+        likePost() {
+            this.likes.fromloggedUser = !this.likes.fromloggedUser;
+        }
     }
 }
 </script>
@@ -111,6 +133,9 @@ export default {
     }
     .post__comments {
         margin-right: 10px;
+    }
+    button.liked {
+        color: red;
     }
 }
 </style>

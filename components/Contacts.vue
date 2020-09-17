@@ -1,16 +1,18 @@
 <template>
 <div>
     <div class="contact__wrapper" v-for="(contact, index) in contacts" :key="index" @click="toggleChatActivness()">
-        <div class="contact__img profile-img" :style="{ backgroundImage: 'url(' + contact.profileImg + ')' }">
-            <div v-if="contact.status==1" :class="'contact__status status--' + contact.status"></div>
-        </div>
+        <UIProfileImg :imgURL="contact.profileImg" :status="contact.status"/>
         <div class="contact__name"><div>{{contact.userName}}</div></div>
     </div>
 </div>    
 </template>
 
 <script>
+import UIProfileImg from '~/components/ui/UIProfileImg'
 export default {
+    components: {
+        UIProfileImg
+    },
     data() {
         return {
             contacts: [
@@ -48,22 +50,6 @@ export default {
     &:hover {
         background: #f7f7f7;
     }
-}
-.contact__img {
-    position: relative;
-}
-.contact__status {
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    background-color: grey;
-    border: 3px solid white;
-    border-radius: 50%;
-    right: 0;
-    bottom: -3px;
-}
-.status--1 {
-    background-color: green;
 }
 .contact__name {
     display: flex;

@@ -2,36 +2,38 @@
   <div class="chat__wrapper" v-if="isActive">
       <div class="chat__header" @click="toggleChat()">
           <div class="chat__contact-info">
-              <div class="profile-img" style="background-image: url(&quot;https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-37.jpg&quot;);"></div>
+              <UIProfileImg imgURL="https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-37.jpg" status="1" imgSize="30" statusBorderColor="#d3d3d3" />
               <div class="chat__contact-name"><div>Jméno kontaktu</div></div>
           </div>
           <div class="chat__close-btn"><button @click="deactivateChat()"><i class="las la-times"></i></button></div>
       </div>
-      <div class="chat__body" v-show="isChatOpened">
+      <div class="chat__body" v-show="isChatMaximized">
         <div class="chat__content">
             <!--<div class="chat__message chat__message--outgoing"><div class="message__body" @mouseover="hoverOver" @mouseleave="hoverLeave">Já nevím co tu kecám<div class="message__time"><small>10:15</small></div></div></div> -->
             <div v-for="(message, index) in messages" :key="index" :class="'chat__message chat__message--' + ((message.userId == 0) ? 'outgoing' : 'incoming')">
-                <div v-if="!message.userId == 0" class="profile-img" style="background-image: url(&quot;https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-37.jpg&quot;);"></div>
+                <UIProfileImg v-if="!message.userId == 0" class="mr-5" imgURL="https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-37.jpg" imgSize="25" />
                 <div class="message__body">{{message.text}}</div>
             </div>
         </div>
-        <div class="chat__input"><input type="text" v-model="newMessage" @keyup.enter="sendMessage()"/><UIButton text="Odeslat" @click.native="sendMessage()" /></div>
+        <div class="chat__input"><textarea v-model="newMessage" placeholder="Aa" @keyup.enter="sendMessage()"></textarea><UIButton text="Odeslat" @click.native="sendMessage()" /></div>
       </div>
   </div>    
 </template>
 
 <script>
 import UIButton from "~/components/ui/UIButton";
+import UIProfileImg from "~/components/ui/UIProfileImg";
 export default {
     components: {
-        UIButton
+        UIButton,
+        UIProfileImg
     },
     props: {
         isActive: Boolean
     },
     data() {
         return {
-            isChatOpened: true,
+            isChatMaximized: true,
             newMessage: '',
             messages: [
                 {
@@ -49,7 +51,7 @@ export default {
     },
     methods: {
         toggleChat() {
-            this.isChatOpened = !this.isChatOpened;
+            this.isChatMaximized = !this.isChatMaximized;
             this.scrollToEnd();
         },
         deactivateChat() {
@@ -95,11 +97,6 @@ export default {
     box-shadow: 0px 1px 15px 0px rgba(51, 51, 51, 0.2);
     border-top-left-radius: 5px;
     border-top-right-radius: 5px; 
-
-    .profile-img {
-        width: 30px;
-        height: 30px;
-    }
 }
 .chat__contact-info {
     display: flex;
@@ -132,10 +129,14 @@ export default {
     overflow-y: scroll; 
 }
 .chat__input {
+    display: flex;
     padding: 10px;   
-    input {
+    textarea {
         width: 100%;
-        border: 1px solid #000;
+        border: 1px solid grey;
+        border-radius: 5px;
+        margin-right: 10px;
+        padding: 5px;
     }
 }
 .chat__message {
@@ -160,13 +161,11 @@ export default {
     &--incoming .message__body {
         background: silver;
     }  
-    .profile-img {
-        width: 25px;
-        height: 25px;
-        margin-right: 5px;
-    }
     .message__time {
         display: none;
     }      
+}
+.mr-5 {
+    margin-right: 5px;
 }
 </style>
