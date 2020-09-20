@@ -1,5 +1,5 @@
 <template>
-  <div>{{timeAgo}}</div>
+  <span>{{timeAgo}}</span>
 </template>
 
 <script>

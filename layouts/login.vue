@@ -1,5 +1,7 @@
 <template>
-  <div>me, user, page</div>
+  <div>
+      <Nuxt />
+  </div>    
 </template>
 
 <script>

@@ -1,9 +1,9 @@
 <template>
   <div>
     Křestní jméno
-    <input type="text" v-model="firstName"/>
+    <input type="text" v-model="first_name"/>
     Příjmení
-    <input type="text" v-model="lastName"/>
+    <input type="text" v-model="last_name"/>
     Pohlaví
     <input type="radio" v-model="sex" value="m"> Muž
     <input type="radio" v-model="sex" value="f"> Žena
@@ -14,21 +14,22 @@
 <script>
 import UIButton from "~/components/ui/UIButton";
 export default {
+  layout: 'login',
   components: {
     UIButton
   },
   data() {
     return {
-      firstName: '',
-      lastName: '',
+      first_name: '',
+      last_name: '',
       sex: ''
     }
   },
   methods: {
     logIn() {
       this.$store.commit('login', {
-        firstName: this.firstName,
-        lastName: this.lastName,
+        first_name: this.first_name,
+        last_name: this.last_name,
         sex: this.sex
       });
       this.$router.push('/')

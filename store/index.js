@@ -5,22 +5,24 @@ const createStore = () => {
         state: () => ({
             isChatActive: false,
             loggedUser: {
-                userId: 0,
-                firstName: 'Nezalogovaný',
-                lastName: 'Uživatel',
+                userId: "me",
+                profileImg: 'http://jakubnedorost.cz/marty/images/profiles/me/profileimg.jpg',
+                first_name: 'Nezalogovaný',
+                last_name: 'Uživatel',
                 sex: 'm',
                 points: 0
             }
         }),
         getters: {
             getloggedUserWholeName: state => {
-              return state.loggedUser.firstName + " " + state.loggedUser.lastName;
+              return state.loggedUser.first_name + " " + state.loggedUser.last_name;
             }
         },        
         mutations: {
             login: (state, payload) => {
                 state.loggedUser = {
-                    userId: 0,
+                    userId: "me",
+                    profileImg: 'http://jakubnedorost.cz/marty/images/profiles/me/profileimg.jpg',
                     points: 0,
                     ...payload
                 }

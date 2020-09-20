@@ -1,7 +1,7 @@
 <template>
   <div class="newpost__wrapper">
     <div class="newpost__profile-img-wrapper">
-      <div class="profile-img" :style="{ backgroundImage: 'url(' + profileImg + ')' }"></div>
+      <nuxt-link to="/profile/me"><UIProfileImg :imgURL="this.$store.state.loggedUser.profileImg" /></nuxt-link>
     </div>
     <div class="newpost__input">
       <div class="newpost__fakeinput" @click="showCreatePostInput = true">Co se vám honí hlavou?</div>
@@ -20,9 +20,11 @@
 
 <script>
 import UIButton from "~/components/ui/UIButton";
+import UIProfileImg from '~/components/ui/UIProfileImg';
 export default {
   components: {
-    UIButton
+    UIButton,
+    UIProfileImg
   },
   data() {
     return {

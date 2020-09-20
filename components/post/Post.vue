@@ -1,7 +1,7 @@
 <template>
     <div class="post">
         <div class="post__head">
-                <UIProfileImg :imgURL="postData.profile.img"/>
+                <nuxt-link :to="'/profile/' + postData.profile.userId"><UIProfileImg :imgURL="postData.profile.img"/></nuxt-link>
                 <div class="post-wrapper">
                 <a :href="postData.profile.url" class="profile-name">{{postData.profile.name}}</a>
                 <div class="post-time"><TimeAgo :time="postData.published"/></div>
@@ -24,29 +24,31 @@
                     <span v-else>Líbí se {{likes.count}} uživatelům.</span>
                 </div>
                 <div class="post__footer-right">
-                    <div class="post__comments">
-                        <i class="lar la-comments"></i> {{postData.comments}}
-                    </div>
-                    <div class="post__shares">
+                    <button class="post__comments-stats" @click="toggleComments">
+                        <i class="lar la-comments"></i> {{comments.length}}
+                    </button>
+                    <div class="post__shares-stats">
                         <i class="las la-share"></i> {{postData.shares}}
                     </div>
                 </div>
             </div>
             <div class="post__footer-buttons">
                 <button @click="likePost" :class="(likes.fromloggedUser) ? 'liked' : ''"><i class="las la-heart"></i> To se mi líbí</button>
-                <button><i class="las la-comment"></i> Okomentovat</button>
+                <button @click="toggleComments"><i class="las la-comment"></i> Okomentovat</button>
                 <button><i class="las la-share-square"></i> Sdílet</button>
             </div>
+            <PostComments v-if="areCommentsOpened" :comments="comments" />
         </div>
     </div>  
 </template>
 
 <script>
 import TimeAgo from "~/components/TimeAgo";
-import PostMenu from "~/components/PostMenu";
-import PostVideo from "~/components/PostVideo";
-import PostPhotos from "~/components/PostPhotos";
-import UIProfileImg from '~/components/ui/UIProfileImg'
+import PostMenu from "~/components/post/PostMenu";
+import PostVideo from "~/components/post/PostVideo";
+import PostPhotos from "~/components/post/PostPhotos";
+import PostComments from "~/components/post/PostComments";
+import UIProfileImg from '~/components/ui/UIProfileImg';
 
 export default {
     props: {
@@ -57,16 +59,18 @@ export default {
         PostMenu,
         PostVideo,
         PostPhotos,
+        PostComments,
         UIProfileImg
     },
     data() {
         return {
+            areCommentsOpened: false,
+            comments: [
+                'Komentář 1', 'komentářík jdhiahsdaj ahaaa ahaaaaa no nevíííím'
+            ],
             likes: {
                 count: 50,
                 fromloggedUser: false
-            },
-            comments: {
-                count: 38
             },
             shares: {
                 count: 11
@@ -76,12 +80,16 @@ export default {
     methods: {
         likePost() {
             this.likes.fromloggedUser = !this.likes.fromloggedUser;
+        },
+        toggleComments() {
+            this.areCommentsOpened = !this.areCommentsOpened;
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
+@import "~/assets/variables.scss";
 .post {
     padding-bottom: 10px;
 
@@ -131,7 +139,7 @@ export default {
             }
         }        
     }
-    .post__comments {
+    .post__comments-stats {
         margin-right: 10px;
     }
     button.liked {

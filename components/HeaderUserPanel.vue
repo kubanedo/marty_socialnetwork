@@ -2,7 +2,7 @@
 <div style="position: relative;">
     <div class="user-panel" @click="showMenu = !showMenu">
         <div class="user-panel__profile-img-wrapper">
-            <UIProfileImg :imgURL="profileImg" />
+            <UIProfileImg :imgURL="this.$store.state.loggedUser.profileImg" />
         </div>
         <div>
             <strong>{{wholeUsername}}</strong><br/>
@@ -26,7 +26,6 @@ export default {
   data() {
     return {
       wholeUsername: this.$store.getters.getloggedUserWholeName,  
-      profileImg: 'https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg',
       showMenu: false
     }
   },

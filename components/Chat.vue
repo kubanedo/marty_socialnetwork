@@ -88,6 +88,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~/assets/variables.scss";
 .chat__header {
     cursor: pointer;
     display: flex;
@@ -133,7 +134,7 @@ export default {
     padding: 10px;   
     textarea {
         width: 100%;
-        border: 1px solid grey;
+        background: $input-color;
         border-radius: 5px;
         margin-right: 10px;
         padding: 5px;
@@ -156,10 +157,10 @@ export default {
     }
 
     &--outgoing .message__body {
-        background: orange;
+        background: $message-other-color;
     }
     &--incoming .message__body {
-        background: silver;
+        background: $message-grey-color;
     }  
     .message__time {
         display: none;
