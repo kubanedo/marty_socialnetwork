@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 const createStore = () => {
     return new Vuex.Store({
         state: () => ({
+            startTimestamp: Date.now(),
             isChatActive: false,
             loggedUser: {
                 userId: "me",

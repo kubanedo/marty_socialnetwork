@@ -24,6 +24,7 @@ export default {
     margin: 0 auto;
 }
 .embed {
+    background: black;
     position: relative;
     overflow: hidden;
     padding-top: 56.25%;

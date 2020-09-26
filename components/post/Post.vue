@@ -10,7 +10,8 @@
         </div>
         <div class="post__body">
             <div class="post__text">
-                {{postData.text}}                            
+                {{postData.text}}  
+                <QuizAction />
             </div>
             <div class="post__extra-content">
                 <PostPhotos v-if="postData.extraContent.type=='photo'" :photosData="postData.extraContent.url"/> 
@@ -49,7 +50,7 @@ import PostVideo from "~/components/post/PostVideo";
 import PostPhotos from "~/components/post/PostPhotos";
 import PostComments from "~/components/post/PostComments";
 import UIProfileImg from '~/components/ui/UIProfileImg';
-
+import QuizAction from '~/components/QuizAction';
 export default {
     props: {
         postData: Object
@@ -60,7 +61,8 @@ export default {
         PostVideo,
         PostPhotos,
         PostComments,
-        UIProfileImg
+        UIProfileImg,
+        QuizAction
     },
     data() {
         return {

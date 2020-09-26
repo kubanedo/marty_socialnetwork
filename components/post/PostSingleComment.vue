@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="post__comment">
-        <UIProfileImg imgURL="https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg" imgSize=35 class="mr-5"/>
+        <div><UIProfileImg imgURL="https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg" :imgSize="35" class="mr-5"/></div>
         <div>
         <div class="post__comment-content"><strong class="post__comment-author">Jméno Komentujícího</strong>{{comment}}</div>
         <small><strong @click="likeComment" :class="(isLiked) ? 'liked' : ''">To se mi líbí</strong> · <strong @click="replyToComment">Odpovědět</strong> · <TimeAgo/></small>
@@ -49,7 +49,8 @@ export default {
     .post__comment-content {
         background: $message-grey-color;
         padding: 5px 7px;
-        border-radius: 5px; 
+        border-radius: 5px;
+        overflow-wrap: break-word; 
         
         .post__comment-author {
             margin-right: 10px;

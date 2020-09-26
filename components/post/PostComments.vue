@@ -2,9 +2,10 @@
     <div class="post__comments">
         <div>
             <PostSingleComment v-for="(comment, index) in comments" class="post__comment" :key="index" :comment="comment" @addReplyReference="addReplyReference"/>
-        <!--<textarea v-model="newComment" id="addComment" placeholder="Napište komentář..." @keyup.enter="addComment()"></textarea>-->
-        {{newComment}}
-            <UIHtmlInput v-model="newComment" id="addComment" @keyup.enter="addComment()"/>
+            <div class="post__new-comment-wrapper">
+                <div><UIProfileImg :imgURL="this.$store.state.loggedUser.profileImg" :imgSize="35" class="mr-5"/></div>
+                <div class="post__new-comment-textarea"><textarea v-model="newComment" id="addComment" placeholder="Napište komentář..." @keydown.enter.prevent="addComment()"></textarea></div>
+            </div>    
         </div>
     </div>  
 </template>
@@ -29,8 +30,10 @@ export default {
     },
     methods: {
         addComment() {
-            this.comments.push(this.newComment);
-            this.newComment = '';
+            if(this.newComment) {
+                this.comments.push(this.newComment);
+                this.newComment = '';
+            }
         },
         focusInput() {
             const input = this.$el.querySelector('#addComment');
@@ -65,6 +68,13 @@ export default {
             margin-right: 10px;
             padding: 10px;
             color: black;
+            overflow-wrap: break-word;
         }
+    }
+    .post__new-comment-wrapper {
+        display: flex;
+    }
+    .post__new-comment-textarea {
+        width: 100%;
     }
 </style>

@@ -79,8 +79,9 @@ export default {
 .main-wrapper {
     padding-top: 90px;
     .container.grid {
+        max-width: 1040px;
         display: grid;
-        grid-template-columns: 1fr 2fr 1fr;
+        grid-template-columns: 1fr 3fr !important;
         gap: 30px;
     }
 }

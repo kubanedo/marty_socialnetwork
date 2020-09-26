@@ -10,7 +10,7 @@
                 </ul>
             </nav>
             <div class="header__logo-wrapper">
-                <nuxt-link to="/"><h1>fakebook</h1></nuxt-link>
+                <nuxt-link to="/"><h1>#fakebook</h1></nuxt-link>
             </div>
             <div class="header__user-panel">
                 <HeaderUserPanel />
@@ -79,6 +79,10 @@ header {
   }
   .header__logo-wrapper {
       text-align: center;
+
+      a {
+          text-decoration: none;
+      }
   }
 }
 .main-wrapper {
