@@ -11,17 +11,11 @@ export default {
        }
    }, 
    props: {
-       time: [Number, Object]
+       time: String
    },
    methods: {
        getTimeAgo() {
-            let date;
-            if(typeof this.time==='object') {
-                date = this.convertRelativeTimeToTimestamp(this.time);
-            } else {
-                date = this.time;
-            }
-
+            let date = this.time;
             let getOutput = (date) => {
                 const now = new Date();
                 date = new Date(date);
@@ -53,21 +47,15 @@ export default {
 
             return getOutput(date);
        },
-       convertRelativeTimeToTimestamp(relativeTimeObject) {
-          let daysAgo = (relativeTimeObject.daysAgo) ? (relativeTimeObject.daysAgo * 24 * 60 * 60 * 1000) : 0;
-          let hoursAgo = (relativeTimeObject.hoursAgo) ? (relativeTimeObject.hoursAgo * 60 * 60 * 1000) : 0;
-          let minutesAgo = (relativeTimeObject.minutesAgo) ? (relativeTimeObject.minutesAgo * 60 * 1000) : 0;
-
-          let timestamp = this.$store.state.startTimestamp - (daysAgo + hoursAgo + minutesAgo);
-          return timestamp;
-       },
        reloadTimeAgo() {
            let vm = this;
            let reloadInterval = vm.getTimeAgo().reloadInterval * 1000;
-
+           console.log(reloadInterval);
+           console.log("timeoutputreload", vm.interval );
            if(reloadInterval !== 0) {
                 vm.interval = setInterval(function() {
                     vm.timeAgo = vm.getTimeAgo().output;
+                    console.log('reload');
                 }, reloadInterval);
            } else {
                console.log("timeoutputreload", vm.interval);
@@ -82,6 +70,7 @@ export default {
        this.reloadTimeAgo();
    },
    destroyed() {
+       console.log("timeoutputreload", this.interval);
         if(this.interval) {
             clearInterval(this.interval);
         }

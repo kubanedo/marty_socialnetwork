@@ -1,42 +1,42 @@
 <template>
 <div>
-    <div class="contact__wrapper" v-for="(contact, index) in contacts" :key="index" @click="toggleChatActivness()">
-        <UIProfileImg :imgURL="contact.profileImg" :status="contact.status"/>
-        <div class="contact__name"><div>{{contact.userName}}</div></div>
+    <div class="contact__wrapper" v-for="(contact, contactId) in contacts" :key="contactId" 
+        @click="openChat({
+            contactId: contactId,
+            first_name: contact.first_name,
+            last_name: contact.last_name
+            })">
+        <div><UIProfileImg :imgURL="'http://jakubnedorost.cz/marty/images/profiles/' + contactId + '/profileimg.jpg'" :status="contact.status"/></div>
+        <div class="contact__name"><div>{{contact.first_name + " " + contact.last_name}}</div></div>
     </div>
 </div>    
 </template>
 
 <script>
+import axios from 'axios'
 import UIProfileImg from '~/components/ui/UIProfileImg'
+
 export default {
     components: {
         UIProfileImg
     },
     data() {
         return {
-            contacts: [
-                {
-                    userId: 0,
-                    profileImg: 'https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-37.jpg',
-                    userName: 'Danda Panda',
-                    status: 0
-                },
-                {
-                    userId: 1,
-                    profileImg: 'https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-6.jpg',
-                    userName: 'Cindy Pindy',
-                    status: 1
-                }                
-            ]
+            contacts: []
         }
     },
     methods: {
-        toggleChatActivness() {
-            this.$store.commit('toggleChatActivness');
+        openChat(contactId) {
+            this.$store.commit('openChat', contactId);
         }
-    }
-    
+    },
+    mounted() {
+      axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles')
+        .then(response => {
+          this.contacts = response.data[0];
+        })
+        .catch(error => console.log(error))        
+    }   
 }
 </script>
 

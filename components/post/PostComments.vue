@@ -4,7 +4,9 @@
             <PostSingleComment v-for="(comment, index) in comments" class="post__comment" :key="index" :comment="comment" @addReplyReference="addReplyReference"/>
             <div class="post__new-comment-wrapper">
                 <div><UIProfileImg :imgURL="this.$store.state.loggedUser.profileImg" :imgSize="35" class="mr-5"/></div>
-                <div class="post__new-comment-textarea"><textarea v-model="newComment" id="addComment" placeholder="Napište komentář..." @keydown.enter.prevent="addComment()"></textarea></div>
+                <div class="post__new-comment-textarea">
+                    <UIInput v-model="newComment" id="addComment" placeholder="Napište komentář..." @keydown.enter.prevent.native="addComment()"/>
+                </div>
             </div>    
         </div>
     </div>  
@@ -12,8 +14,8 @@
 
 <script>
 import UIProfileImg from '~/components/ui/UIProfileImg';
-import UIHtmlInput from '~/components/ui/UIHtmlInput';
 import PostSingleComment from '~/components/post/PostSingleComment';
+import UIInput from "~/components/ui/UIInput";
 export default {
     props: {
         comments: Array
@@ -21,7 +23,7 @@ export default {
     components: {
         PostSingleComment,
         UIProfileImg,
-        UIHtmlInput
+        UIInput
     },    
     data() {
         return {
@@ -37,7 +39,7 @@ export default {
         },
         focusInput() {
             const input = this.$el.querySelector('#addComment');
-            if(typeof input !== "undefined") {
+            if(typeof input !== "undefined" && input !== null) {
                input.focus(); 
             }
         },
@@ -62,13 +64,8 @@ export default {
         padding: 20px 20px 10px 20px;
 
         textarea {
-            background: $input-color;
-            width: 100%;
-            border-radius: 5px;
+
             margin-right: 10px;
-            padding: 10px;
-            color: black;
-            overflow-wrap: break-word;
         }
     }
     .post__new-comment-wrapper {

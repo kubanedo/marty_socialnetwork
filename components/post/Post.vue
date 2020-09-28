@@ -1,40 +1,43 @@
 <template>
     <div class="post">
         <div class="post__head">
-                <nuxt-link :to="'/profile/' + postData.profile.userId"><UIProfileImg :imgURL="postData.profile.img"/></nuxt-link>
+                <nuxt-link :to="'/profile/' + postData.posted_by"><UIProfileImg :imgURL="'http://jakubnedorost.cz/marty/images/profiles/' + postData.posted_by + '/profileimg.jpg'"/></nuxt-link>
                 <div class="post-wrapper">
-                <a :href="postData.profile.url" class="profile-name">{{postData.profile.name}}</a>
-                <div class="post-time"><TimeAgo :time="postData.published"/></div>
+                    <nuxt-link :to="'/profile/' + postData.posted_by" class="profile-name">{{postData.posted_by}}</nuxt-link>
+                    <div class="post-time"><TimeAgo :time="postData.published"/> · <PrivacySettings :privacySetting="postData.privacy_settings"/></div>                
                 </div>
                 <div class="post__menu"><PostMenu /></div>
         </div>
         <div class="post__body">
             <div class="post__text">
-                {{postData.text}}  
-                <QuizAction />
+                {{postData.post_text}}  
+                <QuizAction v-if="postData.quiz_action && postData.quiz_action.placement=='post_text'" :quizAction="postData.quiz_action"/>
             </div>
-            <div class="post__extra-content">
-                <PostPhotos v-if="postData.extraContent.type=='photo'" :photosData="postData.extraContent.url"/> 
-                <PostVideo v-if="postData.extraContent.type=='video'" :embedURL="postData.extraContent.url"/>                   
+            <div class="post__extra-content" v-if="postData.extra_content">
+                <PostPhotos v-if="postData.extra_content.type=='photo'" :photosData="postData.extra_content.url"/> 
+                <PostVideo v-if="postData.extra_content.type=='video'" :embedURL="postData.extra_content.url"/>                   
             </div>
         </div>
         <div class="post__footer">
             <div class="post__footer-stats">
                 <div class="post__likes">
-                    <i class="las la-heart"></i> <span v-if="likes.fromloggedUser">Líbí se vám a {{likes.count}} dalším uživatelům.</span>
-                    <span v-else>Líbí se {{likes.count}} uživatelům.</span>
+                    <i class="las la-heart"></i> 
+                    <span v-if="islikedByMe && likesFromOthers">Líbí se vám a {{likesFromOthers}} dalším uživatelům.</span>
+                    <span v-else-if="islikedByMe">Líbí se vám.</span>
+                    <span v-else-if="likesFromOthers">Líbí se {{likesFromOthers}} uživatelům.</span>
+                    <span v-else>0</span>
                 </div>
                 <div class="post__footer-right">
                     <button class="post__comments-stats" @click="toggleComments">
                         <i class="lar la-comments"></i> {{comments.length}}
                     </button>
                     <div class="post__shares-stats">
-                        <i class="las la-share"></i> {{postData.shares}}
+                        <i class="las la-share"></i> {{shares.count}}
                     </div>
                 </div>
             </div>
             <div class="post__footer-buttons">
-                <button @click="likePost" :class="(likes.fromloggedUser) ? 'liked' : ''"><i class="las la-heart"></i> To se mi líbí</button>
+                <button @click="likePost" :class="(islikedByMe) ? 'liked' : ''"><i class="las la-heart"></i> To se mi líbí</button>
                 <button @click="toggleComments"><i class="las la-comment"></i> Okomentovat</button>
                 <button><i class="las la-share-square"></i> Sdílet</button>
             </div>
@@ -49,6 +52,7 @@ import PostMenu from "~/components/post/PostMenu";
 import PostVideo from "~/components/post/PostVideo";
 import PostPhotos from "~/components/post/PostPhotos";
 import PostComments from "~/components/post/PostComments";
+import PrivacySettings from "~/components/post/PrivacySettings";
 import UIProfileImg from '~/components/ui/UIProfileImg';
 import QuizAction from '~/components/QuizAction';
 export default {
@@ -66,22 +70,37 @@ export default {
     },
     data() {
         return {
+            likes: this.postData.likes || null,
             areCommentsOpened: false,
             comments: [
                 'Komentář 1', 'komentářík jdhiahsdaj ahaaa ahaaaaa no nevíííím'
             ],
-            likes: {
-                count: 50,
-                fromloggedUser: false
-            },
             shares: {
                 count: 11
             }
         }
     },
+    computed: {
+        islikedByMe() {
+            return (this.likes && this.likes.known && this.likes.known.indexOf('me') > -1) ? true : false;
+        },
+        likesFromOthers() {
+            return ((this.likes && this.likes.known) ? ((this.likes && this.likes.known && this.likes.known.indexOf('me') > -1) ? this.likes.known.length - 1 : this.likes.known.length) : 0) + ((this.likes && this.likes.others) ? this.likes.others : null);
+        }
+    },
     methods: {
         likePost() {
-            this.likes.fromloggedUser = !this.likes.fromloggedUser;
+           if(!this.likes) {
+             this.likes =  {
+                 known: []
+             }  
+           } 
+
+           if(this.likes.known.indexOf('me') > -1) {
+               this.likes.known.splice(this.likes.known.indexOf('me'),1);
+           } else {
+               this.likes.known.push('me'); 
+           }      
         },
         toggleComments() {
             this.areCommentsOpened = !this.areCommentsOpened;

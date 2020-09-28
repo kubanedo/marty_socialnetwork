@@ -1,0 +1,77 @@
+[{
+    "jnovak": {
+        "old_messages": [
+            {
+                "userId": "jnovak",  
+                "time": {
+                    "daysAgo": 2,
+                    "hoursAgo": 1,
+                    "minutesAgo": 1
+                },
+                "text": "Já nevím co tu kecám"                
+            },
+            {
+                "userId": "me",  
+                "time": {
+                    "daysAgo": 2
+                },
+                "text": "To taky nevím"                
+            },
+            {
+                "userId": "jnovak",  
+                "time": {
+                    "daysAgo": 1,
+                    "hoursAgo": 23
+                },
+                "text": "Jak se vede?"                
+            }                        
+        ],
+        "preparedMessages": [
+            {
+                "text": "My se známe?",
+                "incomingAnswer": {
+                    "text": "Ano, nepamatuješ se?",
+                    "preparedMessages": [
+                        {
+                            "text": "Ne",
+                            "incomingAnswer": {
+                                "text": "Potkali jsme se přece na oslavě Martinových narozenin.",
+                                "preparedMessages": [
+                                    {
+                                        "text": "To není možné. Já jsem tam nebyl."
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "text": "Ano"
+                        }
+                    ]
+                }
+            },
+            {
+                "text": "Mám se dobře, díky a ty?"
+            }                
+        ]        
+    },
+    "eliskasvob": {
+        "old_messages": [
+            {
+                "userId": "eliskasvob",  
+                "time": {
+                    "daysAgo": 2,
+                    "hoursAgo": 1,
+                    "minutesAgo": 1
+                },
+                "text": "Ahoj miluješ mě???"                
+            },
+            {
+                "userId": "me",  
+                "time": {
+                    "daysAgo": 2
+                },
+                "text": "To víš že jo zlatíčko"                
+            }                       
+        ]
+    }   
+}]

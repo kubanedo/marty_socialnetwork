@@ -1,0 +1,111 @@
+[
+    {
+        "posted_by": "jnovak",
+        "published": {
+            "hoursAgo": 5,
+            "minutesAgo": 8
+        },
+        "privacy_settings": "all",
+        "post_text": "Nezahrál by si někdo counterstrike???",
+        "quiz_action": {
+            "placement": "post_text",
+            "question": "Je potřeba řešit nastavení soukromí u příspěvku?",
+            "answers": [
+                "Ano.",
+                "Ne."
+            ],
+            "right_answer_position": 1,
+            "max_points": 100
+        },
+        "likes": {
+            "known": [
+                "me",
+                "eliskasvob"
+            ],
+            "others": 8
+        }
+    },
+    {
+        "posted_by": "eliskasvob",
+        "published": {
+            "daysAgo": 1,
+            "hoursAgo": 5,
+            "minutesAgo": 8
+        },
+        "privacy_settings": "all",
+        "post_text": "Už se těším na podzimní prázdniny!"
+    },
+    {
+        "posted_by": "dvorakova.nela",
+        "published": {
+            "daysAgo": 2,
+            "hoursAgo": 8,
+            "minutesAgo": 50
+        },
+        "privacy_settings": "friends",
+        "post_text": "Moc mě mrzí když ti člověk pro kterého by jste udělali cokoliv lže :("
+    },
+    {
+        "posted_by": "jakub.cerny",
+        "published": {
+            "daysAgo": 3,
+            "hoursAgo": 7,
+            "minutesAgo": 8
+        },
+        "privacy_settings": "all",
+        "post_text": "Jo lidi! Prší ... nemusíte to psát na sítě :/",
+        "likes": {
+            "known": [
+                "me",
+                "eliskasvob"
+            ],
+            "others": 8
+        }
+    },
+    {
+        "posted_by": "pepino",
+        "published": {
+            "daysAgo": 4,
+            "hoursAgo": 5,
+            "minutesAgo": 23
+        },
+        "privacy_settings": "friends",
+        "post_text": "Letošní dovolenou v Itálii jsem si náramě užil. Mrkněte na fotky!",
+        "extra_content": {
+            "type": "photo",
+            "url": [
+                "https://www.irozhlas.cz/sites/default/files/styles/zpravy_otvirak_velky/public/uploader/jakub_nemcok_jako_pa_191018-093542_kro.JPG?itok=ZpzwVeCA",
+                "https://img.blesk.cz/img/1/normal690/5994234-img-marty-is-dead-v0.jpg",
+                "https://dehayf5mhw1h7.cloudfront.net/wp-content/uploads/sites/683/2020/01/03230000/Getty_Buckinghams630_010320.jpg"
+            ]
+        }
+    },
+    {
+        "posted_by": "malltv",
+        "published": {
+            "daysAgo": 5,
+            "hoursAgo": 5,
+            "minutesAgo": 8
+        },
+        "privacy_settings": "all",
+        "post_text": "O jaké video šlo a zabil Marty svého psa? Uvidíte v novém díle #martyisdead už teď 👉 https://bit.ly/martyisdead_friend",
+        "extra_content": {
+            "type": "video",
+            "url": "https://www.mall.tv/embed/martyisdead/s1-e2-friend"
+        }
+    },
+    {
+        "posted_by": "rady.pana.koziska",
+        "published": {
+            "daysAgo": 6,
+            "hoursAgo": 1,
+            "minutesAgo": 10
+        },
+        "privacy_settings": "all",
+        "post_text": "Jaké jsou nejčastější způsoby kontaktu internetových predátorů? Poslechněte si tipy Martina Kožíška a nenaleťte podvodníkům!",
+        "extra_content": {
+            "type": "video",
+            "url": "https://www.mall.tv/embed/martyisdead/1-na-co-si-dat-pozor-pri-seznameni-na-internetu"
+        }
+    }
+]

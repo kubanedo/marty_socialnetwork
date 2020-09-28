@@ -1,0 +1,33 @@
+[{
+    "jnovak": {
+        "first_name": "Jan",
+        "last_name": "Novák",
+        "sex": "m",
+        "friends": ["me", "eliskasvob"],
+        "about_info": { "birthday": "15.4.2001", "current_town": "Praha", "study": "VŠE" }
+    },
+    "eliskasvob": {
+        "first_name": "Eliška",
+        "last_name": "Svobodová",
+        "sex": "f",
+        "friends": ["me", "eliskasvob"]
+    },
+    "dvorakova.nela": {
+        "first_name": "Nela",
+        "last_name": "Dvořáková",
+        "sex": "f",
+        "friends": ["pepino"]
+    },
+    "jakub.cerny": {
+        "first_name": "Jakub",
+        "last_name": "Černý",
+        "sex": "m",
+        "friends": ["pepino"]
+    },
+    "pepino": {
+        "first_name": "Pepíno",
+        "last_name": "'Poky' Pokorný",
+        "sex": "m",
+        "friends": ["me", "eliskasvob"]
+    }   
+}]

@@ -63,7 +63,7 @@ export default {
       }
       this.dataLoaded = true
     } else {  
-      axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles&c=1')
+      axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles')
         .then(response => {
           const data = response.data[0][this.$route.params.id];
           this.profileData = {...data, userId: this.$route.params.id}

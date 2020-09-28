@@ -1,9 +1,10 @@
 <template>
-  <div class="chat__wrapper" v-if="isActive" @click="resetNewIncomingMessagesCount()">
+<div>
+  <div v-if="isActive" class="chat__wrapper" @click="resetNewIncomingMessagesCount()">
       <div :class="'chat__header' + ((newIncomingMessagesCount>0) ? ' blinking' : '')" @click="toggleChat()">
           <div class="chat__contact-info">
-              <UIProfileImg imgURL="https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-37.jpg" :status="1" :imgSize="30" statusBorderColor="#d3d3d3" />
-              <div class="chat__contact-name"><div>Jméno kontaktu</div></div>
+              <UIProfileImg :imgURL="'http://jakubnedorost.cz/marty/images/profiles/' + chatMainData.contactId + '/profileimg.jpg'" :status="1" :imgSize="30" statusBorderColor="#d3d3d3" />
+              <div class="chat__contact-name"><div>{{chatMainData.first_name + ' ' + chatMainData.last_name}}</div></div>
               <div class="chat__new-msg-count-wrapper"><div v-if="newIncomingMessagesCount>0" class="chat__new-msg-count">{{newIncomingMessagesCount}}</div></div>
           </div>
           <div class="chat__close-btn"><button @click="deactivateChat()"><i class="las la-times"></i></button></div>
@@ -11,11 +12,12 @@
       <div class="chat__body" v-show="isChatMaximized">
         <div class="chat__content">
             <ChatMessage v-for="(message, index) in messages" :key="index" :message="message"/>
-            <ChatTypingDots v-if="areTypingDotsActive" contactName="Jméno kontaktu"/>
+            <div v-if="!(Array.isArray(messages) && messages.length)" class="text-center"><small><i class="las la-envelope-open"></i> Zatím jste si nepsali.</small></div>
+            <ChatTypingDots v-if="areTypingDotsActive" :contactName="chatMainData.first_name"/>
         </div>
-        <div class="chat__prepared-messages" style="padding: 5px;" v-if="preparedMessages">
+        <div class="chat__prepared-messages" v-if="preparedMessages">
             <div v-if="showPreparedMessagesInput">
-                <small>Vyber odpověď:</small><br/>
+                <strong><small>Vyber odpověď:</small></strong><br/>
                 <button 
                         v-for="(preparedMessage, index) in preparedMessages" :key="index"
                         @click="choosePreparedMessage(preparedMessage)">
@@ -23,81 +25,44 @@
                 </button>
             </div>
             <div v-else>
-                <i>Vyčkej na reakci ...</i>
+                <strong><i>Vyčkej na reakci ...</i></strong>
             </div>    
         </div>
-        <div class="chat__input" v-else><textarea v-model="newMessage" placeholder="Aa" @keydown.enter.prevent="sendMessage()"></textarea><UIButton text="Odeslat" @click.native="sendMessage()" /></div>
+        <div class="chat__input" v-else>
+            <UIInput id="addMessage" v-model="newMessage" placeholder="Aa" @keydown.enter.prevent.native="sendMessage()" />
+            <UIButton text="Odeslat" @click.native="sendMessage()" />
+        </div>
       </div>
-  </div>    
+  </div>
+</div>      
 </template>
 
 <script>
+import axios from 'axios'
 import UIButton from "~/components/ui/UIButton";
 import UIProfileImg from "~/components/ui/UIProfileImg";
+import UIInput from "~/components/ui/UIInput";
 import ChatMessage from "~/components/chat/ChatMessage";
 import ChatTypingDots from "~/components/chat/ChatTypingDots";
+
 export default {
     components: {
         UIButton,
         UIProfileImg,
+        UIInput,
         ChatMessage,
         ChatTypingDots
     },
-    props: {
-        isActive: Boolean
-    },
     data() {
         return {
-            chatUserId: 58,
+            isActive: false,
             isChatMaximized: true,
             areTypingDotsActive: false,
             newIncomingMessagesCount: 0,
             newMessage: '',
-            messages: [
-                {
-                    userId: 58,  
-                    time: '14.9.2020',
-                    text: 'Já nevím co tu kecám'  
-                },
-                {
-                    userId: 0,  
-                    time: '15.9.2020',
-                    text: 'Prd kecáš'  
-                },
-                {
-                    userId: 58,  
-                    time: '15.9.2020',
-                    text: 'Jak se vede?'  
-                } 
-            ],
-            preparedMessages: [
-                {
-                    text: "My se známe?",
-                    incomingAnswer: {
-                        text: 'Ano, nepamatuješ se?',
-                        preparedMessages: [
-                            {
-                                text: "Ne",
-                                incomingAnswer: {
-                                    text: 'Potkali jsme se přece na oslavě Martinových narozenin.',
-                                    preparedMessages: [
-                                        {
-                                            text: "To není možné. Já jsem tam nebyl."
-                                        }
-                                    ]
-                                }
-                            },
-                            {
-                                text: "Ano"
-                            }
-                        ]
-                    }
-                },
-                {
-                    text: "Mám se dobře, díky a ty?"
-                }                
-            ],
-        showPreparedMessagesInput: true
+            messages: [],
+            preparedMessages: null,
+            showPreparedMessagesInput: true
         }
     },
     methods: {
@@ -106,21 +71,21 @@ export default {
             this.scrollToEnd();
         },
         deactivateChat() {
-            this.$store.state.isChatActive = false;
+            this.$store.commit('closeChat');
+            this.isActive = false;
+            this.$destroy();
         },
         scrollToEnd() {
-            if(this.isActive) { 
                 /* bez timeoutu nescrolovalo úplně dolů */
                 setTimeout(() => { 	
                     let chatBody = this.$el.querySelector(".chat__content");
                     chatBody.scrollTop = chatBody.scrollHeight;
                 },1);                
-            }
         },
         sendMessage() {
             if(this.newMessage) {
                 this.messages.push({
-                    userId: 0,
+                    userId: 'me',
                     time: Date.now(),
                     text: this.newMessage
                 });
@@ -161,34 +126,37 @@ export default {
                 this.preparedMessages = null; 
             }
         },
-        replaceSmileys(value) {
-            const map = {
-                "<3": "\u2764\uFE0F",
-                "</3": "\uD83D\uDC94",
-                ":D": "\uD83D\uDE00",
-                ":)": "\uD83D\uDE03",
-                ";)": "\uD83D\uDE09",
-                ":(": "\uD83D\uDE12",
-                ":p": "\uD83D\uDE1B",
-                ";p": "\uD83D\uDE1C",
-                ":'(": "\uD83D\uDE22",
-                ":P": "\ud83d\ude0b",
-                ":-*": "\ud83d\ude18",
-            }; 
-            function escapeSpecialChars(regex) {
-                return regex.replace(/([()[{*+.$^\\|?])/g, '\\$1');
-            } 
-            for (var i in map) {
-                const regex = new RegExp(escapeSpecialChars(i), 'gim');
-                value = value.replace(regex, map[i]);
-            }
-            return value;                                  
-        },
         resetNewIncomingMessagesCount() {
             this.newIncomingMessagesCount = 0;
         },
-        getCurrentTimestamp() {
+        focusInput() {
+            const input = this.$el.querySelector('#addMessage');
+            console.log("focus", input);
+            if(typeof input !== "undefined" && input !== null) {
+               input.focus(); 
+            }
+        },
+        loadChatMessages() {
+            let chatMainData = this.chatMainData;
+            axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=chats')
+                .then(response => {
+                    const contactData = response.data[0][chatMainData.contactId];
+                    if(contactData) {
+                        let messages = contactData.old_messages;
+                        this.messages = (messages) ? [...messages] : [];
 
+                        let preparedMessages = contactData.preparedMessages;
+                        this.preparedMessages = (preparedMessages) ? [...preparedMessages] : null;
+                    } else {
+                        this.messages = [];
+                        this.preparedMessages = null;
+                    }
+
+                    this.isActive=true;
+                    this.focusInput();
+                    this.scrollToEnd();
+                })
+                .catch(error => console.log(error)) 
         }                                  
     },
     watch: {
@@ -197,16 +165,24 @@ export default {
            this.isChatMaximized=true;
            this.scrollToEnd();
         },
+        chatMainData() {
+           /* při změně uživatele chatu, vždy maximalizuj */ 
+           this.isChatMaximized=true;
+           /* a aktualizuj zprávy */
+           this.loadChatMessages();
+        },
         messages() {
             /* při aktualizaci zpráv */
             this.scrollToEnd();
-        },
-        newMessage(value) {
-            this.newMessage = this.replaceSmileys(value);
+        }
+    },
+    computed: {
+        chatMainData() {
+            return this.$store.state.openedChat;
         }
     },
     mounted() {
-        this.scrollToEnd();
+        this.loadChatMessages();      
     }
 }
 </script>
@@ -264,17 +240,14 @@ export default {
 .chat__content {
     padding: 10px;
     max-height: 350px;
+    min-height: 100px;
     overflow-y: scroll; 
 }
 .chat__input {
     display: flex;
     padding: 10px;   
     textarea {
-        width: 100%;
-        background: $input-color;
-        border-radius: 5px;
         margin-right: 10px;
-        padding: 5px;
     }
 }
 .chat__new-msg-count-wrapper {
@@ -292,6 +265,7 @@ export default {
 }
 .chat__prepared-messages {
     box-shadow: 0px 1px 15px 0px rgba(51, 51, 51, 0.2);
+    padding: 5px;
     button {
         padding: 5px; 
         border: 1px solid grey; 

@@ -18,7 +18,7 @@
           </div>     
       </header>     
     <Nuxt />
-    <Chat :isActive="isChatActive"/>
+    <Chat v-if="isChatOpened!==null"/>
   </div>
 </template>
 
@@ -29,8 +29,8 @@ export default {
      Chat
    },
   computed: {
-      isChatActive() {
-          return this.$store.state.isChatActive;
+      isChatOpened() {
+          return this.$store.state.openedChat;
       }        
   }   
 }
@@ -108,5 +108,8 @@ header {
     font-size: 15px;
     text-decoration: none;
     color: black;
+}
+.text-center {
+    text-align: center;
 }
 </style>

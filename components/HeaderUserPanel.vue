@@ -11,7 +11,11 @@
     </div>
     <div v-if="showMenu" class="user-panel__menu">
         <div class="card">
-            Menu
+            Přejít na svůj profil<br/>
+            Nastavení<br/>
+            <hr>
+            Uložit hru<br/>
+            Odhlásit se
         </div>
     </div>    
 </div>    

@@ -16,13 +16,16 @@
 
 <script>
 export default {
+  props: {
+    quizAction: Object
+  },
   data() {
     return {
       isQuestionVisible: false,
-      question: 'Jak by jsi se zachoval, kdyby ti psal cizí člověk?',
-      answers: ['odpověď A', 'Odpověď B', 'Odpověď C', 'Odpověď D'],
-      rightAnswerPosition: 1,
-      points: 100,
+      question: this.quizAction.question,
+      answers: this.quizAction.answers,
+      rightAnswerPosition: this.quizAction.right_answer_position,
+      points: this.quizAction.max_points,
       rightAnswer: '',
       result: '',
       disableAnswering: false

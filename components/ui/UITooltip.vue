@@ -1,10 +1,10 @@
 <template>
-  <div class="tooltip__wrapper" @mouseover="hover=true" @mouseleave="hover=false">
+  <span class="tooltip__wrapper" @mouseover="hover=true" @mouseleave="hover=false">
       <slot />
       <div v-if="hover" :class="'tooltip__content ' + position">
           {{text}}
       </div>        
-  </div>        
+  </span>        
 </template>
 
 <script>

@@ -10,17 +10,14 @@
 
                 </div>
 
-                    <p style="position: fixed; bottom: 20px;">(c) 2020 Internet Mall, a.s.</p>
+                    <Footer />
                
             </aside>
             <div class="main-content">
                 <div class="card card--noshadow">
                     <CreateNewPost />
                 </div>
-                <Post :postData="postData"/>
-                <Post :postData="postData2"/> 
-                <Post :postData="postData"/> 
-                <Post :postData="postData"/>                 
+                <Post v-for="(postData, index) in postsData" :key="index" :postData="postData"/>            
             </div>
             <aside class="right-sidebar">
                 <div class="card">
@@ -37,28 +34,32 @@
 </template>
 
 <script>
+import axios from 'axios'
 import HeaderUserPanel from "~/components/HeaderUserPanel";
 import CreateNewPost from "~/components/CreateNewPost";
 import Post from "~/components/post/Post";
 import Contacts from "~/components/Contacts";
+import Footer from "~/components/Footer";
 
 export default {
     components: {
         Post,
         HeaderUserPanel,
         CreateNewPost,
-        Contacts
+        Contacts,
+        Footer
     },
     data() {
         return {
-            postData: {
-                profile: {
+            postsData: {},
+            /*postData: {
+                /*profile: {
                     userId: "me",
                     name: "Jakub Mary",
                     img: "https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg",
                     url: "/profil/jakub-mary"
                 },
-                published: "2020-09-10T21:10:00",
+                published: 1601226342350,
                 text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam ut molestiae exercitationem tenetur facilis odit neque iusto autem officia. Delectus dicta perferendis soluta quia ipsum autem saepe natus ut recusandae.",
                 extraContent: {
                     type: "photo",
@@ -79,7 +80,10 @@ export default {
                     img: "https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg",
                     url: "/profil/jakub-mary"
                 },
-                published: "2020-09-03T22:20:00",
+                published: {
+                    daysAgo: 2,
+                    hoursAgo: 3
+                },
                 text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam ut molestiae exercitationem tenetur facilis odit neque iusto autem officia. Delectus dicta perferendis soluta quia ipsum autem saepe natus ut recusandae.",
                 extraContent: {
                     type: "video",
@@ -88,13 +92,20 @@ export default {
                 likes: 40,
                 comments: 38,
                 shares: 11
-            }                
+            } */               
         }
     },
     methods: {
         changePoints(points) {
             this.$store.commit('changePoints', points);
         }          
+    },
+    mounted() {
+            axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=posts')
+                .then(response => {
+                    this.postsData = response.data;
+                })
+                .catch(error => console.log(error)) 
     }
 }
 </script>
