@@ -2,22 +2,20 @@
 <div style="position: relative;">
     <div class="user-panel" @click="showMenu = !showMenu">
         <div class="user-panel__profile-img-wrapper">
-            <UIProfileImg :imgURL="this.$store.state.loggedUser.profileImg" />
+            <UIProfileImg userID="me" />
         </div>
         <div>
             <strong>{{wholeUsername}}</strong><br/>
             <i class="las la-coins"></i> Skóre: {{getPoints}}
         </div>
     </div>
-    <div v-if="showMenu" class="user-panel__menu">
-        <div class="card">
-            Přejít na svůj profil<br/>
-            Nastavení<br/>
-            <hr>
-            Uložit hru<br/>
-            Odhlásit se
-        </div>
-    </div>    
+    <ul v-if="showMenu" class="user-panel__menu" @mouseleave="showMenu=!showMenu">
+        <li><nuxt-link to="/profile/me">Přejít na svůj profil</nuxt-link></li>
+        <li>Nastavení</li>
+        <hr>
+        <li>Uložit hru</li>
+        <li><nuxt-link to="/login">Odhlásit se</nuxt-link></li>
+    </ul>    
 </div>    
 </template>
 
@@ -42,6 +40,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~/assets/variables.scss";
     .user-panel {
         cursor: pointer;
         display: flex;
@@ -50,10 +49,33 @@ export default {
     .user-panel__profile-img-wrapper {
         margin-right: 10px;
     }
-    .user-panel__menu {
+    ul.user-panel__menu {
+        min-width: 150px;
         position: absolute;
-        transform: translateY(100%);
-        bottom: 0;
+        font-size: 14px;
+        bottom: -15px;
         right: 0;
-    }
+        z-index: 10;
+        transform: translateY(100%);
+        background: white;
+        padding: 8px 14px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+
+        li {
+            display: block;
+            list-style: none;
+            white-space: nowrap;
+            padding: 5px 0;
+
+            a {
+                color: #444444;
+                text-decoration: none;
+            }
+
+            &:hover, & a:hover {
+                cursor: pointer;
+                color: $primary-color;
+            }
+        }
+    }    
 </style>

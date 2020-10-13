@@ -1,9 +1,9 @@
 <template>
 <div>
-  <div v-if="isActive" class="chat__wrapper" @click="resetNewIncomingMessagesCount()">
+  <div class="chat__wrapper" @click="resetNewIncomingMessagesCount()">
       <div :class="'chat__header' + ((newIncomingMessagesCount>0) ? ' blinking' : '')" @click="toggleChat()">
           <div class="chat__contact-info">
-              <UIProfileImg :imgURL="'http://jakubnedorost.cz/marty/images/profiles/' + chatMainData.contactId + '/profileimg.jpg'" :status="1" :imgSize="30" statusBorderColor="#d3d3d3" />
+              <UIProfileImg :userID="chatMainData.contactId" :status="1" :imgSize="30" statusBorderColor="#d3d3d3" />
               <div class="chat__contact-name"><div>{{chatMainData.first_name + ' ' + chatMainData.last_name}}</div></div>
               <div class="chat__new-msg-count-wrapper"><div v-if="newIncomingMessagesCount>0" class="chat__new-msg-count">{{newIncomingMessagesCount}}</div></div>
           </div>
@@ -29,7 +29,7 @@
             </div>    
         </div>
         <div class="chat__input" v-else>
-            <UIInput id="addMessage" v-model="newMessage" placeholder="Aa" @keydown.enter.prevent.native="sendMessage()" />
+            <UIInput ref="addMessage" v-model="newMessage" placeholder="Aa" @keydown.enter.prevent.native="sendMessage()" />
             <UIButton text="Odeslat" @click.native="sendMessage()" />
         </div>
       </div>
@@ -42,27 +42,35 @@ import axios from 'axios'
 import UIButton from "~/components/ui/UIButton";
 import UIProfileImg from "~/components/ui/UIProfileImg";
 import UIInput from "~/components/ui/UIInput";
+import UILoader from "~/components/ui/UILoader";
 import ChatMessage from "~/components/chat/ChatMessage";
 import ChatTypingDots from "~/components/chat/ChatTypingDots";
 
+import focusInput from '~/mixins/focusInput.js'
+
 export default {
+    mixins: [focusInput],    
     components: {
         UIButton,
         UIProfileImg,
         UIInput,
+        UILoader,
         ChatMessage,
         ChatTypingDots
     },
+    props: {
+        chatMainData: Object
+    },
     data() {
         return {
-            isActive: false,
             isChatMaximized: true,
             areTypingDotsActive: false,
             newIncomingMessagesCount: 0,
             newMessage: '',
             messages: [],
             preparedMessages: null,
-            showPreparedMessagesInput: true
+            showPreparedMessagesInput: true,
+            incomingMsgTone: new Audio('swiftly.mp3')
         }
     },
     methods: {
@@ -72,23 +80,27 @@ export default {
         },
         deactivateChat() {
             this.$store.commit('closeChat');
-            this.isActive = false;
             this.$destroy();
         },
         scrollToEnd() {
                 /* bez timeoutu nescrolovalo úplně dolů */
+                let vm = this;
                 setTimeout(() => { 	
-                    let chatBody = this.$el.querySelector(".chat__content");
-                    chatBody.scrollTop = chatBody.scrollHeight;
+                    let chatBody = vm.$el.querySelector(".chat__content");
+                    if(chatBody!==undefined) {
+                        chatBody.scrollTop = chatBody.scrollHeight;
+                    }
                 },1);                
         },
         sendMessage() {
             if(this.newMessage) {
-                this.messages.push({
+                let newMessageObj = {
                     userId: 'me',
                     time: Date.now(),
                     text: this.newMessage
-                });
+                };
+                this.messages.push(newMessageObj);
+                this.updateChatInStore(newMessageObj, 'message');
                 this.newMessage = '';
             }
         },
@@ -101,17 +113,22 @@ export default {
             let randomTimeBeforeTyping = randomTime(3, 7);  
             setTimeout(() => {
                 vm.areTypingDotsActive=true;
+                vm.scrollToEnd();
             }, randomTimeBeforeTyping);
 
             setTimeout(() => {
                 vm.areTypingDotsActive=false;
                 vm.showPreparedMessagesInput=true;
-                vm.messages.push({
-                    userId: this.chatUserId,  
+                let newMessageObj = {
+                    userId: this.chatMainData.contactId,  
                     time: Date.now(),
                     text: reply  
-                });
+                }
+                vm.messages.push(newMessageObj);
+                vm.updateChatInStore(newMessageObj, 'message');
                 vm.newIncomingMessagesCount++;
+                vm.incomingMsgTone.volume = 0.1;
+                vm.incomingMsgTone.play();
             },randomTime(randomTimeBeforeTyping/1000, 15));
         },
         choosePreparedMessage(preparedMessage) {
@@ -121,20 +138,16 @@ export default {
             if(preparedMessage.incomingAnswer) {
                 this.showPreparedMessagesInput = false;
                 this.getReply(preparedMessage.incomingAnswer.text);
-                this.preparedMessages = preparedMessage.incomingAnswer.preparedMessages;
+                let updatedPreparedMessages = preparedMessage.incomingAnswer.preparedMessages;
+                this.preparedMessages = updatedPreparedMessages;
+                this.updateChatInStore(updatedPreparedMessages, 'preparedMessages');
             } else {
-                this.preparedMessages = null; 
+                this.preparedMessages = null;
+                this.updateChatInStore(null, 'preparedMessages');
             }
         },
         resetNewIncomingMessagesCount() {
             this.newIncomingMessagesCount = 0;
-        },
-        focusInput() {
-            const input = this.$el.querySelector('#addMessage');
-            console.log("focus", input);
-            if(typeof input !== "undefined" && input !== null) {
-               input.focus(); 
-            }
         },
         loadChatMessages() {
             let chatMainData = this.chatMainData;
@@ -152,12 +165,36 @@ export default {
                         this.preparedMessages = null;
                     }
 
-                    this.isActive=true;
-                    this.focusInput();
+                    this.focusInput('addMessage');
                     this.scrollToEnd();
                 })
-                .catch(error => console.log(error)) 
-        }                                  
+                .catch(error => console.log(error))
+                .finally(() => {
+                    this.getChangesFromStore(); 
+                })
+        },
+        updateChatInStore(value, type) {
+            let chatData;
+            if(type=='message') {
+                chatData = {
+                    contact_id: this.chatMainData.contactId,
+                    newMessage: value
+                }
+            } else {
+                chatData = {
+                    contact_id: this.chatMainData.contactId,
+                    preparedMessagesUpdate: value                    
+                }
+            }
+            this.$store.commit('updateChat', chatData);
+        },
+        getChangesFromStore() {
+            let storeData = this.$store.state.chats[0][this.chatMainData.contactId];
+            if(storeData!==undefined) {
+                this.messages = [...this.messages, ...storeData.old_messages];
+                this.preparedMessages = storeData.preparedMessages;
+            }
+        }    
     },
     watch: {
         isActive() {
@@ -176,13 +213,8 @@ export default {
             this.scrollToEnd();
         }
     },
-    computed: {
-        chatMainData() {
-            return this.$store.state.openedChat;
-        }
-    },
     mounted() {
-        this.loadChatMessages();      
+            this.loadChatMessages();          
     }
 }
 </script>

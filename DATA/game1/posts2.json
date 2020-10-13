@@ -1,0 +1,39 @@
+[{
+    "1jnovak": {
+
+        "posted_by": "jnovak",
+        "published": {
+            "hoursAgo": 5,
+            "minutesAgo": 8
+        },
+        "privacy_settings": "all",
+        "post_text": "Nezahrál by si někdo counterstrike??? :D",
+        "quiz_action": {
+            "placement": "post_text",
+            "question": "Je potřeba řešit nastavení soukromí u příspěvku?",
+            "answers": [
+                "Ano.",
+                "Ne."
+            ],
+            "right_answer_position": 1,
+            "max_points": 100
+        },
+        "likes": {
+            "known": [
+                "me",
+                "eliskasvob"
+            ],
+            "others": 8
+        }
+    },
+    "2eliskasvob": {      
+        "posted_by": "eliskasvob",
+        "published": {
+            "daysAgo": 1,
+            "hoursAgo": 5,
+            "minutesAgo": 8
+        },
+        "privacy_settings": "all",
+        "post_text": "Už se těším na podzimní prázdniny!"
+    }
+}]

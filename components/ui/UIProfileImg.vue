@@ -1,5 +1,5 @@
 <template>
-    <div class="user__img" :style="{ backgroundImage: 'url(' + imgURL + ')', width: imgSize + 'px', height: imgSize + 'px' }">
+    <div class="user__img" :style="{ backgroundImage: 'url(' + imgLink + ')', width: imgSize + 'px', height: imgSize + 'px' }">
         <div v-if="status==1" :class="'user__status status--' + status" :style="{width: imgSize * 0.33 + 'px', height: imgSize * 0.33 + 'px', border: imgSize * 0.067 + 'px solid ' + statusBorderColor}"></div>
     </div>
 </template>
@@ -9,7 +9,9 @@ export default {
     props: {
         imgURL: { 
             type: String,
-            required: true
+        },
+        userID: {
+            type: String,
         },
         imgSize: { 
             type: Number,
@@ -22,6 +24,21 @@ export default {
         statusBorderColor: {
             type: String,
             default: 'white'
+        }
+    },
+    data() {
+        return {
+            imgLink: this.imgURL || 'http://jakubnedorost.cz/marty/images/profiles/' + this.userID + '/profileimg.jpg'
+        }
+    },
+    watch: {
+        userID(value) {
+            this.imgLink = 'http://jakubnedorost.cz/marty/images/profiles/' + value + '/profileimg.jpg';
+        }
+    },
+    mounted() {
+        if(this.userID=='me') {
+            this.imgLink = this.$store.state.loggedUser.profileImg
         }
     }
 }

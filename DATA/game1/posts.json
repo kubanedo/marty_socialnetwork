@@ -1,12 +1,13 @@
 [
     {
+        "post_id": "1jnovak",
         "posted_by": "jnovak",
         "published": {
             "hoursAgo": 5,
             "minutesAgo": 8
         },
         "privacy_settings": "all",
-        "post_text": "Nezahrál by si někdo counterstrike???",
+        "post_text": "Nezahrál by si někdo counterstrike??? :D",
         "quiz_action": {
             "placement": "post_text",
             "question": "Je potřeba řešit nastavení soukromí u příspěvku?",
@@ -23,9 +24,16 @@
                 "eliskasvob"
             ],
             "others": 8
+        },
+        "shares": {
+            "known": [
+                "eliskasvob"
+            ],
+            "others": 2
         }
     },
     {
+        "post_id": "2eliskasvob",        
         "posted_by": "eliskasvob",
         "published": {
             "daysAgo": 1,
@@ -36,6 +44,7 @@
         "post_text": "Už se těším na podzimní prázdniny!"
     },
     {
+        "post_id": "3dvorakovanela",        
         "posted_by": "dvorakova.nela",
         "published": {
             "daysAgo": 2,
@@ -46,6 +55,7 @@
         "post_text": "Moc mě mrzí když ti člověk pro kterého by jste udělali cokoliv lže :("
     },
     {
+        "post_id": "4jakubcerny",        
         "posted_by": "jakub.cerny",
         "published": {
             "daysAgo": 3,
@@ -63,6 +73,7 @@
         }
     },
     {
+        "post_id": "5pepino",        
         "posted_by": "pepino",
         "published": {
             "daysAgo": 4,
@@ -81,6 +92,7 @@
         }
     },
     {
+        "post_id": "6malltv",        
         "posted_by": "malltv",
         "published": {
             "daysAgo": 5,
@@ -95,6 +107,7 @@
         }
     },
     {
+        "post_id": "7radypanakoziska",        
         "posted_by": "rady.pana.koziska",
         "published": {
             "daysAgo": 6,

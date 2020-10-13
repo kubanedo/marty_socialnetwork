@@ -1,17 +1,21 @@
 <template>
-    <div class="post">
+    <div v-if="nameLoaded && !isDeleted" class="post">
         <div class="post__head">
-                <nuxt-link :to="'/profile/' + postData.posted_by"><UIProfileImg :imgURL="'http://jakubnedorost.cz/marty/images/profiles/' + postData.posted_by + '/profileimg.jpg'"/></nuxt-link>
+                <nuxt-link :to="'/profile/' + postData.posted_by"><UIProfileImg :userID="postData.posted_by" statusBorderColor="grey" /></nuxt-link>
                 <div class="post-wrapper">
-                    <nuxt-link :to="'/profile/' + postData.posted_by" class="profile-name">{{postData.posted_by}}</nuxt-link>
-                    <div class="post-time"><TimeAgo :time="postData.published"/> · <PrivacySettings :privacySetting="postData.privacy_settings"/></div>                
+                    <nuxt-link :to="'/profile/' + postData.posted_by" class="profile-name">{{postedByName}}</nuxt-link>
+                    <div class="post-time"><TimeAgo :time="postData.published"/> · <PrivacySettings :postedBy="postData.posted_by" :privacySetting="postData.privacy_settings" :postID="postData.post_id" @updatePrivacySetting="updatePrivacySetting($event)"/></div>                
                 </div>
-                <div class="post__menu"><PostMenu /></div>
+                <div class="post__menu"><PostMenu :postedBy="postData.posted_by" :postID="postData.post_id" @isDeleted="isDeleted=true" @editPost="editPost"/></div>
         </div>
         <div class="post__body">
             <div class="post__text">
-                {{postData.post_text}}  
+                <span v-html="postText"></span>  
                 <QuizAction v-if="postData.quiz_action && postData.quiz_action.placement=='post_text'" :quizAction="postData.quiz_action"/>
+                <PostSharedContent v-if="postData.shared_post" :sharedPost="postData.shared_post" />
+            </div>
+            <div class="post__linkpreview" v-if="postData.link && !postData.extra_content">
+                <LinkPreview :linkData="postData.link" />
             </div>
             <div class="post__extra-content" v-if="postData.extra_content">
                 <PostPhotos v-if="postData.extra_content.type=='photo'" :photosData="postData.extra_content.url"/> 
@@ -20,8 +24,8 @@
         </div>
         <div class="post__footer">
             <div class="post__footer-stats">
-                <div class="post__likes">
-                    <i class="las la-heart"></i> 
+                <div class="post__likes" :class="(!islikedByMe && likesFromOthers == 0) ? 'zero-likes' : ''">
+                    <i class="las la-heart"></i>
                     <span v-if="islikedByMe && likesFromOthers">Líbí se vám a {{likesFromOthers}} dalším uživatelům.</span>
                     <span v-else-if="islikedByMe">Líbí se vám.</span>
                     <span v-else-if="likesFromOthers">Líbí se {{likesFromOthers}} uživatelům.</span>
@@ -29,82 +33,199 @@
                 </div>
                 <div class="post__footer-right">
                     <button class="post__comments-stats" @click="toggleComments">
-                        <i class="lar la-comments"></i> {{comments.length}}
+                       <span><i class="lar la-comments"></i> {{commentsCount}}</span>
                     </button>
-                    <div class="post__shares-stats">
-                        <i class="las la-share"></i> {{shares.count}}
+                    <div v-if="shareCount > 0" class="post__shares-stats">
+                        <i class="las la-share"></i> {{shareCount}}
                     </div>
                 </div>
             </div>
             <div class="post__footer-buttons">
                 <button @click="likePost" :class="(islikedByMe) ? 'liked' : ''"><i class="las la-heart"></i> To se mi líbí</button>
                 <button @click="toggleComments"><i class="las la-comment"></i> Okomentovat</button>
-                <button><i class="las la-share-square"></i> Sdílet</button>
+                <button @click="sharePost" v-if="(postData.posted_by=='me') ? true : (privacySetting=='all' ? true : false)"><i class="las la-share-square"></i> Sdílet</button>
             </div>
-            <PostComments v-if="areCommentsOpened" :comments="comments" />
+            <PostComments v-if="areCommentsOpened" :postID="postData.post_id" :comments="comments" />
         </div>
     </div>  
 </template>
 
 <script>
+import axios from 'axios'
 import TimeAgo from "~/components/TimeAgo";
 import PostMenu from "~/components/post/PostMenu";
 import PostVideo from "~/components/post/PostVideo";
 import PostPhotos from "~/components/post/PostPhotos";
+import PostSharedContent from "~/components/post/PostSharedContent";
 import PostComments from "~/components/post/PostComments";
 import PrivacySettings from "~/components/post/PrivacySettings";
 import UIProfileImg from '~/components/ui/UIProfileImg';
+import LinkPreview from "~/components/post/LinkPreview";
 import QuizAction from '~/components/QuizAction';
+
+import clickableLinks from '~/mixins/clickableLinks.js'
+import replaceSmileys from '~/mixins/smileys.js'
 export default {
+    mixins: [clickableLinks, replaceSmileys],
     props: {
-        postData: Object
+        post_data: Object
     },
     components: {
         TimeAgo,
         PostMenu,
         PostVideo,
         PostPhotos,
+        PostSharedContent,
         PostComments,
         UIProfileImg,
-        QuizAction
+        QuizAction,
+        LinkPreview
     },
     data() {
         return {
-            likes: this.postData.likes || null,
+            postData: this.post_data,
+            nameLoaded: false,
             areCommentsOpened: false,
-            comments: [
-                'Komentář 1', 'komentářík jdhiahsdaj ahaaa ahaaaaa no nevíííím'
-            ],
-            shares: {
-                count: 11
-            }
+            isDeleted: false,            
+            postText: '',
+            postedByName: '',
+            comments: [],
+            privacySetting: this.post_data.privacy_settings
         }
     },
     computed: {
         islikedByMe() {
-            return (this.likes && this.likes.known && this.likes.known.indexOf('me') > -1) ? true : false;
-        },
+            return (this.postData.likes && this.postData.likes.known && this.postData.likes.known.indexOf('me') > -1) ? true : false;
+        },        
         likesFromOthers() {
-            return ((this.likes && this.likes.known) ? ((this.likes && this.likes.known && this.likes.known.indexOf('me') > -1) ? this.likes.known.length - 1 : this.likes.known.length) : 0) + ((this.likes && this.likes.others) ? this.likes.others : null);
+            return ((this.postData.likes && this.postData.likes.known) ? ((this.postData.likes && this.postData.likes.known && this.postData.likes.known.indexOf('me') > -1) ? this.postData.likes.known.length - 1 : this.postData.likes.known.length) : 0) + ((this.postData.likes && this.postData.likes.others) ? this.postData.likes.others : null);
+        },
+        shareCount() {
+            let shareCount = 0;
+            if(this.postData.shares) {
+                if(this.postData.shares.known) {
+                    shareCount += this.postData.shares.known.length;
+                }
+                if(this.postData.shares.others) {
+                    shareCount += this.postData.shares.others;
+                }                
+            }
+            return shareCount;
+        },        
+        commentsCount() {
+            return ((this.comments && this.comments.length) ? this.comments.length : 0);
         }
     },
     methods: {
         likePost() {
-           if(!this.likes) {
-             this.likes =  {
-                 known: []
+           if(!this.postData.likes) {
+             this.postData = {
+                 ...this.postData,
+                 likes: { known: [] }
              }  
            } 
 
-           if(this.likes.known.indexOf('me') > -1) {
-               this.likes.known.splice(this.likes.known.indexOf('me'),1);
+           if(this.postData.likes.known.indexOf('me') > -1) {
+               this.postData.likes.known.splice(this.postData.likes.known.indexOf('me'),1);
            } else {
-               this.likes.known.push('me'); 
-           }      
+               this.postData.likes.known.push('me');
+           } 
+           this.updatePost({likes: this.postData.likes});                
+        },
+        sharePost(){
+           if(!this.postData.shares) {
+             this.postData = {
+                 ...this.postData,
+                 shares: { known: [] }
+             }  
+           } 
+
+           if(this.postData.shares.known.indexOf('me') > -1) {
+               this.postData.shares.known.splice(this.postData.shares.known.indexOf('me'),1);
+           } else {
+               this.postData.shares.known.push('me');
+           }            
+            this.$store.state.modalWindow = {
+                modalName: 'CreatePost',
+                shareData: {...this.postData}
+            }
+            this.updatePost({shares: this.postData.shares});
         },
         toggleComments() {
             this.areCommentsOpened = !this.areCommentsOpened;
+        },
+        getFullName() {
+            if(this.post_data.posted_by=='me') {
+                this.postedByName = this.$store.getters.getloggedUserWholeName;
+                this.nameLoaded = true;
+            } else {
+                axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles_basic-info')
+                    .then(response => {
+                        const data = response.data[0][this.post_data.posted_by];
+                        if(data.first_name) {
+                            this.postedByName = data.first_name + ' ' + data.last_name;
+                        } else {
+                            this.postedByName = data.name;
+                        }
+                    })
+                    .catch(error => console.log(error)) 
+                    .finally(() => this.nameLoaded = true)                
+            }
+        },
+        loadComments() {
+                axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=comments')
+                    .then(response => {
+                        const data = response.data[0][this.post_data.post_id];
+                        this.comments = data;
+                        this.commentsCount = (this.comments && this.comments.length) ? this.comments.length : 0;
+                        if(this.commentsCount > 0) {
+                            this.areCommentsOpened = true;
+                        }
+                    })
+                    .catch(error => console.log(error)) 
+                    .finally(() => this.getCommentsChangesFromStore());        
+        },
+        updatePost(updatedProperty) {
+            let postData = {
+                post_id: this.postData.post_id,
+                posted_by: this.postData.posted_by, 
+                ...updatedProperty
+            };
+            this.$store.commit('updatePost', postData);
+        },
+        editPost() {
+            console.log('editPost');
+        },
+        updatePrivacySetting(value) {
+            this.privacySetting = value;
+            this.updatePost({privacy_settings: this.privacySetting});
+        },
+        getChangesFromStore() {
+            let storeArrayPos;
+            this.$store.state.othersPosts.forEach((item, index) => {
+                if(item.post_id==this.postData.post_id) {
+                    storeArrayPos = index;
+                }
+            });
+            if(storeArrayPos!==undefined) {
+               this.postData = {
+                   ...this.postData,
+                   ...this.$store.state.othersPosts[storeArrayPos]
+               } 
+            } 
+        },
+        getCommentsChangesFromStore() {
+            let storeData = this.$store.state.comments[0][this.postData.post_id];
+            if(storeData!==undefined) {
+                this.comments = [...storeData, ...this.comments];
+            }            
         }
+    },
+    mounted() {
+        this.getChangesFromStore();
+        this.postText = this.makeLinksClickable(this.replaceSmileys(this.postData.post_text));
+        this.getFullName();
+        this.loadComments();
     }
 }
 </script>
@@ -142,8 +263,8 @@ export default {
         display: flex;
     }
     .post__footer-buttons {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
+        display: flex;
+        justify-content: space-around;
         text-align: center;
         font-size: 18px;
         padding-bottom: 0;
@@ -153,6 +274,7 @@ export default {
             font-size: 22px;
         }
         button {
+            min-width: 33%;
             padding: 5px;
             border-radius: 5px;
             &:hover {
@@ -165,6 +287,9 @@ export default {
     }
     button.liked {
         color: red;
+    }
+    .zero-likes {
+        color: grey;
     }
 }
 </style>

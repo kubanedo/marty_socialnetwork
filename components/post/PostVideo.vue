@@ -1,15 +1,37 @@
 <template>
   <div class="embed-wrapper">
     <div class="embed">
-        <iframe scrolling="no" :src="embedURL" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen=""></iframe>
+        <iframe v-observe-visibility="{
+                callback: visibilityChanged,
+                intersection: {
+                    rootMargin: '1000px 0px 1000px 0px',
+                    threshold: 0.9,
+                },
+            }" scrolling="no" :src="embedLink" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen=""></iframe>
     </div>
   </div>  
 </template>
 
 <script>
+import VueObserveVisibility from 'vue-observe-visibility'
 export default {
     props: {
         embedURL: String
+    },
+    data() {
+        return {
+             embedLink: this.embedURL
+        }
+    },
+    methods: {
+        visibilityChanged(isVisible) {
+            /*stops playing video, if video is out of viewport */
+            if(!isVisible) {
+                this.embedLink = this.embedURL + '?not-visible';
+            } else {
+                this.embedLink = this.embedURL;
+            }
+        }
     }
 }
 </script>

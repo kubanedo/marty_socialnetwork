@@ -1,19 +1,49 @@
 <template>
   <div class="post__menu">
-      <button @click="showMenu=!showMenu"><i class="las la-ellipsis-v"></i></button>
-      <ul v-if="showMenu">
-          <li><i class="las la-bookmark"></i> Uložit</li>
-          <li><i class="las la-exclamation-triangle"></i> Nahlásit příspěvek</li>                    
-      </ul>
+    <button @click="showMenu=!showMenu"><i class="las la-ellipsis-v"></i></button>
+    <div v-if="showMenu" @mouseleave="showMenu=!showMenu">
+        <ul v-if="postedBy=='me'">
+            <li @click="editPost"><i class="las la-edit"></i> Upravit příspěvek</li>
+            <li @click="deletePost"><i class="las la-trash"></i> Smazat příspěvek</li>                    
+        </ul>    
+        <ul v-else>
+            <li @click="savePost"><i class="las la-bookmark"></i> {{isSaved ? 'Odstranit z uložených' : 'Uložit'}}</li>
+            <li @click="reportPost"><i class="las la-exclamation-triangle"></i> Nahlásit příspěvek</li>                    
+        </ul>
+    </div>    
   </div>
 </template>
 
 <script>
 export default {
+    props: {
+        postedBy: String,
+        postID: String
+    },
     data() {
         return {
-            showMenu: false
+            showMenu: false,
+            isSaved: false
         }
+    },
+    methods: {
+        deletePost() {
+            this.$emit('isDeleted') 
+            this.$store.commit('deletePost', this.postID);
+        },
+        editPost() {
+            this.$emit('editPost') 
+        },
+        savePost() {
+            this.isSaved = !this.isSaved;
+            this.$store.commit('savePost', this.postID); 
+        },
+        reportPost() {
+            this.$store.state.modalWindow = {
+                modalName: 'ReportPost'
+            };
+            this.$store.commit('reportPost', this.postID);            
+        }                
     }
 }
 </script>

@@ -16,9 +16,9 @@
             </aside>
             <div class="main-content">
                 <div v-if="profileData.userId === 'me'" class="card card--noshadow">
-                    <CreateNewPost />
-                </div>                
-                <Post :postData="postData"/>               
+                    <CreateNewPost @postNewPost="postNewPost"/>
+                </div>              
+                <Post v-for="postData in postsDataComp" :key="postData.post_id" :postData="postData"/>               
             </div>
           </div>
       </div>
@@ -34,43 +34,65 @@ export default {
     return {
       dataLoaded: false,
       profileData: {},
-      postData: {
-          profile: {
-              userId: "jnovak",
-              name: "Jan Novák",
-              img: "https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-1.jpg",
-          },
-          published: "2020-09-10T21:10:00",
-          text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam ut molestiae exercitationem tenetur facilis odit neque iusto autem officia. Delectus dicta perferendis soluta quia ipsum autem saepe natus ut recusandae.",
-          extraContent: {
-              type: "photo",
-              url: [ 
-                  "https://www.irozhlas.cz/sites/default/files/styles/zpravy_otvirak_velky/public/uploader/jakub_nemcok_jako_pa_191018-093542_kro.JPG?itok=ZpzwVeCA",
-                  "https://img.blesk.cz/img/1/normal690/5994234-img-marty-is-dead-v0.jpg",
-                  "https://dehayf5mhw1h7.cloudfront.net/wp-content/uploads/sites/683/2020/01/03230000/Getty_Buckinghams630_010320.jpg"
-              ]
-          },
-          likes: 40,
-          comments: 38,
-          shares: 11
-      }      
+      postsData: []   
     }
   },
-  mounted() {
-    if(this.$route.params.id=="me") {
-      this.profileData = {
-        ...this.$store.state.loggedUser
-      }
-      this.dataLoaded = true
-    } else {  
-      axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles')
-        .then(response => {
-          const data = response.data[0][this.$route.params.id];
-          this.profileData = {...data, userId: this.$route.params.id}
+  computed: {
+        postsDataComp() {
+            return this.postsData
+        }
+  },
+  methods: {
+    getProfileData() {
+        if(this.$route.params.id=="me") {
+          this.profileData = {
+            ...this.$store.state.loggedUser
+          }
           this.dataLoaded = true
+        } else {  
+          axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles')
+            .then(response => {
+              const data = response.data[0][this.$route.params.id];
+              this.profileData = {...data, userId: this.$route.params.id}
+              this.dataLoaded = true
+            })
+            .catch(error => console.log(error))
+        } 
+    },
+    getPostsData() {
+      axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=posts')
+        .then(response => {
+            response.data.forEach((item) => {
+              console.log(item);
+              if(item.posted_by==this.$route.params.id) {
+                this.postsData.unshift(item);
+              }
+            });
         })
         .catch(error => console.log(error))
-    } 
+
+        this.$store.state.posts.forEach((item) => {
+            this.postsData.unshift(item)
+        });
+    },
+    postNewPost(newPostText) {
+        let vm = this;
+        setTimeout(() => { 
+            const newPost = {
+                "post_id": "me" + (Math.floor(Math.random() * 100000) + 1),
+                "posted_by": "me",
+                "published": new Date().getTime(),
+                "privacy_settings": "all",
+                "post_text": newPostText               
+            };
+            vm.postsData.unshift(newPost);
+            vm.$store.commit('postNewPost', newPost);
+        }, 1000);
+    }    
+  },
+  mounted() {
+      this.getProfileData();
+      this.getPostsData();     
   }
 }
 </script>

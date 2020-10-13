@@ -1,0 +1,44 @@
+[{
+    "1jnovak": [
+        {
+            "commented_by": "jnovak", 
+            "published": {
+                "hoursAgo": 4,
+                "minutesAgo": 8
+            },  
+            "comment_text": "Škoda :(",
+            "likes": {
+                "known": [
+                    "me",
+                    "eliskasvob"
+                ],
+                "others": 8
+            }                      
+        },  
+        {
+            "commented_by": "eliskasvob", 
+            "published": {
+                "hoursAgo": 4,
+                "minutesAgo": 8
+            },  
+            "comment_text": "Já teda fakt ne :D",
+            "quiz_action": {
+                "placement": "post_text",
+                "question": "Je potřeba řešit nastavení soukromí u příspěvku?",
+                "answers": [
+                    "Ano.",
+                    "Ne."
+                ],
+                "right_answer_position": 1,
+                "max_points": 100
+            },
+            "likes": {
+                "known": [
+                    "me",
+                    "eliskasvob"
+                ],
+                "others": 8
+            }                      
+        }              
+    ]
+}]

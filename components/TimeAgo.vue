@@ -70,7 +70,6 @@ export default {
                     vm.timeAgo = vm.getTimeAgo().output;
                 }, reloadInterval);
            } else {
-               console.log("timeoutputreload", vm.interval);
                if(vm.interval) {
                  clearInterval(vm.interval);
                }

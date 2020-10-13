@@ -3,9 +3,9 @@
     :class="'chat__message chat__message--' + ((message.userId == 'me') ? 'outgoing' : 'incoming')"
   >
     <UIProfileImg
-      v-if="!message.userId == 'me'"
+      v-if="message.userId !== 'me'"
       class="mr-5"
-      imgURL="https://demo.hasthemes.com/adda-preview/adda/assets/images/profile/profile-small-37.jpg"
+      :userID="message.userId"
       :imgSize="25"
     />
     <UiTooltip :text="dateTime" :position="((message.userId == 'me') ? 'left' : 'right')" class="message__body-wrapper">

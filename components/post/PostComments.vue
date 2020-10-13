@@ -1,11 +1,12 @@
 <template>
     <div class="post__comments">
         <div>
-            <PostSingleComment v-for="(comment, index) in comments" class="post__comment" :key="index" :comment="comment" @addReplyReference="addReplyReference"/>
+            <PostSingleComment v-for="comment in commentsToDisplay" class="post__comment" :key="comment.commented_by + comment.published" :commentData="comment" @addReplyReference="addReplyReference"/>
+            <div v-if="showLessComments && commentsData.length > 3" @click="showLessComments=false" class="post__show-all-comments">Zobrazit další komentáře</div>
             <div class="post__new-comment-wrapper">
-                <div><UIProfileImg :imgURL="this.$store.state.loggedUser.profileImg" :imgSize="35" class="mr-5"/></div>
+                <div><UIProfileImg userID="me" :imgSize="35" class="mr-5"/></div>
                 <div class="post__new-comment-textarea">
-                    <UIInput v-model="newComment" id="addComment" placeholder="Napište komentář..." @keydown.enter.prevent.native="addComment()"/>
+                    <UIInput v-model="newComment" ref="addComment" placeholder="Napište komentář..." @keydown.enter.prevent.native="addComment()"/>
                 </div>
             </div>    
         </div>
@@ -16,9 +17,14 @@
 import UIProfileImg from '~/components/ui/UIProfileImg';
 import PostSingleComment from '~/components/post/PostSingleComment';
 import UIInput from "~/components/ui/UIInput";
+
+import focusInput from '~/mixins/focusInput.js'
+
 export default {
+    mixins: [focusInput],
     props: {
-        comments: Array
+        comments: Array,
+        postID: String
     },
     components: {
         PostSingleComment,
@@ -27,30 +33,51 @@ export default {
     },    
     data() {
         return {
-            newComment: ''
+            commentsData: this.comments || [],
+            newComment: '',
+            showLessComments: true
+        }
+    },
+    computed: {
+        commentsToDisplay() {
+            if(this.showLessComments && this.commentsData.length > 3) {
+                return this.commentsData.slice(0, 3);
+            } else {
+                return this.commentsData;
+            }
         }
     },
     methods: {
         addComment() {
             if(this.newComment) {
-                this.comments.push(this.newComment);
+                let vm = this;
+                let newCommentText = vm.newComment;
+                setTimeout(() => { 
+                    const newComment = {
+                        "commented_by": "me",
+                        "published": new Date().getTime(),
+                        "comment_text": newCommentText               
+                    };
+                    vm.commentsData.unshift(newComment);
+                    vm.updateCommentsInStore(newComment);
+                }, 1000);
                 this.newComment = '';
-            }
-        },
-        focusInput() {
-            const input = this.$el.querySelector('#addComment');
-            if(typeof input !== "undefined" && input !== null) {
-               input.focus(); 
             }
         },
         addReplyReference(event) {
             this.newComment = '<strong>' + event + '</strong> ';
+        },
+        updateCommentsInStore(newComment) {
+            this.$store.commit('updateComments', {
+                post_id: this.postID,
+                ...newComment
+            });
         }
 
-    },
+    }/*,
     mounted() {
-        this.focusInput() 
-    }   
+        this.focusInput('addComment') 
+    } */  
 }
 </script>
 
@@ -73,5 +100,11 @@ export default {
     }
     .post__new-comment-textarea {
         width: 100%;
+    }
+    .post__show-all-comments {
+        color: $primary-color;
+        cursor: pointer;
+        padding-bottom: 20px;
+        text-align: center;
     }
 </style>

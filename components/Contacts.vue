@@ -6,7 +6,7 @@
             first_name: contact.first_name,
             last_name: contact.last_name
             })">
-        <div><UIProfileImg :imgURL="'http://jakubnedorost.cz/marty/images/profiles/' + contactId + '/profileimg.jpg'" :status="contact.status"/></div>
+        <div><UIProfileImg :userID="contactId" :status="contact.status"/></div>
         <div class="contact__name"><div>{{contact.first_name + " " + contact.last_name}}</div></div>
     </div>
 </div>    
@@ -34,6 +34,7 @@ export default {
       axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles')
         .then(response => {
           this.contacts = response.data[0];
+
         })
         .catch(error => console.log(error))        
     }   

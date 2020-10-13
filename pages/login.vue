@@ -9,6 +9,7 @@
     <input type="radio" v-model="sex" value="m"> Muž
     <input type="radio" v-model="sex" value="f"> Žena<br/>
     <UIButton text="Přihlásit se" @click.native="logIn()" />
+    <button @click="$router.push('/')">zpět</button>
   </div>
 </template>
 
@@ -29,12 +30,21 @@ export default {
   methods: {
     logIn() {
       this.$store.commit('login', {
+        game_instance_id: this.createGameInstanceID(),
         first_name: this.first_name,
         last_name: this.last_name,
         sex: this.sex
       });
       this.$router.push('/')
-    }  
+    },
+    createGameInstanceID() {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for ( var i = 0; i < 12; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;      
+    } 
   }
 }
 </script>

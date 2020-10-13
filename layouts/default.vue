@@ -18,20 +18,26 @@
           </div>     
       </header>     
     <Nuxt />
-    <Chat v-if="isChatOpened!==null"/>
+    <ModalWindow v-if="modalData!==null && modalData.modalName" :modalData="modalData"/>
+    <Chat v-if="chatMainData!==null" :chatMainData="chatMainData"/>
   </div>
 </template>
 
 <script>
 import Chat from "~/components/Chat";
+import ModalWindow from '~/components/modals/ModalWindow';
 export default {
-   components: {
-     Chat
-   },
+  components: {
+     Chat,
+     ModalWindow
+  },
   computed: {
-      isChatOpened() {
-          return this.$store.state.openedChat;
-      }        
+    chatMainData() {
+        return this.$store.state.openedChat;
+    },
+    modalData() {
+        return this.$store.state.modalWindow;
+    }    
   }   
 }
 </script>
