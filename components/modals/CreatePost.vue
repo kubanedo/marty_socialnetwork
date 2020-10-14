@@ -85,6 +85,7 @@ export default {
       }, 1000);
       this.newPost = "";
       this.closeWindow();
+      this.$toast.success("Nový příspěvek publikován.");
     }, 
     closeWindow() {
         this.$emit('closeWindow');

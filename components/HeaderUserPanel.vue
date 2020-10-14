@@ -59,8 +59,18 @@ export default {
         transform: translateY(100%);
         background: white;
         padding: 8px 14px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-
+        border-radius: 5px;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+        &:before {
+            content: " ";
+            position: absolute;
+            top: -12px; /* At the bottom of the tooltip */
+            right: 7px;
+            margin-left: -7px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: transparent transparent white transparent;      
+        }
         li {
             display: block;
             list-style: none;

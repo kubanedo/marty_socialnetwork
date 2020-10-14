@@ -9,14 +9,16 @@
 <script>
 import CreatePost from '~/components/modals/CreatePost';
 import ReportPost from '~/components/modals/ReportPost';
+import Quiz from '~/components/modals/Quiz';
 export default {
   components: {
       CreatePost,
-      ReportPost
+      ReportPost,
+      Quiz
   },  
   props: {
       modalData: {
-          type: String,
+          type: Object,
           required: true
       }
   },
@@ -46,14 +48,15 @@ export default {
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: rgba(0,0,0,0.5);
+      background-color: rgba(0,0,0,0.4);
       z-index: 12;      
     }
     .overlay-content {
       background: white;
       padding: 20px;
       margin: 0 auto;
-      width: 100%;
-      max-width: 50%;
+      width: 70%;
+      max-width: 650px;
+      box-shadow: 0px 1px 15px 5px rgba(51, 51, 51, 0.2);
     }
 </style>

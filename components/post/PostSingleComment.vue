@@ -1,117 +1,184 @@
 <template>
-<div v-if="nameLoaded">
+  <div v-if="nameLoaded">
     <div class="post__comment">
-        <div>
+      <div>
+        <nuxt-link :to="'/profile/' + commentData.commented_by">
+          <UIProfileImg
+            :userID="commentData.commented_by"
+            :imgSize="35"
+            class="mr-5"
+          />
+        </nuxt-link>
+      </div>
+      <div>
+        <div class="post__comment-content">
+          <strong class="post__comment-author">
             <nuxt-link :to="'/profile/' + commentData.commented_by">
-                <UIProfileImg :userID="commentData.commented_by" :imgSize="35" class="mr-5"/>
+              {{commentedByName}}
             </nuxt-link>
+          </strong><br />
+          <span><strong v-if="commentData.reply_to">@{{commentData.reply_to}} </strong><span v-html="commentText"></span></span>
+          <QuizAction
+            v-if="
+              commentData.quiz_action &&
+              commentData.quiz_action.placement == 'post_text'
+            "
+            :quizAction="commentData.quiz_action"
+          />
         </div>
-        <div>
-            <div class="post__comment-content">
-                <strong class="post__comment-author"><nuxt-link :to="'/profile/' + commentData.commented_by">{{commentedByName}}</nuxt-link></strong><br/>
-                <span v-html="commentText"></span>
-                <QuizAction v-if="commentData.quiz_action && commentData.quiz_action.placement=='post_text'" :quizAction="commentData.quiz_action"/>
-                <span style="border-radius: 10px; padding: 1px 3px; background: white; font-size: 10px; position: absolute; right: -10px; bottom: 0; box-shadow: 0 1px 3px 0 silver;"><i class="las la-heart"></i> 8</span>
-            </div>
-            <small>
-                <strong @click="likeComment" :class="(isLiked) ? 'liked' : ''">To se mi líbí</strong> · <strong @click="replyToComment">Odpovědět</strong> · <TimeAgo :time="commentData.published"/>
-            </small>
-        </div>
+        <small>
+          <strong @click="likeComment" :class="isLikedByMe ? 'liked' : ''">To se mi líbí</strong>
+          <span class="post__comment-like-counter"><i class="las la-heart"></i> {{ likeCount }}</span>
+          <span class="post__comment-middle-dot"> · </span>
+          <strong @click="replyToComment">Odpovědět</strong>
+          <span class="post__comment-middle-dot"> · </span>
+          <TimeAgo :time="commentData.published" />
+        </small>
+      </div>
     </div>
-</div>      
+  </div>
 </template>
 
 <script>
-import axios from 'axios'
-import UIProfileImg from '~/components/ui/UIProfileImg';
+import axios from "axios";
+import UIProfileImg from "~/components/ui/UIProfileImg";
 
-import clickableLinks from '~/mixins/clickableLinks.js'
-import replaceSmileys from '~/mixins/smileys.js'
+import clickableLinks from "~/mixins/clickableLinks.js";
+import replaceSmileys from "~/mixins/smileys.js";
 
 export default {
-    mixins: [clickableLinks, replaceSmileys],
-    props: {
-        commentData: Object
+  mixins: [clickableLinks, replaceSmileys],
+  props: {
+    commentData: Object,
+  },
+  data() {
+    return {
+      comment_data: this.commentData,
+      nameLoaded: false,
+      commentText: "",
+      commentedByName: this.commentData.commented_by,
+      isLiked: false,
+    };
+  },
+  components: {
+    UIProfileImg,
+  },
+  computed: {
+    isLikedByMe() {
+      return this.comment_data.likes &&
+        this.comment_data.likes.known &&
+        this.comment_data.likes.known.indexOf("me") > -1
+        ? true
+        : false;
     },
-    data() {
-        return {
-            nameLoaded: false,
-            commentText: '',
-            commentedByName: this.commentData.commented_by,
-            isLiked: false
-        }
+    likeCount() {
+      let knownCount =
+        this.comment_data.likes && this.comment_data.likes.known
+          ? this.comment_data.likes.known.length
+          : 0;
+      let othersCount =
+        this.comment_data.likes && this.comment_data.likes.others
+          ? this.comment_data.likes.others
+          : 0;
+      return knownCount + othersCount;
     },
-    components: {
-        UIProfileImg
+  },
+  methods: {
+    likeComment() {
+      if (!this.comment_data.likes) {
+        this.comment_data = {
+          ...this.comment_data,
+          likes: { known: [] },
+        };
+      }
+
+      if (this.comment_data.likes.known.indexOf("me") > -1) {
+        this.comment_data.likes.known.splice(
+          this.comment_data.likes.known.indexOf("me"),
+          1
+        );
+      } else {
+        this.comment_data.likes.known.push("me");
+      }
+    },  
+    replyToComment() {
+      this.$emit("addReplyReference", this.commentedByName);
     },
-    methods: {
-        likeComment() {
-            this.isLiked = !this.isLiked;
-        },
-        replyToComment() {
-            this.$emit('addReplyReference', 'Jakub Nedorost');
-        },
-        getFullName() {
-            if(this.commentData.commented_by=='me') {
-                this.commentedByName = this.$store.getters.getloggedUserWholeName;
-                this.nameLoaded = true;
+    getFullName() {
+      if (this.commentData.commented_by == "me") {
+        this.commentedByName = this.$store.getters.getloggedUserWholeName;
+        this.nameLoaded = true;
+      } else {
+        axios
+          .get(
+            "http://jakubnedorost.cz/marty/json-cors.php?f=profiles_basic-info"
+          )
+          .then((response) => {
+            const data = response.data[0][this.commentData.commented_by];
+            if (data.first_name) {
+              this.commentedByName = data.first_name + " " + data.last_name;
             } else {
-                axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles_basic-info')
-                    .then(response => {
-                        const data = response.data[0][this.commentData.commented_by];
-                        if(data.first_name) {
-                            this.commentedByName = data.first_name + ' ' + data.last_name;
-                        } else {
-                            this.commentedByName = data.name;
-                        }
-                    })
-                    .catch(error => console.log(error)) 
-                    .finally(() => this.nameLoaded = true)                
+              this.commentedByName = data.name;
             }
-        }    
+          })
+          .catch((error) => console.log(error))
+          .finally(() => (this.nameLoaded = true));
+      }
     },
-    mounted() {
-        this.commentText = this.makeLinksClickable(this.replaceSmileys(this.commentData.comment_text));
-        this.getFullName();        
-    }
-}
+  },
+  mounted() {
+    this.commentText = this.makeLinksClickable(
+      this.replaceSmileys(this.commentData.comment_text)
+    );
+    this.getFullName();
+  },
+};
 </script>
 
 <style lang="scss">
 @import "~/assets/variables.scss";
-    .post__comment {
-        display: flex;
-        margin-bottom: 10px; 
+.post__comment {
+  display: flex;
+  margin-bottom: 10px;
 
-        small strong {
-            cursor: pointer;
-            font-size: 12px;
-        }         
-    }
-    .post__comment-content {
-        position: relative;
-        background: $message-grey-color;
-        padding: 5px 7px;
-        border-radius: 5px;
-        overflow-wrap: break-word; 
-        
-        .post__comment-author {
-            margin-right: 10px;
+  small strong {
+    cursor: pointer;
+    font-size: 12px;
+  }
+}
+.post__comment-content {
+  position: relative;
+  background: $message-grey-color;
+  padding: 5px 7px;
+  border-radius: 5px;
+  overflow-wrap: break-word;
 
-            a {
-                color: black;
-                text-decoration: none;
-                &:hover {
-                    color: rgba(0,0,0,0.8)
-                }
-            }
-        }
-        
+  .post__comment-author {
+    margin-right: 10px;
+
+    a {
+      color: black;
+      text-decoration: none;
+      &:hover {
+        color: rgba(0, 0, 0, 0.8);
+      }
     }
-    .mr-5 {
-        margin-right: 5px;
-    }
-    .liked {
-        color: red;
-    }
+  }
+}
+.post__comment-like-counter {
+  display: inline-block;
+  font-size: 10px;
+  padding: 0 0 0 3px;
+  top: -1px;
+  position: relative;
+}
+.post__comment-middle-dot {
+  padding: 0 3px;
+}
+.mr-5 {
+  margin-right: 5px;
+}
+.liked {
+  color: red;
+}
 </style>

@@ -39,7 +39,8 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
-    {src: '~/plugins/vue-observe-visibility.js', mode: 'client'}
+    {src: '~/plugins/vue-observe-visibility.js', mode: 'client'},
+    { src: '~/plugins/vue-toastification.js', mode: 'client' }   
   ],
   /*
   ** Auto import components

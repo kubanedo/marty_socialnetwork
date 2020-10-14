@@ -216,6 +216,7 @@ export default {
         },
         getCommentsChangesFromStore() {
             let storeData = this.$store.state.comments[0][this.postData.post_id];
+            console.log(storeData);
             if(storeData!==undefined) {
                 this.comments = [...storeData, ...this.comments];
             }            
@@ -279,6 +280,9 @@ export default {
             border-radius: 5px;
             &:hover {
                 background: #f7f7f7;
+            }
+            &:active {
+                transform: scale(0.97);
             }
         }        
     }

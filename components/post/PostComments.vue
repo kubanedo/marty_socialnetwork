@@ -6,6 +6,7 @@
             <div class="post__new-comment-wrapper">
                 <div><UIProfileImg userID="me" :imgSize="35" class="mr-5"/></div>
                 <div class="post__new-comment-textarea">
+                    <div v-if="replyingTo"><small>Odpovídáte na <strong>{{replyingTo}}</strong>  <i @click="replyingTo=''" class="las la-times replyto-close"></i></small></div>
                     <UIInput v-model="newComment" ref="addComment" placeholder="Napište komentář..." @keydown.enter.prevent.native="addComment()"/>
                 </div>
             </div>    
@@ -35,7 +36,8 @@ export default {
         return {
             commentsData: this.comments || [],
             newComment: '',
-            showLessComments: true
+            showLessComments: true, 
+            replyingTo: ''
         }
     },
     computed: {
@@ -52,20 +54,25 @@ export default {
             if(this.newComment) {
                 let vm = this;
                 let newCommentText = vm.newComment;
+                let replyTo = vm.replyingTo;
                 setTimeout(() => { 
                     const newComment = {
                         "commented_by": "me",
                         "published": new Date().getTime(),
                         "comment_text": newCommentText               
                     };
+                    if(replyTo) {                        
+                        newComment['reply_to'] = replyTo;
+                    }
                     vm.commentsData.unshift(newComment);
                     vm.updateCommentsInStore(newComment);
                 }, 1000);
                 this.newComment = '';
+                this.replyingTo = '';
             }
         },
-        addReplyReference(event) {
-            this.newComment = '<strong>' + event + '</strong> ';
+        addReplyReference(name) {
+            this.replyingTo = name;
         },
         updateCommentsInStore(newComment) {
             this.$store.commit('updateComments', {
@@ -106,5 +113,11 @@ export default {
         cursor: pointer;
         padding-bottom: 20px;
         text-align: center;
+    }
+    .replyto-close {
+        &:hover {
+            transform: scale(0.9);
+            cursor: pointer;
+        }
     }
 </style>

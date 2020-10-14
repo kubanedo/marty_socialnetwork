@@ -19,5 +19,8 @@ button {
     &:hover {
         background: lighten($input-color, 5);
     }
+    &:active {
+        transform: scale(0.97);
+    }    
 }
 </style>

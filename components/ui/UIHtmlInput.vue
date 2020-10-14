@@ -1,17 +1,21 @@
 <template>
-  <div contenteditable="true" @input="updateHTML"></div>
+  <div contenteditable="true" @input="updateHTML" @keydown.enter.prevent="enterPress" v-html="value"></div>
 </template>
 
 <script>
 export default {
-  props:['value'],
+  props:['value', 'placeholder'],
   mounted() {
     this.$el.innerHTML = this.value;
   },
   methods: {
     updateHTML(e) {
       this.$emit('input', e.target.innerHTML);
-    }
+    },
+    enterPress(e) {
+      this.$emit('enterPress');
+      e.target.innerHTML = '';
+    }    
   }  
 }
 </script>

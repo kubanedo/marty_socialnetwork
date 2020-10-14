@@ -56,6 +56,7 @@ export default {
     },
     data() {
         return {
+            textik: '',
             toggle: false,
             postsData: [],
             myPostsCount: this.$store.state.myPosts.length,
