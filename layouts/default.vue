@@ -4,9 +4,8 @@
           <div class="container">
             <nav class="header__nav">  
                 <ul>
-                    <li><nuxt-link to="/">Úvod</nuxt-link></li>
-                    <li><nuxt-link to="/messages">Zprávy</nuxt-link></li> 
-                    <li><nuxt-link to="/notifications">Upozornění</nuxt-link></li>  
+                    <li><nuxt-link to="/messages"><button><i class="las la-sms"></i><br/> Zprávy</button></nuxt-link></li> 
+                    <li><nuxt-link to="/notifications"><button><i class="las la-bell"></i><br/>  Upozornění</button></nuxt-link></li>  
                 </ul>
             </nav>
             <div class="header__logo-wrapper">

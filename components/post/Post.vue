@@ -176,14 +176,16 @@ export default {
                 axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=comments')
                     .then(response => {
                         const data = response.data[0][this.post_data.post_id];
-                        this.comments = data;
-                        this.commentsCount = (this.comments && this.comments.length) ? this.comments.length : 0;
-                        if(this.commentsCount > 0) {
-                            this.areCommentsOpened = true;
-                        }
+                        this.comments = [...data];
                     })
-                    .catch(error => console.log(error)) 
-                    .finally(() => this.loadMyCommentsFromStore());        
+                    .catch(error => console.log(error))
+                    .then(() => this.loadMyCommentsFromStore()) 
+                    .finally(() => {
+                            this.commentsCount = (this.comments && this.comments.length) ? this.comments.length : 0;
+                            if(this.commentsCount > 0) {
+                                this.areCommentsOpened = true;
+                            }                        
+                    });        
         },
         updatePost(updatedProperty) {
             let postData = {
@@ -214,10 +216,16 @@ export default {
                } 
             } 
         },
-        loadMyCommentsFromStore() {
-            let storeData = this.$store.state.myComments[0][this.postData.post_id];
+        loadMyCommentsFromStore() {                     
+            let storeData = this.$store.state.myComments[this.postData.post_id];
+            console.log(storeData, "storeData")
             if(storeData!==undefined) {
-                this.comments = [...storeData, ...this.comments];
+                let temporaryArray = []; 
+                storeData.forEach((item) => {
+                    temporaryArray.unshift(item)
+                });      
+                console.log(temporaryArray)         
+                this.comments = [...temporaryArray, ...this.comments];
             }            
         }
     },

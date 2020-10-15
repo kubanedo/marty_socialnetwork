@@ -11,14 +11,10 @@
                     <div v-if="profileData.about_info && profileData.about_info.current_town"><strong><i class="las la-city"></i> Žije ve městě: </strong>{{ profileData.about_info.current_town }}</div>
                     <div v-if="profileData.about_info && profileData.about_info.study"><strong><i class="las la-graduation-cap"></i> Studuje: </strong>{{ profileData.about_info.study }}</div>
                     {{profileData}}
-                </div>
-                <p style="position: fixed; bottom: 20px;">(c) 2020 Internet Mall, a.s.</p>               
+                </div>             
             </aside>
             <div class="main-content">
-                <div v-if="profileData.userId === 'me'" class="card card--noshadow">
-                    <CreateNewPost @postNewPost="postNewPost"/>
-                </div>              
-                <Post v-for="postData in postsDataComp" :key="postData.post_id" :postData="postData"/>               
+                <PostsLoop :filterByAuthor="$route.params.id" />             
             </div>
           </div>
       </div>
@@ -28,8 +24,12 @@
 <script>
 import axios from 'axios'
 import ProfileHeader from '~/components/profile/ProfileHeader'
-import Post from "~/components/post/Post";
+import PostsLoop from "~/components/PostsLoop";
 export default {
+  components: {
+    ProfileHeader,
+    PostsLoop
+  },
   data() {
     return {
       dataLoaded: false,
@@ -58,41 +58,10 @@ export default {
             })
             .catch(error => console.log(error))
         } 
-    },
-    getPostsData() {
-      axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=posts')
-        .then(response => {
-            response.data.forEach((item) => {
-              console.log(item);
-              if(item.posted_by==this.$route.params.id) {
-                this.postsData.unshift(item);
-              }
-            });
-        })
-        .catch(error => console.log(error))
-
-        this.$store.state.posts.forEach((item) => {
-            this.postsData.unshift(item)
-        });
-    },
-    postNewPost(newPostText) {
-        let vm = this;
-        setTimeout(() => { 
-            const newPost = {
-                "post_id": "me" + (Math.floor(Math.random() * 100000) + 1),
-                "posted_by": "me",
-                "published": new Date().getTime(),
-                "privacy_settings": "all",
-                "post_text": newPostText               
-            };
-            vm.postsData.unshift(newPost);
-            vm.$store.commit('postNewPost', newPost);
-        }, 1000);
-    }    
+    }  
   },
   mounted() {
-      this.getProfileData();
-      this.getPostsData();     
+      this.getProfileData();   
   }
 }
 </script>

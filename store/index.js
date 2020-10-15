@@ -111,7 +111,9 @@ const createStore = () => {
                 if(state.myComments[postID]==undefined) {
                     state.myComments[postID] = [];
                 }       
-                state.myComments[postID].push(payload);             
+                state.myComments[postID].push(payload);
+                let arrayPos = state.myComments[postID].length - 1;
+                delete state.myComments[postID][arrayPos].post_id;                            
             },             
             updateComment: (state, payload) => {
                 let arrayPos;
@@ -124,7 +126,10 @@ const createStore = () => {
                             arrayPos = index;
                         }
                     });
-                }    
+                } else {
+                    state[storeProperty][postID] = [];
+                }   
+
                 if(arrayPos !== undefined) {
                     state[storeProperty][postID][arrayPos] = {
                         ...state[storeProperty][postID][arrayPos],
@@ -132,12 +137,10 @@ const createStore = () => {
                     };
                     delete state[storeProperty][postID][arrayPos].post_id;
                 } else {
-                    state[storeProperty][postID] = [];
                     state[storeProperty][postID].push({
                         ...payload
                     });
                     let newArrayPos = state[storeProperty][postID].length - 1;
-                    console.log(newArrayPos);
                     delete state[storeProperty][postID][newArrayPos].post_id;                    
                 }  
                 

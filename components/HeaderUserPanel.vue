@@ -1,5 +1,5 @@
 <template>
-<div style="position: relative;">
+<div class="user-panel__wrapper">
     <div class="user-panel" @click="showMenu = !showMenu">
         <div class="user-panel__profile-img-wrapper">
             <UIProfileImg userID="me" />
@@ -41,6 +41,10 @@ export default {
 
 <style lang="scss" scoped>
 @import "~/assets/variables.scss";
+    .user-panel__wrapper {
+        position: relative;
+        display: inline-block;
+    }
     .user-panel {
         cursor: pointer;
         display: flex;

@@ -1,41 +1,12 @@
 <template>
   <div>
-      <div class="main-wrapper">
-          <div class="container homepage-grid">
-            <aside class="left-sidebar">
-                <div class="card">
-                    <h3>Profil</h3>
-                    Počet přátel: 43<br/>
-                    <span>Počet nevyřízených žádostí: 2</span>
-                    <div style="display: none; max-width: 200px;">
-                        {{store}}
-                    </div>    
+    <div v-if="filterByAuthor=='all'||filterByAuthor=='me'" class="card card--noshadow">
+        <CreateNewPost />
+    </div>
 
-                </div>  
-                <div class="card">
-                    <button><i class="las la-user-friends"></i> Lidé</button>
-                </div>                             
-            </aside>
-            <div class="main-content">
-                <div class="card card--noshadow">
-                    <CreateNewPost />
-                </div>
-
-                <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData"/>
-                <UILoader v-if="isLoading"/>            
-            </div>
-            <aside class="right-sidebar">
-                <div class="card">
-                    <h3>Kontakty</h3>
-                    <Contacts />
-                </div>
-                <div class="card">
-                    <h3>Stránky</h3>
-                </div>                
-            </aside>
-          </div>
-      </div>
-  </div>  
+    <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData"/>
+    <UILoader v-if="isLoading"/>       
+  </div>    
 </template>
 
 <script>
@@ -44,15 +15,18 @@ import CreateNewPost from "~/components/CreateNewPost";
 import Post from "~/components/post/Post";
 import UILoader from "~/components/ui/UILoader";
 
-import Contacts from "~/components/Contacts";
-
 export default {
+    props: {
+        filterByAuthor: {
+            type: String,
+            default: 'all'
+        }
+    },
     components: {
         Post,
         CreateNewPost,
-        Contacts,
         UILoader
-    },
+    },    
     data() {
         return {
             postsData: [],
@@ -110,16 +84,26 @@ export default {
         this.loadMorePosts();
         axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=posts')
             .then(response => {
-                this.postsData = [...response.data];
+                if(this.filterByAuthor!=='all') {
+                    response.data.forEach((item) => {
+                        if(item.posted_by==this.filterByAuthor) {
+                            this.postsData.unshift(item);
+                        }
+                    });                    
+                } else {
+                   this.postsData = [...response.data];
+                }
             })
             .catch(error => console.log(error))
             .finally(() => {
-                this.loadMyPostsFromStore();
+                if(this.filterByAuthor=='all'||this.filterByAuthor=='me') {
+                    this.loadMyPostsFromStore();
+                }
             })    
     }
 }
 </script>
 
-<style scoped>
+<style>
 
 </style>

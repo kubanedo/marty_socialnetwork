@@ -8,18 +8,25 @@
         <div class="post__photo-count" v-if="photosData.length > 2" @click="openLightbox(photosData[2], 2)"><div>+ {{photosData.length - 2}}</div></div>
     </div>
     <div v-if="showLightbox==true" class="post__gallery-overlay" @click.self.prevent="closeLightbox()">
-        <div class="post__gallery-content">
-            <button @click="closeLightbox()"><i class="las la-times"></i></button><br/>
-            <img :src="photoInLightbox.url"><br/>
-            <button v-if="photoInLightbox.index > 0" @click="previousPhoto">Předchozí</button>
-            <button v-if="photoInLightbox.index <= photosData.length - 2" @click="nextPhoto">Další</button>
-        </div>    
+        <div class="switch-photo switch-photo--previous" v-if="photoInLightbox.index > 0" @click="previousPhoto"><div><i class="las la-angle-double-left"></i></div></div>
+        <div>            
+            <div class="post__gallery-content">
+                <UiCloseBtn @click.native="closeLightbox()"/><br/>
+                <img :src="photoInLightbox.url"><br/>
+            </div>
+        </div>
+        <div class="switch-photo swich-photo--next" v-if="photoInLightbox.index <= photosData.length - 2" @click="nextPhoto"><div><i class="las la-angle-double-right"></i></div></div>    
     </div>    
 </div>
 </template>
 
 <script>
+import UICloseBtn from "~/components/ui/UICloseBtn";
+
 export default {
+    components: {
+        UICloseBtn
+    },
     props: {
         photosData: Array
     },
@@ -89,8 +96,8 @@ export default {
     }
     .post__gallery-overlay {
       display: flex;
-      justify-content: center;
       flex-direction: column;
+      justify-content: center;
       position: fixed;
       width: 100%;
       height: 100%;
@@ -98,7 +105,7 @@ export default {
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: rgba(0,0,0,0.5);
+      background-color: rgba(0,0,0,0.9);
       z-index: 12;      
     }
     .post__gallery-content {
@@ -108,5 +115,30 @@ export default {
       margin: 0 auto;
       width: 100%;
       max-width: 80%;
-    }    
+
+      img {
+          width: 95%;
+          max-width: 1200px;
+          height: auto;
+      }
+    }  
+.switch-photo {
+    position: absolute;
+    cursor: pointer;
+    color: white;
+    width: 85px;
+    top: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.2);
+    &:hover {
+    background: rgba(0,0,0,0.4);
+    }
+}
+.swich-photo--next {
+    right: 0;
+}
+.swich-photo--previous {
+    left: 0;
+}
+  
 </style>
