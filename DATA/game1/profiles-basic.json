@@ -1,0 +1,34 @@
+{
+        "jnovak": {
+            "first_name": "Jan",
+            "last_name": "Novák",
+            "status": 1
+        },
+        "eliskasvob": {
+            "first_name": "Eliška",
+            "last_name": "Svobodová",
+            "status": 0
+        },
+        "dvorakova.nela": {
+            "first_name": "Nela",
+            "last_name": "Dvořáková",
+            "status": 0
+        },
+        "jakub.cerny": {
+            "first_name": "Jakub",
+            "last_name": "Černý",
+            "status": 1
+        },
+        "pepino": {
+            "first_name": "Pepíno",
+            "last_name": "'Poky' Pokorný",
+            "status": 0
+        },
+        "malltv": {
+            "name": "MALL.TV"
+        },
+        "rady.pana.koziska": {
+            "name": "Rady pana Kožíška"
+        }  
+
+}

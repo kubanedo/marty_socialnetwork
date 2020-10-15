@@ -45,11 +45,13 @@ export default {
     },
     watch: {
         myPosts(value) {
-            if(value.length > this.myPostsCount) {
-                //jen pokud přibylo
-                this.postsData.unshift(value[0]); 
+            if(this.filterByAuthor=='all'||this.filterByAuthor=='me') {
+                if(value.length > this.myPostsCount) {
+                    //jen pokud přibylo
+                    this.postsData.unshift(value[0]); 
+                }
+                this.myPostsCount = value.length;
             }
-            this.myPostsCount = value.length;
         },
         store(value) {
             this.store = value;

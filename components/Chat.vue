@@ -3,7 +3,7 @@
   <div class="chat__wrapper" @click="resetNewIncomingMessagesCount()">
       <div :class="'chat__header' + ((newIncomingMessagesCount>0) ? ' blinking' : '')" @click="toggleChat()">
           <div class="chat__contact-info">
-              <UIProfileImg :userID="chatMainData.contactId" :status="1" :imgSize="30" statusBorderColor="#d3d3d3" />
+              <UIProfileImg :userID="chatMainData.contactId" :status="chatMainData.status" :imgSize="30" statusBorderColor="#d3d3d3" />
               <div class="chat__contact-name"><div>{{chatMainData.first_name + ' ' + chatMainData.last_name}}</div></div>
               <div class="chat__new-msg-count-wrapper"><div v-if="newIncomingMessagesCount>0" class="chat__new-msg-count">{{newIncomingMessagesCount}}</div></div>
           </div>

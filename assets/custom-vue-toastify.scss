@@ -5,3 +5,14 @@
     padding: 15px 15px;
     font-family: "Roboto", Arial, sans-serif;
 }
+.Vue-Toastification__container {
+    max-width: 1430px;
+    margin: 0 auto;
+    width: 95%;    
+}
+@media only screen and (min-width: 600px) {
+    .Vue-Toastification__container.bottom-left {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}

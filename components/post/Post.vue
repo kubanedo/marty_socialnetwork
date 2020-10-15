@@ -88,7 +88,7 @@ export default {
             areCommentsOpened: false,
             isDeleted: false,            
             postText: '',
-            postedByName: '',
+            postedByName: this.post_data.posted_by,
             comments: [],
             privacySetting: this.post_data.privacy_settings
         }
@@ -159,9 +159,9 @@ export default {
                 this.postedByName = this.$store.getters.getloggedUserWholeName;
                 this.nameLoaded = true;
             } else {
-                axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles_basic-info')
+                axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles-basic')
                     .then(response => {
-                        const data = response.data[0][this.post_data.posted_by];
+                        const data = response.data[this.post_data.posted_by];
                         if(data.first_name) {
                             this.postedByName = data.first_name + ' ' + data.last_name;
                         } else {
