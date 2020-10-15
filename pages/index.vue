@@ -101,6 +101,13 @@ export default {
               
                 }
             }
+        },
+        loadMyPostsFromStore() {
+                let temporaryArray = [];
+                this.$store.state.myPosts.forEach((item) => {
+                    temporaryArray.push(item)
+                });
+                this.postsData = [...temporaryArray, ...this.postsData]  
         }
     },
     mounted() {
@@ -111,11 +118,7 @@ export default {
             })
             .catch(error => console.log(error))
             .finally(() => {
-                let temporaryArray = [];
-                this.$store.state.myPosts.forEach((item) => {
-                    temporaryArray.push(item)
-                });
-                this.postsData = [...temporaryArray, ...this.postsData]                
+                this.loadMyPostsFromStore();
             })    
     }
 }

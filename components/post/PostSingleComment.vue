@@ -50,6 +50,7 @@ export default {
   mixins: [clickableLinks, replaceSmileys],
   props: {
     commentData: Object,
+    postID: String
   },
   data() {
     return {
@@ -93,13 +94,11 @@ export default {
       }
 
       if (this.comment_data.likes.known.indexOf("me") > -1) {
-        this.comment_data.likes.known.splice(
-          this.comment_data.likes.known.indexOf("me"),
-          1
-        );
+        this.comment_data.likes.known.splice(this.comment_data.likes.known.indexOf("me"), 1);
       } else {
         this.comment_data.likes.known.push("me");
       }
+      this.updateComment({likes: this.comment_data.likes});       
     },  
     replyToComment() {
       this.$emit("addReplyReference", this.commentedByName);
@@ -125,8 +124,35 @@ export default {
           .finally(() => (this.nameLoaded = true));
       }
     },
+    updateComment(updatedProperty) {
+        let commentData = {
+            post_id: this.postID,
+            comment_id: this.commentData.comment_id,
+            commented_by: this.commentData.commented_by, 
+            ...updatedProperty
+        };
+        this.$store.commit('updateComment', commentData);
+    },
+    getChangesFromStore() {
+        let storeArrayPos;
+        let othersComments = this.$store.state.othersComments[this.postID];
+        if(othersComments!==undefined) {
+          this.$store.state.othersComments[this.postID].forEach((item, index) => {
+              if(item.comment_id==this.comment_data.comment_id) {
+                  storeArrayPos = index;
+              }
+          });
+          if(storeArrayPos!==undefined) {
+              this.comment_data = {
+                  ...this.comment_data,
+                  ...this.$store.state.othersComments[this.postID][storeArrayPos]
+              } 
+          } 
+        }   
+    }        
   },
   mounted() {
+    this.getChangesFromStore();
     this.commentText = this.makeLinksClickable(
       this.replaceSmileys(this.commentData.comment_text)
     );

@@ -20,7 +20,8 @@ button {
         background: lighten($input-color, 5);
     }
     &:active {
+        border-radius: 50%;
         transform: scale(0.97);
-    }    
+    }   
 }
 </style>

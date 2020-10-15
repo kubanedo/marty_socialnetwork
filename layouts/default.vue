@@ -58,6 +58,13 @@ a {
 a:hover {
    text-decoration: none; 
 }
+button:active, button:focus, textarea:active {
+    outline: none;
+}
+button:focus {
+    background: lighten($grey-color, 1);
+    border-radius: 5px;
+}
 .container {
     max-width: 1430px;
     width: 95%;

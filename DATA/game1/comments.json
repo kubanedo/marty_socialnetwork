@@ -1,6 +1,7 @@
 [{
     "1jnovak": [
         {
+            "comment_id": "com1jnovak1",
             "commented_by": "jnovak", 
             "published": {
                 "hoursAgo": 4,
@@ -16,6 +17,7 @@
             }                      
         },  
         {
+            "comment_id": "com1jnovak2",            
             "commented_by": "eliskasvob", 
             "published": {
                 "hoursAgo": 4,

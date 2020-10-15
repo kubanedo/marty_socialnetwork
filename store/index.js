@@ -17,7 +17,8 @@ const createStore = () => {
             chats: [{}],
             myPosts: [],
             othersPosts: [],
-            comments: [{}],
+            myComments: {},
+            othersComments: {},            
             savedPosts: [],
             reportedPosts: [],
             answeredQuizActions: [],
@@ -72,6 +73,22 @@ const createStore = () => {
                     });
                 }                    
             },
+            savePost: (state, post_id) => {
+                let posInArray = state.savedPosts.indexOf(post_id);
+                if(posInArray < 0) {
+                    state.savedPosts.push(post_id);
+                } else {
+                    state.savedPosts.splice(posInArray, 1);
+                }   
+            },
+            reportPost: (state, post_id) => {
+                let posInArray = state.reportedPosts.indexOf(post_id);
+                if(posInArray < 0) {
+                    state.reportedPosts.push(post_id);
+                } else {
+                    state.reportedPosts.splice(posInArray, 1);
+                }   
+            },                  
             updateChat: (state, payload) => {
                 let contactID = payload.contact_id;
                 if(state.chats[0][contactID]==undefined) {
@@ -89,29 +106,42 @@ const createStore = () => {
                     }
                 }                  
             },
-            updateComments: (state, payload) => {
+            postNewComment: (state, payload) => {
                 const postID = payload.post_id;
-                if(state.comments[0][postID]==undefined) {
-                    state.comments[0][postID] = [];
+                if(state.myComments[postID]==undefined) {
+                    state.myComments[postID] = [];
                 }       
-                state.comments[0][postID].push(payload);             
-            },                                      
-            savePost: (state, post_id) => {
-                let posInArray = state.savedPosts.indexOf(post_id);
-                if(posInArray < 0) {
-                    state.savedPosts.push(post_id);
+                state.myComments[postID].push(payload);             
+            },             
+            updateComment: (state, payload) => {
+                let arrayPos;
+                let storeProperty = (payload.commented_by=='me') ? 'myComments' : 'othersComments';
+                let postID = payload.post_id;
+
+                if(state[storeProperty][postID]!==undefined) {
+                    state[storeProperty][postID].forEach((item, index) => {
+                        if(item.comment_id==payload.comment_id) {
+                            arrayPos = index;
+                        }
+                    });
+                }    
+                if(arrayPos !== undefined) {
+                    state[storeProperty][postID][arrayPos] = {
+                        ...state[storeProperty][postID][arrayPos],
+                        ...payload
+                    };
+                    delete state[storeProperty][postID][arrayPos].post_id;
                 } else {
-                    state.savedPosts.splice(posInArray, 1);
-                }   
-            },
-            reportPost: (state, post_id) => {
-                let posInArray = state.reportedPosts.indexOf(post_id);
-                if(posInArray < 0) {
-                    state.reportedPosts.push(post_id);
-                } else {
-                    state.reportedPosts.splice(posInArray, 1);
-                }   
-            },                                              
+                    state[storeProperty][postID] = [];
+                    state[storeProperty][postID].push({
+                        ...payload
+                    });
+                    let newArrayPos = state[storeProperty][postID].length - 1;
+                    console.log(newArrayPos);
+                    delete state[storeProperty][postID][newArrayPos].post_id;                    
+                }  
+                
+            },                                                              
             changePoints: (state, payload) => {
                 state.loggedUser.points = state.loggedUser.points + payload;
             },

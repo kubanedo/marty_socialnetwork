@@ -1,7 +1,7 @@
 <template>
     <div class="post__comments">
         <div>
-            <PostSingleComment v-for="comment in commentsToDisplay" class="post__comment" :key="comment.commented_by + comment.published" :commentData="comment" @addReplyReference="addReplyReference"/>
+            <PostSingleComment v-for="comment in commentsToDisplay" class="post__comment" :key="comment.comment_id" :commentData="comment" :postID="postID" @addReplyReference="addReplyReference"/>
             <div v-if="showLessComments && commentsData.length > 3" @click="showLessComments=false" class="post__show-all-comments">Zobrazit další komentáře</div>
             <div class="post__new-comment-wrapper">
                 <div><UIProfileImg userID="me" :imgSize="35" class="mr-5"/></div>
@@ -57,6 +57,7 @@ export default {
                 let replyTo = vm.replyingTo;
                 setTimeout(() => { 
                     const newComment = {
+                        "comment_id": "me-com" + (Math.floor(Math.random() * 100000) + 1),
                         "commented_by": "me",
                         "published": new Date().getTime(),
                         "comment_text": newCommentText               
@@ -75,7 +76,7 @@ export default {
             this.replyingTo = name;
         },
         updateCommentsInStore(newComment) {
-            this.$store.commit('updateComments', {
+            this.$store.commit('postNewComment', {
                 post_id: this.postID,
                 ...newComment
             });

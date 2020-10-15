@@ -183,7 +183,7 @@ export default {
                         }
                     })
                     .catch(error => console.log(error)) 
-                    .finally(() => this.getCommentsChangesFromStore());        
+                    .finally(() => this.loadMyCommentsFromStore());        
         },
         updatePost(updatedProperty) {
             let postData = {
@@ -214,9 +214,8 @@ export default {
                } 
             } 
         },
-        getCommentsChangesFromStore() {
-            let storeData = this.$store.state.comments[0][this.postData.post_id];
-            console.log(storeData);
+        loadMyCommentsFromStore() {
+            let storeData = this.$store.state.myComments[0][this.postData.post_id];
             if(storeData!==undefined) {
                 this.comments = [...storeData, ...this.comments];
             }            
