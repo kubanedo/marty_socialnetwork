@@ -8,14 +8,14 @@
         <div class="post__photo-count" v-if="photosData.length > 2" @click="openLightbox(photosData[2], 2)"><div>+ {{photosData.length - 2}}</div></div>
     </div>
     <div v-if="showLightbox==true" class="post__gallery-overlay" @click.self.prevent="closeLightbox()">
-        <div class="switch-photo switch-photo--previous" v-if="photoInLightbox.index > 0" @click="previousPhoto"><div><i class="las la-angle-double-left"></i></div></div>
+        <div class="switch-photo switch-photo--previous" v-if="photoInLightbox.index > 0" @click="previousPhoto"><div class="switch-photo-btn"><i class="las la-angle-double-left"></i></div></div>
         <div>            
             <div class="post__gallery-content">
                 <UiCloseBtn @click.native="closeLightbox()"/><br/>
                 <img :src="photoInLightbox.url"><br/>
             </div>
         </div>
-        <div class="switch-photo swich-photo--next" v-if="photoInLightbox.index <= photosData.length - 2" @click="nextPhoto"><div><i class="las la-angle-double-right"></i></div></div>    
+        <div class="switch-photo switch-photo--next" v-if="photoInLightbox.index <= photosData.length - 2" @click="nextPhoto"><div class="switch-photo-btn"><i class="las la-angle-double-right"></i></div></div>    
     </div>    
 </div>
 </template>
@@ -132,13 +132,40 @@ export default {
     background: rgba(0,0,0,0.2);
     &:hover {
     background: rgba(0,0,0,0.4);
+    width: 75px;
     }
 }
-.swich-photo--next {
-    right: 0;
+.switch-photo--next {
+    right: 0; 
+    &:hover .switch-photo-btn {
+        transform: translateX(10px);
+    } 
 }
-.swich-photo--previous {
-    left: 0;
+.switch-photo--previous {
+    left: 0;  
+    &:hover .switch-photo-btn {
+        transform: translateX(-10px);
+    } 
 }
-  
+.switch-photo-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: 70px;
+    height: 70px;
+    background: black;
+    border-radius: 50%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 25px;
+}
+.switch-photo--next .switch-photo-btn {
+    right: 20px;
+    
+}
+.switch-photo--previous .switch-photo-btn {
+    left: 20px;
+}  
 </style>
