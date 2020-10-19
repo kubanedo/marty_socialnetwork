@@ -4,9 +4,9 @@ const createStore = () => {
     return new Vuex.Store({
         state: () => ({
             startTimestamp: new Date().getTime(),
-            gameInstanceId: 0,
-            gameId: 0,
+            gameVersion: 0,
             loggedUser: {
+                gameId: 0,
                 userId: "me",
                 profileImg: 'http://jakubnedorost.cz/marty/images/profiles/me/profileimg.jpg',
                 first_name: 'Nezalogovaný',
@@ -40,6 +40,10 @@ const createStore = () => {
                     ...payload
                 }
             },
+            loadGame: (state, gameId) => {
+                    gameId;
+                    state;
+            },           
             postNewPost: (state, newPostObj) => {
                 state.myPosts.unshift(newPostObj);
             },

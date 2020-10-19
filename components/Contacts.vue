@@ -34,14 +34,12 @@ export default {
     mounted() {
       axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles-basic')
         .then(response => {
+           console.log(response.data, "respData") 
           let data = Object.entries(response.data);
-          let temporaryArray = [];
-          data.forEach(item => {
-              if(item[1].first_name!==undefined) {
-                  temporaryArray.push(item);
-              };
+          data = data.filter((item) => {
+              return (item[1].first_name !== undefined);
           });
-         this.contacts = Object.fromEntries(temporaryArray);
+         this.contacts = Object.fromEntries(data);
         })
         .catch(error => console.log(error))        
     }   

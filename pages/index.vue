@@ -17,12 +17,7 @@
                 </div>                             
             </aside>
             <div class="main-content">
-                <div class="card card--noshadow">
-                    <CreateNewPost />
-                </div>
-
-                <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData"/>
-                <UILoader v-if="isLoading"/>            
+                <PostsLoop /> 
             </div>
             <aside class="right-sidebar">
                 <div class="card">
@@ -40,20 +35,16 @@
 
 <script>
 import axios from 'axios'
-import CreateNewPost from "~/components/CreateNewPost";
-import Post from "~/components/post/Post";
-import UILoader from "~/components/ui/UILoader";
+import PostsLoop from "~/components/PostsLoop";
 
 import Contacts from "~/components/Contacts";
 
 export default {
     components: {
-        Post,
-        CreateNewPost,
-        Contacts,
-        UILoader
+        PostsLoop,
+        Contacts
     },
-    data() {
+/*    data() {
         return {
             postsData: [],
             myPostsCount: this.$store.state.myPosts.length,
@@ -116,7 +107,7 @@ export default {
             .finally(() => {
                 this.loadMyPostsFromStore();
             })    
-    }
+    } */
 }
 </script>
 

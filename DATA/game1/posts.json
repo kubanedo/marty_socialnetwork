@@ -120,5 +120,38 @@
             "type": "video",
             "url": "https://www.mall.tv/embed/martyisdead/1-na-co-si-dat-pozor-pri-seznameni-na-internetu"
         }
+    },
+    {
+        "post_id": "8jnovak",        
+        "posted_by": "jnovak",
+        "published": {
+            "daysAgo": 6,
+            "hoursAgo": 1,
+            "minutesAgo": 10
+        },
+        "privacy_settings": "all",
+        "post_text": "Kukuuuuuu!"
+    },
+    {
+        "post_id": "9jnovak",        
+        "posted_by": "jnovak",
+        "published": {
+            "daysAgo": 6,
+            "hoursAgo": 1,
+            "minutesAgo": 10
+        },
+        "privacy_settings": "all",
+        "post_text": "hřej, když můžeš mě hřát"        
+    },
+    {
+        "post_id": "10jnovak",        
+        "posted_by": "jnovak",
+        "published": {
+            "daysAgo": 6,
+            "hoursAgo": 1,
+            "minutesAgo": 10
+        },
+        "privacy_settings": "all",
+        "post_text": "Mám rád vůni tvý kůže"
     }
 ]

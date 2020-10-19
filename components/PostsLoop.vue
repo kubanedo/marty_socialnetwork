@@ -5,7 +5,8 @@
     </div>
 
     <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData"/>
-    <UILoader v-if="isLoading"/>       
+
+    <NoMorePosts v-if="noMorePosts" />     
   </div>    
 </template>
 
@@ -13,6 +14,7 @@
 import axios from 'axios'
 import CreateNewPost from "~/components/CreateNewPost";
 import Post from "~/components/post/Post";
+import NoMorePosts from "~/components/post/NoMorePosts";
 import UILoader from "~/components/ui/UILoader";
 
 export default {
@@ -25,13 +27,16 @@ export default {
     components: {
         Post,
         CreateNewPost,
-        UILoader
+        UILoader,
+        NoMorePosts
     },    
     data() {
         return {
             postsData: [],
             myPostsCount: this.$store.state.myPosts.length,
             isLoading: false,
+            newPostsToBeLoadedFrom: 1,
+            noMorePosts: false,
             store: this.$store.state
         }
     },
@@ -58,50 +63,50 @@ export default {
         }
     },
     methods: {
-        loadMorePosts() {
-            window.onscroll = () => {
-                let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
-                if(bottomOfWindow) {
-                    this.isLoading = true;
-
-                    axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=posts')
-                        .then(response => {
-                            this.postsData.push(...response.data);
-                        })
-                        .finally(() => {this.isLoading = false})
-                        .catch(error => console.log(error))        
-              
+        addScrollListener() {
+            window.addEventListener('scroll', this.loadNewPostsOnScroll);
+        },
+        loadNewPostsOnScroll() {
+                if(this.noMorePosts==false) {
+                    let bottomOfWindow = Math.abs(Math.round(document.documentElement.scrollTop + window.innerHeight) - Math.round(document.documentElement.offsetHeight)) < 2; // odchylka pod 2          
+                    if(bottomOfWindow) {
+                        this.isLoading = true;
+                        this.loadPosts(this.newPostsToBeLoadedFrom); 
+                        this.newPostsToBeLoadedFrom += 1;
+                    }
+                } else {
+                    window.removeEventListener('scroll', this.loadNewPostsOnScroll); 
                 }
+        },        
+        loadPosts(from = 0, count = 1) {
+            let queryUrl = 'https://jakubnedorost.cz/marty/api/?type=posts&from='+ from +'&count='+ count;
+            if(this.filterByAuthor!=='all') {
+                queryUrl += '&posted_by=' + this.filterByAuthor;                
             }
+            axios.get(queryUrl)
+                    .then(response => { 
+                        if(Array.isArray(response.data) && response.data.length) {
+                            this.postsData = [...this.postsData, ...response.data]
+                            console.log(response.data)
+                        } else {
+                            this.noMorePosts = true;
+                        }
+                        this.isLoading = false;                        
+                    })
+                    .catch(error => console.log(error))  
         },
         loadMyPostsFromStore() {
-                let temporaryArray = [];
-                this.$store.state.myPosts.forEach((item) => {
-                    temporaryArray.push(item)
-                });
-                this.postsData = [...temporaryArray, ...this.postsData]  
+                let myPosts = [...this.$store.state.myPosts];
+                myPosts.reverse();
+                this.postsData = [...myPosts, ...this.postsData]  
         }
     },
     mounted() {
-        this.loadMorePosts();
-        axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=posts')
-            .then(response => {
-                if(this.filterByAuthor!=='all') {
-                    response.data.forEach((item) => {
-                        if(item.posted_by==this.filterByAuthor) {
-                            this.postsData.unshift(item);
-                        }
-                    });                    
-                } else {
-                   this.postsData = [...response.data];
-                }
-            })
-            .catch(error => console.log(error))
-            .finally(() => {
-                if(this.filterByAuthor=='all'||this.filterByAuthor=='me') {
-                    this.loadMyPostsFromStore();
-                }
-            })    
+        this.addScrollListener();
+        this.loadPosts();
+        if(this.filterByAuthor=='all'||this.filterByAuthor=='me') {
+            this.loadMyPostsFromStore();
+        }
     }
 }
 </script>

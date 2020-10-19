@@ -13,13 +13,14 @@
         <li><nuxt-link to="/profile/me">Přejít na svůj profil</nuxt-link></li>
         <li>Nastavení</li>
         <hr>
-        <li>Uložit hru</li>
+        <li @click="saveGame">Uložit hru</li>
         <li><nuxt-link to="/login">Odhlásit se</nuxt-link></li>
     </ul>    
 </div>    
 </template>
 
 <script>
+import axios from 'axios'
 import UIProfileImg from '~/components/ui/UIProfileImg'
 export default {
   components: {
@@ -35,6 +36,14 @@ export default {
      getPoints() {
          return this.$store.state.loggedUser.points;
      }
+  },
+  methods: {
+      saveGame() {
+            let gameId = this.$store.state.loggedUser.game_id;
+            axios.post("https://jakubnedorost.cz/marty/api/save/?game_id=" + gameId, this.$store.state)
+                    .then(response => console.log(response))  
+          this.$toast.success("Hra uložena.");                
+      }
   }
 }
 </script>
