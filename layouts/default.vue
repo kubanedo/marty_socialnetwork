@@ -19,7 +19,7 @@
       </header>     
     <Nuxt />
     <ModalWindow v-if="modalData!==null && modalData.modalName" :modalData="modalData"/>
-    <Chat v-if="chatMainData!==null" :chatMainData="chatMainData"/>
+    <Chat v-if="chatContactId!==null" :contactId="chatContactId"/>
   </div>
 </template>
 
@@ -35,7 +35,7 @@ export default {
      ModalWindow
   },
   computed: {
-    chatMainData() {
+    chatContactId() {
         return this.$store.state.openedChat;
     },
     modalData() {

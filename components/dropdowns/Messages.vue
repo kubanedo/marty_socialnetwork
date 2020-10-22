@@ -2,9 +2,7 @@
   <div class="messages__wrapper">
             <h3>Zprávy</h3>
             <div v-for="(latestMessage, contactId) in latestMessages" :key="contactId" class="latest-message"
-                    @click="openChat({
-                    contactId: contactId
-                    })">
+                    @click="openChat(contactId)">
                 <div class="latest-message__img"><UIProfileImg :userID="contactId" /></div>
                 <div class="latest-message__info">
                     <strong>{{contactId}}</strong><br/>

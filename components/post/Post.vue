@@ -162,7 +162,7 @@ export default {
                 this.postedByName = this.$store.getters.getloggedUserWholeName;
                 this.nameLoaded = true;
             } else {
-                axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles-basic')
+                axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic')
                     .then(response => {
                         const data = response.data[this.post_data.posted_by];
                         if(data.first_name) {
@@ -176,9 +176,9 @@ export default {
             }
         },
         loadComments() {
-                axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=comments')
+                axios.get('https://jakubnedorost.cz/marty/api/?type=comments&post_id=' + this.post_data.post_id)
                     .then(response => {
-                        const data = response.data[0][this.post_data.post_id];
+                        const data = response.data;
                         this.comments = [...data];
                     })
                     .catch(error => console.log(error))

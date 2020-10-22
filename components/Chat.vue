@@ -3,8 +3,8 @@
   <div class="chat__wrapper" @click="resetNewIncomingMessagesCount()">
       <div :class="'chat__header' + ((newIncomingMessagesCount>0) ? ' blinking' : '')" @click="toggleChat()">
           <div class="chat__contact-info">
-              <UIProfileImg :userID="chatMainData.contactId" :status="chatMainData.status" :imgSize="30" statusBorderColor="#d3d3d3" />
-              <div class="chat__contact-name"><div>{{chatMainData.first_name + ' ' + chatMainData.last_name}}</div></div>
+              <UIProfileImg :userID="contactId" :status="contactData.status" :imgSize="30" statusBorderColor="#d3d3d3" />
+              <div class="chat__contact-name"><div>{{contactData.first_name + ' ' + contactData.last_name}}</div></div>
               <div class="chat__new-msg-count-wrapper"><div v-if="newIncomingMessagesCount>0" class="chat__new-msg-count">{{newIncomingMessagesCount}}</div></div>
           </div>
           <div class="chat__close-btn"><button @click="deactivateChat()"><i class="las la-times"></i></button></div>
@@ -13,7 +13,7 @@
         <div class="chat__content">
             <ChatMessage v-for="(message, index) in messages" :key="index" :message="message"/>
             <div v-if="!(Array.isArray(messages) && messages.length)" class="text-center"><small><i class="las la-envelope-open"></i> Zatím jste si nepsali.</small></div>
-            <ChatTypingDots v-if="areTypingDotsActive" :contactName="chatMainData.first_name"/>
+            <ChatTypingDots v-if="areTypingDotsActive" :contactName="contactData.first_name"/>
         </div>
         <div class="chat__prepared-messages" v-if="preparedMessages">
             <div v-if="showPreparedMessagesInput">
@@ -59,10 +59,11 @@ export default {
         ChatTypingDots
     },
     props: {
-        chatMainData: Object
+        contactId: String
     },
     data() {
         return {
+            contactData: {},
             isChatMaximized: true,
             areTypingDotsActive: false,
             newIncomingMessagesCount: 0,
@@ -120,7 +121,7 @@ export default {
                 vm.areTypingDotsActive=false;
                 vm.showPreparedMessagesInput=true;
                 let newMessageObj = {
-                    userId: this.chatMainData.contactId,  
+                    userId: this.contactId,  
                     time: Date.now(),
                     text: reply  
                 }
@@ -150,15 +151,14 @@ export default {
             this.newIncomingMessagesCount = 0;
         },
         loadChatMessages() {
-            let chatMainData = this.chatMainData;
-            axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=chats')
+            axios.get('https://jakubnedorost.cz/marty/api/?type=messages&contact_id=' + this.contactId)
                 .then(response => {
-                    const contactData = response.data[0][chatMainData.contactId];
-                    if(contactData) {
-                        let messages = contactData.old_messages;
+                    const chatData = response.data;
+                    if(chatData) {
+                        let messages = chatData.old_messages;
                         this.messages = (messages) ? [...messages] : [];
 
-                        let preparedMessages = contactData.preparedMessages;
+                        let preparedMessages = chatData.preparedMessages;
                         this.preparedMessages = (preparedMessages) ? [...preparedMessages] : null;
                     } else {
                         this.messages = [];
@@ -177,23 +177,30 @@ export default {
             let chatData;
             if(type=='message') {
                 chatData = {
-                    contact_id: this.chatMainData.contactId,
+                    contact_id: this.contactData.contactId,
                     newMessage: value
                 }
             } else {
                 chatData = {
-                    contact_id: this.chatMainData.contactId,
+                    contact_id: this.contactData.contactId,
                     preparedMessagesUpdate: value                    
                 }
             }
             this.$store.commit('updateChat', chatData);
         },
         getChangesFromStore() {
-            let storeData = this.$store.state.chats[0][this.chatMainData.contactId];
+            let storeData = this.$store.state.chats[0][this.contactData.contactId];
             if(storeData!==undefined) {
                 this.messages = [...this.messages, ...storeData.old_messages];
                 this.preparedMessages = storeData.preparedMessages;
             }
+        },
+        getContactData() {
+            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_id=' + this.contactId)
+                .then(response => {
+                    this.contactData = response.data;
+                })
+                .catch(error => console.log(error))
         }    
     },
     watch: {
@@ -202,11 +209,12 @@ export default {
            this.isChatMaximized=true;
            this.scrollToEnd();
         },
-        chatMainData() {
+        contactId() {
            /* při změně uživatele chatu, vždy maximalizuj */ 
            this.isChatMaximized=true;
            /* a aktualizuj zprávy */
            this.loadChatMessages();
+           this.getContactData();
         },
         messages() {
             /* při aktualizaci zpráv */
@@ -214,7 +222,8 @@ export default {
         }
     },
     mounted() {
-            this.loadChatMessages();          
+            this.loadChatMessages();  
+            this.getContactData();        
     }
 }
 </script>

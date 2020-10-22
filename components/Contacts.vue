@@ -1,12 +1,7 @@
 <template>
 <div>
     <div class="contact__wrapper" v-for="(contact, contactId) in contacts" :key="contactId"
-        @click="openChat({
-            contactId: contactId,
-            first_name: contact.first_name,
-            last_name: contact.last_name,
-            status: contact.status
-            })">
+        @click="openChat(contactId)">
         <div><UIProfileImg :userID="contactId" :status="contact.status"/></div>
         <div class="contact__name"><div>{{contact.first_name + " " + contact.last_name}}</div></div>
     </div>
@@ -32,7 +27,7 @@ export default {
         }
     },
     mounted() {
-      axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles-basic')
+      axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic')
         .then(response => {
            console.log(response.data, "respData") 
           let data = Object.entries(response.data);
