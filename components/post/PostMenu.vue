@@ -1,7 +1,7 @@
 <template>
   <div class="post__menu">
     <button @click="showMenu=!showMenu"><i class="las la-ellipsis-v"></i></button>
-    <div v-if="showMenu" @mouseleave="showMenu=!showMenu">
+    <div v-if="showMenu" v-click-outside="closeMenu">
         <ul v-if="postedBy=='me'">
             <li @click="editPost"><i class="las la-edit"></i> Upravit příspěvek</li>
             <li @click="deletePost"><i class="las la-trash"></i> Smazat příspěvek</li>                    
@@ -27,6 +27,9 @@ export default {
         }
     },
     methods: {
+        closeMenu() {
+            this.showMenu=false;
+        },
         deletePost() {
             this.$emit('isDeleted') 
             this.$store.commit('deletePost', this.postID);

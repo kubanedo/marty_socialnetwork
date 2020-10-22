@@ -22,11 +22,6 @@ export default {
           required: true
       }
   },
-  data() {
-    return {
-        componentName: ''
-      }
-  },
   methods: {
     closeWindow() {
         this.$store.state.modalWindow = null;

@@ -28,13 +28,15 @@ export default {
   },
   data() {
     return {
-      wholeUsername: this.$store.getters.getloggedUserWholeName,  
       showMenu: false
     }
   },
   computed: {
      getPoints() {
          return this.$store.state.loggedUser.points;
+     },
+     wholeUsername() {
+         return this.$store.getters.getloggedUserWholeName;
      }
   },
   methods: {

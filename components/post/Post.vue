@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div class="post__footer-buttons">
-                <button @click="likePost" :class="(islikedByMe) ? 'liked' : ''"><i class="las la-heart"></i> To se mi líbí</button>
+                <button @click="likePost" :class="(islikedByMe) ? 'liked' : ''"><i :class="'las la-heart' + ((animatedLike) ? ' animated-like' : '')"></i> To se mi líbí</button>
                 <button @click="toggleComments"><i class="las la-comment"></i> Okomentovat</button>
                 <button @click="sharePost" v-if="(postData.posted_by=='me') ? true : (privacySetting=='all' ? true : false)"><i class="las la-share-square"></i> Sdílet</button>
             </div>
@@ -90,7 +90,8 @@ export default {
             postText: '',
             postedByName: this.post_data.posted_by,
             comments: [],
-            privacySetting: this.post_data.privacy_settings
+            privacySetting: this.post_data.privacy_settings,
+            animatedLike: false
         }
     },
     computed: {
@@ -127,8 +128,10 @@ export default {
 
            if(this.postData.likes.known.indexOf('me') > -1) {
                this.postData.likes.known.splice(this.postData.likes.known.indexOf('me'),1);
+               this.animatedLike = false;   
            } else {
-               this.postData.likes.known.push('me');
+                this.postData.likes.known.push('me');
+                this.animatedLike = true;           
            } 
            this.updatePost({likes: this.postData.likes});                
         },
@@ -299,6 +302,36 @@ export default {
     button.liked {
         color: red;
     }
+    i.animated-like {
+        animation: heartbeat 1s 4;
+    }
+    @keyframes heartbeat
+    {
+        0%
+            {
+                transform: scale( 1.25 );
+            }
+        20%
+            {
+                transform: scale( 1 );
+            }
+        40%
+            {
+                transform: scale( 1.25 );
+            }
+        60%
+            {
+                transform: scale( 1 );
+            }
+        80%
+            {
+                transform: scale( 1.25 );
+            }
+        100%
+            {
+                transform: scale( 1.25 );
+            }
+    }    
     .zero-likes {
         color: grey;
     }

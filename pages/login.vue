@@ -21,6 +21,9 @@
             <input type="text" v-model="gameId"/><br/>
             <UIButton text="Přihlásit se" @click.native="loadGame()" />
             <div @click="showloadGameInput=false">Začít hrát novou hru</div>
+            <div v-if="$route.query['game-not-found']===null">
+              Hra nenalezena
+            </div>  
           </div>  
         <button @click="$router.push('/')">zpět</button>
       </div>
@@ -29,7 +32,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import UIButton from "~/components/ui/UIButton";
 export default {
   layout: 'login',
@@ -56,22 +58,13 @@ export default {
           sex: this.sex
         });
         localStorage.setItem("gameID", generatedGameId);
+        this.$store.dispatch('saveGame');
         this.$router.push('/')
       }
     },
     loadGame() {
       if(this.gameId) {
-        console.log('loaded')
-      axios.get('http://jakubnedorost.cz/marty/api/?load_game=' + this.gameId)
-              .then(response => { 
-                  let loadedState = response.data;
-                  console.log(loadedState)
-                  if(loadedState.loggedUser.game_id===this.gameId) {
-                    this.store.replaceState(loadedState);
-                    this.$router.push('/')
-                  }     
-              })
-              .catch(error => console.log(error))  
+        this.$store.dispatch('loadGame', this.gameId);
       }
     },
     createGameId() {
@@ -82,6 +75,9 @@ export default {
         }
         return result;      
     } 
+  },
+  mounted() {
+    console.log(this.$route.query['game-not-found'])
   }
 }
 </script>

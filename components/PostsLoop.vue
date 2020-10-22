@@ -35,7 +35,7 @@ export default {
             postsData: [],
             myPostsCount: this.$store.state.myPosts.length,
             isLoading: false,
-            newPostsToBeLoadedFrom: 1,
+            newPostsToBeLoadedFrom: 3,
             noMorePosts: false,
             store: this.$store.state
         }
@@ -72,13 +72,13 @@ export default {
                     if(bottomOfWindow) {
                         this.isLoading = true;
                         this.loadPosts(this.newPostsToBeLoadedFrom); 
-                        this.newPostsToBeLoadedFrom += 1;
+                        this.newPostsToBeLoadedFrom += 3;
                     }
                 } else {
                     window.removeEventListener('scroll', this.loadNewPostsOnScroll); 
                 }
         },        
-        loadPosts(from = 0, count = 1) {
+        loadPosts(from = 0, count = 3) {
             let queryUrl = 'https://jakubnedorost.cz/marty/api/?type=posts&from='+ from +'&count='+ count;
             if(this.filterByAuthor!=='all') {
                 queryUrl += '&posted_by=' + this.filterByAuthor;                
@@ -93,20 +93,25 @@ export default {
                         }
                         this.isLoading = false;                        
                     })
-                    .catch(error => console.log(error))  
+                    .catch(error => console.log(error))
+                    .finally(() => {
+                        if(from == 0) {
+                            this.loadMyPostsFromStore();
+                        }
+                    }) 
         },
         loadMyPostsFromStore() {
+            if(this.filterByAuthor=='all'||this.filterByAuthor=='me') {
                 let myPosts = [...this.$store.state.myPosts];
-                myPosts.reverse();
-                this.postsData = [...myPosts, ...this.postsData]  
+                /*console.log('myposts', myPosts)
+                myPosts.reverse();*/
+                this.postsData = [...myPosts, ...this.postsData]
+            }      
         }
     },
     mounted() {
         this.addScrollListener();
         this.loadPosts();
-        if(this.filterByAuthor=='all'||this.filterByAuthor=='me') {
-            this.loadMyPostsFromStore();
-        }
     }
 }
 </script>

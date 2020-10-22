@@ -1,4 +1,10 @@
 import Vuex from 'vuex'
+import axios from 'axios'
+
+const saveGame = (gameId, state) => {
+    axios.post("https://jakubnedorost.cz/marty/api/save/?game_id=" + gameId, state)
+        .then(response => console.log(response))  
+}
 
 const createStore = () => {
     return new Vuex.Store({
@@ -6,7 +12,7 @@ const createStore = () => {
             startTimestamp: new Date().getTime(),
             gameVersion: 0,
             loggedUser: {
-                gameId: 0,
+                game_id: 0,
                 userId: "me",
                 profileImg: 'http://jakubnedorost.cz/marty/images/profiles/me/profileimg.jpg',
                 first_name: 'Nezalogovaný',
@@ -40,12 +46,13 @@ const createStore = () => {
                     ...payload
                 }
             },
-            loadGame: (state, gameId) => {
-                    gameId;
-                    state;
-            },           
+            loadGame: (state, loadedState) => {
+                Object.assign(state, loadedState);
+               /* $nuxt.$router.push('/')*/
+            },          
             postNewPost: (state, newPostObj) => {
                 state.myPosts.unshift(newPostObj);
+                saveGame(state.loggedUser.game_id, state);
             },
             deletePost: (state, post_id) => {
                 let arrayPos;
@@ -56,7 +63,8 @@ const createStore = () => {
                 });
                 if(arrayPos !== undefined) {
                     state.myPosts.splice(arrayPos, 1);
-                }    
+                } 
+                saveGame(state.loggedUser.game_id, state);  
             }, 
             updatePost: (state, payload) => {
                 let arrayPos;
@@ -75,7 +83,8 @@ const createStore = () => {
                     state[storeProperty].push({
                         ...payload
                     });
-                }                    
+                }
+                saveGame(state.loggedUser.game_id, state);                    
             },
             savePost: (state, post_id) => {
                 let posInArray = state.savedPosts.indexOf(post_id);
@@ -83,7 +92,8 @@ const createStore = () => {
                     state.savedPosts.push(post_id);
                 } else {
                     state.savedPosts.splice(posInArray, 1);
-                }   
+                }
+                saveGame(state.loggedUser.game_id, state);   
             },
             reportPost: (state, post_id) => {
                 let posInArray = state.reportedPosts.indexOf(post_id);
@@ -92,6 +102,7 @@ const createStore = () => {
                 } else {
                     state.reportedPosts.splice(posInArray, 1);
                 }   
+                saveGame(state.loggedUser.game_id, state);
             },                  
             updateChat: (state, payload) => {
                 let contactID = payload.contact_id;
@@ -108,7 +119,8 @@ const createStore = () => {
                     } else {
                         delete state.chats[0][contactID].preparedMessages;
                     }
-                }                  
+                } 
+                saveGame(state.loggedUser.game_id, state);                 
             },
             postNewComment: (state, payload) => {
                 const postID = payload.post_id;
@@ -117,7 +129,8 @@ const createStore = () => {
                 }       
                 state.myComments[postID].push(payload);
                 let arrayPos = state.myComments[postID].length - 1;
-                delete state.myComments[postID][arrayPos].post_id;                            
+                delete state.myComments[postID][arrayPos].post_id;  
+                saveGame(state.loggedUser.game_id, state);                          
             },             
             updateComment: (state, payload) => {
                 let arrayPos;
@@ -147,10 +160,11 @@ const createStore = () => {
                     let newArrayPos = state[storeProperty][postID].length - 1;
                     delete state[storeProperty][postID][newArrayPos].post_id;                    
                 }  
-                
+                saveGame(state.loggedUser.game_id, state);
             },                                                              
             changePoints: (state, payload) => {
                 state.loggedUser.points = state.loggedUser.points + payload;
+                saveGame(state.loggedUser.game_id, state);
             },
             openChat: (state, payload) => {
                 state.openedChat = payload;
@@ -158,6 +172,29 @@ const createStore = () => {
             closeChat: state => {
                 state.openedChat = null;
             }            
+        },
+        actions: {
+            loadGame (context, gameId) {
+                axios.get('http://jakubnedorost.cz/marty/api/?load_game=' + gameId)
+                    .then(response => {
+                        let loadedState = response.data;
+                        console.log(loadedState);
+                        if (loadedState && (loadedState.loggedUser.game_id === gameId)) {
+                            context.commit('loadGame', loadedState);
+                           /* $nuxt.$router.push('/') */
+                        } else {
+                            console.log('nenalezena hra')
+                            $nuxt.$router.push('/login?game-not-found')
+                        }
+                    })
+                    .catch(error => { 
+                        console.log(error)
+                        $nuxt.$router.push('/login?error') 
+                    })
+            },
+            saveGame: (context) => {
+                saveGame(context.state.loggedUser.game_id, context.state);
+            },                      
         }
     });
 }        

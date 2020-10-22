@@ -2,10 +2,11 @@
   <div>
       <header>
           <div class="container">
-            <nav class="header__nav">  
+            <nav class="header__nav"> 
+                
                 <ul>
-                    <li><nuxt-link to="/messages"><button><i class="las la-sms"></i><br/> Zprávy</button></nuxt-link></li> 
-                    <li><nuxt-link to="/notifications"><button><i class="las la-bell"></i><br/>  Upozornění</button></nuxt-link></li>  
+                    <li><DropdownWrapper dropdownName="Messages"><button><i class="las la-sms"></i><br/> Zprávy</button></DropdownWrapper></li> 
+                    <li><DropdownWrapper dropdownName="Notifications"><button><i class="las la-bell"></i><br/>  Upozornění</button></DropdownWrapper></li>  
                 </ul>
             </nav>
             <div class="header__logo-wrapper">
@@ -24,10 +25,13 @@
 
 <script>
 import Chat from "~/components/Chat";
+import DropdownWrapper from "~/components/dropdowns/DropdownWrapper";
 import ModalWindow from '~/components/modals/ModalWindow';
 export default {
+  middleware: ['login'],
   components: {
      Chat,
+     DropdownWrapper,
      ModalWindow
   },
   computed: {
