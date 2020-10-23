@@ -11,8 +11,18 @@
         <div class="switch-photo switch-photo--previous" v-if="photoInLightbox.index > 0" @click="previousPhoto"><div class="switch-photo-btn"><i class="las la-angle-double-left"></i></div></div>
         <div>            
             <div class="post__gallery-content">
-                <UiCloseBtn @click.native="closeLightbox()"/><br/>
-                <img :src="photoInLightbox.url"><br/>
+                <div class="post__gallery-inner" style="position: relative;">
+                    <UiCloseBtn @click.native="closeLightbox()" style="position: absolute; right: -10px; top: -10px;"/>
+                    <img :src="photoInLightbox.url"><br/>
+                    <div class="post__gallery-post">
+                        <div class="post__gallery-post-author">
+                            <nuxt-link :to="'/profile/'+postData.posted_by"><UIProfileImg :userID="postData.posted_by" style="margin-right: 10px;"/></nuxt-link>
+                            <div><nuxt-link :to="'/profile/'+postData.posted_by">{{postData.posted_by}}</nuxt-link><br/><small><TimeAgo :time="postData.published"/></small></div>
+                        </div>    
+                        <div v-html="postData.post_text" style="margin-left: 20px;"></div>                    
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="switch-photo switch-photo--next" v-if="photoInLightbox.index <= photosData.length - 2" @click="nextPhoto"><div class="switch-photo-btn"><i class="las la-angle-double-right"></i></div></div>    
@@ -22,13 +32,18 @@
 
 <script>
 import UICloseBtn from "~/components/ui/UICloseBtn";
+import TimeAgo from "~/components/TimeAgo";
+import UIProfileImg from '~/components/ui/UIProfileImg';
 
 export default {
     components: {
-        UICloseBtn
+        UICloseBtn,
+        TimeAgo,
+        UIProfileImg
     },
     props: {
-        photosData: Array
+        photosData: Array,
+        postData: Object
     },
     data() {
         return {
@@ -94,6 +109,13 @@ export default {
         background: rgba(44,44,44,0.5);
         font-size: 22px;
     }
+    .post__gallery-post {
+        display: flex;
+        color: white;
+        background: rgba(0,0,0,0.4);
+        margin: 0 auto;
+        padding: 10px 20px;
+    }
     .post__gallery-overlay {
       display: flex;
       flex-direction: column;
@@ -109,7 +131,6 @@ export default {
       z-index: 12;      
     }
     .post__gallery-content {
-      text-align: center;
       position: relative;  
       padding: 20px;
       margin: 0 auto;
@@ -117,11 +138,19 @@ export default {
       max-width: 80%;
 
       img {
-          width: 95%;
-          max-width: 1200px;
+          width: 100%;
           height: auto;
       }
     }  
+    .post__gallery-inner {
+        display: block;
+        width: 95%;
+        max-width: 1200px; 
+        margin: 0 auto;        
+    }
+    .post__gallery-post-author {
+        display: flex;
+    }
 .switch-photo {
     position: absolute;
     cursor: pointer;

@@ -18,7 +18,12 @@
                 <LinkPreview :linkData="postData.link" />
             </div>
             <div class="post__extra-content" v-if="postData.extra_content">
-                <PostPhotos v-if="postData.extra_content.type=='photo'" :photosData="postData.extra_content.url"/> 
+                <PostPhotos v-if="postData.extra_content.type=='photo'" :photosData="postData.extra_content.url" 
+                :postData="{
+                    posted_by: postData.posted_by,
+                    published: postData.published,
+                    post_text: postData.post_text
+                }"/> 
                 <PostVideo v-if="postData.extra_content.type=='video'" :embedURL="postData.extra_content.url"/>                   
             </div>
         </div>

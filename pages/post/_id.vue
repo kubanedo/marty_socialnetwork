@@ -1,13 +1,20 @@
 <template>
-    <div>
-       <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData"/> 
-       <br/>
-              <br/>
-                     <br/>
-                            <br/>
-                                   <br/>
-                                   {{postsData}}
-    </div>
+<div>
+      <div class="main-wrapper">
+          <div class="container homepage-grid">
+            <aside class="left-sidebar">
+                            
+            </aside>
+            <div class="main-content">
+               <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData"/>
+               {{postsData}}
+            </div>
+            <aside class="right-sidebar">
+               
+            </aside>
+          </div>
+      </div>
+  </div>      
 </template>
 
 <script>
@@ -19,15 +26,17 @@ export default {
     },
     data() {
         return {
-            postsData: []
+            postsData: [] 
         }
     },
     computed: {
-
+        myPosts() {
+            return this.$store.state.myPosts;
+        }
     },
     methods: {
         loadPost() {
-                let myPostsFromStore = [...this.$store.state.myPosts];
+                let myPostsFromStore = [...this.myPosts];
                 console.log(myPostsFromStore)
                 let postsData = myPostsFromStore.filter((item) => {
                     return item.post_id === this.$route.params.id;
@@ -49,6 +58,11 @@ export default {
                 }              
         }
     },
+    watch: {
+        myPosts(value) {
+            this.loadPost();
+        }
+    },    
     mounted() {
         this.loadPost();
     }

@@ -7,10 +7,6 @@
                     <h3>Profil</h3>
                     Počet přátel: 43<br/>
                     <span>Počet nevyřízených žádostí: 2</span>
-                    <div style="display: none; max-width: 200px;">
-                        {{store}}
-                    </div>    
-
                 </div>  
                 <div class="card">
                     <button><i class="las la-user-friends"></i> Lidé</button>
