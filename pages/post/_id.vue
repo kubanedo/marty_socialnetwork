@@ -6,8 +6,8 @@
                             
             </aside>
             <div class="main-content">
-               <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData"/>
-               {{postsData}}
+               <LoadingPost v-if="loadingPost"/>
+               <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData" @postLoaded="loadingPost=false"/>
             </div>
             <aside class="right-sidebar">
                
@@ -20,12 +20,15 @@
 <script>
 import axios from 'axios'
 import Post from "~/components/post/Post";
+import LoadingPost from "~/components/post/LoadingPost";
 export default {
     components: {
-        Post
+        Post,
+        LoadingPost
     },
     data() {
         return {
+            loadingPost: true,
             postsData: [] 
         }
     },
@@ -65,7 +68,12 @@ export default {
     },    
     mounted() {
         this.loadPost();
-    }
+    },
+    head () {
+        return {
+          title: 'Příspěvek'
+        }
+    } 
 }
 </script>
 

@@ -4,11 +4,13 @@
     <div v-if="showMenu" v-click-outside="closeMenu">
         <ul v-if="postedBy=='me'">
             <li @click="editPost"><i class="las la-edit"></i> Upravit příspěvek</li>
-            <li @click="deletePost"><i class="las la-trash"></i> Smazat příspěvek</li>                    
+            <li @click="deletePost"><i class="las la-trash"></i> Smazat příspěvek</li> 
+            <li><nuxt-link :to="'/post/' + postID"><i class="las la-eye"></i> Zobrazit příspěvek</nuxt-link></li>                                   
         </ul>    
         <ul v-else>
             <li @click="savePost"><i class="las la-bookmark"></i> {{isSaved ? 'Odstranit z uložených' : 'Uložit'}}</li>
-            <li @click="reportPost"><i class="las la-exclamation-triangle"></i> Nahlásit příspěvek</li>                    
+            <li @click="reportPost"><i class="las la-exclamation-triangle"></i> Nahlásit příspěvek</li>
+            <li><nuxt-link :to="'/post/' + postID"><i class="las la-eye"></i> Zobrazit příspěvek</nuxt-link></li>                     
         </ul>
     </div>    
   </div>
@@ -40,6 +42,11 @@ export default {
         },
         savePost() {
             this.isSaved = !this.isSaved;
+            if(this.isSaved) {
+                this.$toast("Příspěvek uložen.");
+            } else {
+                this.$toast("Příspěvek smazán z uložených.");
+            }
             this.$store.commit('savePost', this.postID); 
         },
         reportPost() {
@@ -48,6 +55,12 @@ export default {
             };
             this.$store.commit('reportPost', this.postID);            
         }                
+    },
+    mounted() {
+        let savedPosts = this.$store.state.savedPosts;
+        if(savedPosts.indexOf(this.postID) > -1) {
+            this.isSaved = true;
+        }
     }
 }
 </script>
@@ -64,7 +77,7 @@ ul {
     bottom: -3px;
     right: 0;
     border-radius: 5px;
-    z-index: 10;
+    z-index: 4;
     transform: translateY(100%);
     background: white;
     padding: 8px 14px;

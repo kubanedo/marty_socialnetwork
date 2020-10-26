@@ -145,7 +145,7 @@ export default {
     .post__gallery-inner {
         display: block;
         width: 95%;
-        max-width: 1200px; 
+        max-width: 1000px; 
         margin: 0 auto;        
     }
     .post__gallery-post-author {

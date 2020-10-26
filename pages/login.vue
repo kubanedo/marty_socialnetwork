@@ -78,7 +78,12 @@ export default {
   },
   mounted() {
     console.log(this.$route.query['game-not-found'])
-  }
+  },
+  head () {
+      return {
+        title: 'Přihlásit se'
+      }
+  }   
 }
 </script>
 

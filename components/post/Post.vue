@@ -166,6 +166,7 @@ export default {
             if(this.post_data.posted_by=='me') {
                 this.postedByName = this.$store.getters.getloggedUserWholeName;
                 this.nameLoaded = true;
+                this.$emit('postLoaded'); 
             } else {
                 axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic')
                     .then(response => {
@@ -177,7 +178,10 @@ export default {
                         }
                     })
                     .catch(error => console.log(error)) 
-                    .finally(() => this.nameLoaded = true)                
+                    .finally(() => {
+                        this.nameLoaded = true;
+                        this.$emit('postLoaded'); 
+                    })                
             }
         },
         loadComments() {

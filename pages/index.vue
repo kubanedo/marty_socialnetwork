@@ -7,6 +7,7 @@
                     <h3>Profil</h3>
                     Počet přátel: 43<br/>
                     <span>Počet nevyřízených žádostí: 2</span>
+                    <nuxt-link to="/saved-posts">Uložené příspěvky</nuxt-link>
                 </div>  
                 <div class="card">
                     <button><i class="las la-user-friends"></i> Lidé</button>
@@ -40,6 +41,11 @@ export default {
         PostsLoop,
         Contacts
     },
+    head () {
+        return {
+          title: 'Hlavní strana'
+        }
+    }    
 /*    data() {
         return {
             postsData: [],

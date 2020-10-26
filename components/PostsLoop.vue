@@ -3,8 +3,10 @@
     <div v-if="filterByAuthor=='all'||filterByAuthor=='me'" class="card card--noshadow">
         <CreateNewPost />
     </div>
-
-    <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData"/>
+    <div v-if="loadingPosts">
+      <LoadingPost v-for="item in 3" :key="item"/>
+    </div>
+    <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData" @postLoaded="loadingPosts=false"/>
 
     <NoMorePosts v-if="noMorePosts" />     
   </div>    
@@ -16,6 +18,7 @@ import CreateNewPost from "~/components/CreateNewPost";
 import Post from "~/components/post/Post";
 import NoMorePosts from "~/components/post/NoMorePosts";
 import UILoader from "~/components/ui/UILoader";
+import LoadingPost from "~/components/post/LoadingPost";
 
 export default {
     props: {
@@ -28,10 +31,12 @@ export default {
         Post,
         CreateNewPost,
         UILoader,
-        NoMorePosts
+        NoMorePosts,
+        LoadingPost
     },    
     data() {
         return {
+            loadingPosts: true,
             postsData: [],
             myPostsCount: this.$store.state.myPosts.length,
             isLoading: false,

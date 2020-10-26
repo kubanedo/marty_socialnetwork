@@ -1,15 +1,20 @@
 <template>
   <div class="messages__wrapper">
             <h3>Zprávy</h3>
-            <div v-for="(latestMessage, contactId) in latestMessages" :key="contactId" class="latest-message"
-                    @click="openChat(contactId)">
-                <div class="latest-message__img"><UIProfileImg :userID="contactId" /></div>
-                <div class="latest-message__info">
-                    <strong>{{contactId}}</strong><br/>
-                    <span v-if="latestMessage.userId=='me'">Já: </span>{{shortenMessage(latestMessage.text)}} <br/>
-                    <small><TimeAgo :time="latestMessage.time"/></small>
-                </div>
+            <div v-if="contentLoading">
+                <LoadingDropdownContent v-for="item in 3" :key="item" />
             </div>
+            <div v-else>
+                <div v-for="(latestMessage, contactId) in latestMessages" :key="contactId" class="latest-message"
+                        @click="openChat(contactId)">
+                    <div class="latest-message__img"><UIProfileImg :userID="contactId" /></div>
+                    <div class="latest-message__info">
+                        <strong>{{contactId}}</strong><br/>
+                        <span v-if="latestMessage.userId=='me'">Já: </span>{{shortenMessage(latestMessage.text)}} <br/>
+                        <small><TimeAgo :time="latestMessage.time"/></small>
+                    </div>
+                </div>
+            </div>    
   </div>
 </template>
 
@@ -17,14 +22,17 @@
 import axios from 'axios'
 import TimeAgo from "~/components/TimeAgo";
 import UIProfileImg from '~/components/ui/UIProfileImg'
+import LoadingDropdownContent from '~/components/dropdowns/LoadingDropdownContent'
 export default {
     components: {
         UIProfileImg,
-        TimeAgo
+        TimeAgo,
+        LoadingDropdownContent
     },
     data() {
         return {
-            latestMessages: {}
+            latestMessages: {},
+            contentLoading: true
         }
     },
     methods: {
@@ -35,7 +43,10 @@ export default {
                         this.latestMessages = response.data;
                     }
                 })
-                .catch(error => console.log(error))     
+                .catch(error => console.log(error)) 
+                .finally(() => {
+                    this.contentLoading = false;  
+                })    
         },
         shortenMessage(message) {
             if(message.length > 30) {
