@@ -28,6 +28,8 @@ const createStore = () => {
             savedPosts: [],
             reportedPosts: [],
             answeredQuizActions: [],
+            myFriends: ['eliskasvob', 'jnovak'],
+            myLikedPages: ['malltv'],
             /* App components state */
             openedChat: null,
             modalWindow: null            
@@ -161,7 +163,31 @@ const createStore = () => {
                     delete state[storeProperty][postID][newArrayPos].post_id;                    
                 }  
                 saveGame(state.loggedUser.game_id, state);
-            },                                                              
+            },    
+            changeConnection: (state, payload) => {
+                const connectionType = payload.connection_type;
+                const profileId = payload.profile_id;
+
+                let storeProperty;
+                if(connectionType=='person') {
+                    storeProperty = 'myFriends'; 
+                } else if (connectionType=='page') {
+                    storeProperty = 'myLikedPages';
+                }   
+
+                if(state[storeProperty].includes(profileId)) {
+                    let arrayPos;
+                    state[storeProperty].forEach((item, index) => {
+                        if(item==profileId) {
+                            arrayPos = index;
+                        }
+                    });
+                    state[storeProperty].splice(arrayPos, 1)
+                } else {
+                    state[storeProperty].push(profileId) 
+                }   
+                saveGame(state.loggedUser.game_id, state);                          
+            },                                                                        
             changePoints: (state, payload) => {
                 state.loggedUser.points = state.loggedUser.points + payload;
                 saveGame(state.loggedUser.game_id, state);

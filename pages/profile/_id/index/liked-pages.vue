@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <h2>Přátelé</h2>
+        <h2>To se mi líbí</h2>
         <div class="grid">
             <FriendBox v-for="friend in friends" :key="friend.profile_id" :friendData="friend"/>
         </div>

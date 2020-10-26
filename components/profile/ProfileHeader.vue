@@ -1,12 +1,12 @@
 <template>
     <div class="profile__header-wrapper">
-        <div class="profile__header" :style="{backgroundImage: 'url(http://jakubnedorost.cz/marty/images/profiles/' + normalizedUserId + '/cover.jpg)'}">
+        <div class="profile__header" :style="{backgroundImage: 'url(http://jakubnedorost.cz/marty/images/profiles/' + profileData.userId + '/cover.jpg)'}">
             <div class="container profile__header-grid">
               <div class="profile__header-img"><UIProfileImg :userID="profileData.profile_id" :imgSize="200" class="ui-profile-img"/></div>
               <div class="profile__header-name"><strong>{{profileData.first_name + " " + profileData.last_name}}</strong></div>
               <div class="profile__header-btns">
-                <button v-if="profileData.userId!=='me'">
-                  <div v-if="profileData.friends && (profileData.friends.indexOf('me') > -1)"><i class="las la-user-friends"></i> Jste přátelé</div>
+                <button @click="changeConnection" v-if="profileData.userId!=='me'">
+                  <div v-if="friendWithMe"><i class="las la-user-friends"></i> Jste přátelé</div>
                   <div v-else><i class="las la-plus"></i> Přidat do přátel</div>
                 </button>
               </div>
@@ -17,7 +17,8 @@
               <ul>
                 <nuxt-link :to="'/profile/' + profileData.userId" tag="li">Hlavní stránka</nuxt-link>
                 <nuxt-link :to="'/profile/' + profileData.userId + '/photos'" tag="li">Fotky</nuxt-link>
-                <nuxt-link :to="'/profile/' + profileData.userId + '/friends'" tag="li">Přátelé</nuxt-link>              
+                <nuxt-link :to="'/profile/' + profileData.userId + '/friends'" tag="li">Přátelé</nuxt-link>
+                <nuxt-link :to="'/profile/' + profileData.userId + '/liked-pages'" tag="li">To se mi líbí</nuxt-link>               
               </ul>    
             </div>
         </div>
@@ -33,10 +34,15 @@ export default {
     props: {
         profileData: Object
     },
-    data() {
-        return {
-            normalizedUserId: this.profileData.userId.replace(".","_")
+    computed: {
+        friendWithMe() {
+            return (this.$store.state.myFriends) ? this.$store.state.myFriends.includes(this.profileData.userId) : null;
         }
+    },
+    methods: {
+      changeConnection() {
+        this.$store.commit('changeConnection', {connection_type: 'person', profile_id: this.profileData.userId});
+      }
     }        
 }
 </script>

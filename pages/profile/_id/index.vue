@@ -3,6 +3,7 @@
       <div class="main-wrapper">
           <div class="profile-header">
             <ProfileHeader v-if="dataLoaded" :profileData="{profile_id: $route.params.id, ...profileData}"/>
+            <LoadingProfileHeader v-else />
           </div>
           <div class="container grid">
             <aside class="left-sidebar">
@@ -13,7 +14,13 @@
                     <div v-if="profileData.about_info && profileData.about_info.current_town"><strong><i class="las la-city"></i> Žije ve městě: </strong>{{ profileData.about_info.current_town }}</div>
                     <div v-if="profileData.about_info && profileData.about_info.study"><strong><i class="las la-graduation-cap"></i> Studuje: </strong>{{ profileData.about_info.study }}</div>
                     {{profileData}}
-                </div>             
+                </div> 
+                <div class="card">
+                  <h3>Fotky</h3>
+                </div>
+                <div class="card">
+                  <h3>Přátelé<small v-if="commonFriendsCount > 0"> ({{commonFriendsCount}} společných)</small></h3>
+                </div>                             
             </aside>
             <div class="main-content">
               <nuxt-child :profileData="profileData"/>            
@@ -26,10 +33,11 @@
 <script>
 import axios from 'axios';
 import ProfileHeader from '~/components/profile/ProfileHeader'
-
+import LoadingProfileHeader from '~/components/profile/LoadingProfileHeader'
 export default {
   components: {
-    ProfileHeader
+    ProfileHeader,
+    LoadingProfileHeader
   },
   data() {
     return {
@@ -41,7 +49,17 @@ export default {
   computed: {
         postsDataComp() {
             return this.postsData
-        }
+        },
+        commonFriendsCount() {
+          let result = [];
+          let friendsOfUser = this.profileData.friends;
+          if(this.$store.state.myFriends && friendsOfUser) {
+              result = this.$store.state.myFriends.filter((item) => {
+                  return friendsOfUser.indexOf(item) > -1;
+              });
+          }
+          return result.length;
+      }      
   },
   methods: {
     getProfileData() {
@@ -51,7 +69,7 @@ export default {
           }
           this.dataLoaded = true
         } else {  
-          axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles')
+          axios.get('https://jakubnedorost.cz/marty/api/?type=profiles')
             .then(response => {
               const data = response.data[0][this.$route.params.id];
               this.profileData = {...data, userId: this.$route.params.id}
@@ -78,11 +96,14 @@ export default {
     .container.grid {
         max-width: 1040px;
         display: grid;
-        grid-template-columns: 1fr 3fr !important;
+        grid-template-columns: 2fr 3fr !important;
         gap: 30px;
     }
 }
 .profile-header {
   min-height: 270px;
+}
+.card h3 {
+  margin-bottom: 10px;
 }
 </style>
