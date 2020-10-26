@@ -2,7 +2,7 @@
     <div class="profile__header-wrapper">
         <div class="profile__header" :style="{backgroundImage: 'url(http://jakubnedorost.cz/marty/images/profiles/' + normalizedUserId + '/cover.jpg)'}">
             <div class="container profile__header-grid">
-              <div class="profile__header-img"><UIProfileImg :imgURL="'http://jakubnedorost.cz/marty/images/profiles/' + normalizedUserId + '/profileimg.jpg'" :imgSize="200" class="ui-profile-img"/></div>
+              <div class="profile__header-img"><UIProfileImg :userID="profileData.profile_id" :imgSize="200" class="ui-profile-img"/></div>
               <div class="profile__header-name"><strong>{{profileData.first_name + " " + profileData.last_name}}</strong></div>
               <div class="profile__header-btns">
                 <button v-if="profileData.userId!=='me'">
