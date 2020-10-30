@@ -3,7 +3,7 @@
         <div class="post__head">
                 <nuxt-link :to="'/profile/' + postData.posted_by"><UIProfileImg :userID="postData.posted_by" statusBorderColor="grey" /></nuxt-link>
                 <div class="post-wrapper">
-                    <nuxt-link :to="'/profile/' + postData.posted_by" class="profile-name">{{postedByName}}</nuxt-link>
+                    <nuxt-link :to="'/profile/' + postData.posted_by" class="profile-name underline-hover">{{postedByName}}</nuxt-link>
                     <div class="post-time"><TimeAgo :time="postData.published"/> · <PrivacySettings :postedBy="postData.posted_by" :privacySetting="postData.privacy_settings" :postID="postData.post_id" @updatePrivacySetting="updatePrivacySetting($event)"/></div>                
                 </div>
                 <div class="post__menu"><PostMenu :postedBy="postData.posted_by" :postID="postData.post_id" @isDeleted="isDeleted=true" @editPost="editPost"/></div>

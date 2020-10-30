@@ -29,6 +29,7 @@ const createStore = () => {
             reportedPosts: [],
             answeredQuizActions: [],
             myFriends: ['eliskasvob', 'jnovak'],
+            myPendingFriendRequests: [],
             myLikedPages: ['malltv'],
             /* App components state */
             openedChat: null,
@@ -173,7 +174,9 @@ const createStore = () => {
                     storeProperty = 'myFriends'; 
                 } else if (connectionType=='page') {
                     storeProperty = 'myLikedPages';
-                }   
+                } else if (connectionType=='person-request') {
+                    storeProperty = 'myPendingFriendRequests'
+                }
 
                 if(state[storeProperty].includes(profileId)) {
                     let arrayPos;
@@ -200,6 +203,18 @@ const createStore = () => {
             }            
         },
         actions: {
+            waitForFriendRequestApproval(context, payload) {
+                if(!context.state.myFriends.includes(payload.profile_id) && !context.state.myPendingFriendRequests.includes(payload.profile_id) ) {
+                    context.commit('changeConnection', {...payload, connection_type: 'person-request'}); /* add to request queue */
+                    setTimeout(() => {
+                        context.commit('changeConnection', payload);
+                        context.commit('changeConnection', {...payload, connection_type: 'person-request'}); /* remove from queue */
+                        this._vm.$toast(`${payload.user_name} přijal/a žádost o přátelství.`);
+                    }, 10000);
+                } else {
+                    context.commit('changeConnection', payload);
+                }   
+            },
             loadGame (context, gameId) {
                 axios.get('http://jakubnedorost.cz/marty/api/?load_game=' + gameId)
                     .then(response => {

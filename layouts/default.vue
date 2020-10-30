@@ -1,9 +1,8 @@
 <template>
-  <div>
+  <div id="top">
       <header>
           <div class="container">
-            <nav class="header__nav"> 
-                
+            <nav class="header__nav">                 
                 <ul>
                     <li><DropdownWrapper dropdownName="Messages"><button><i class="las la-sms"></i><br/> Zprávy</button></DropdownWrapper></li> 
                     <li><DropdownWrapper dropdownName="Notifications"><button><i class="las la-bell"></i><br/>  Upozornění</button></DropdownWrapper></li>  
@@ -127,5 +126,16 @@ header {
 }
 .text-center {
     text-align: center;
+}
+.pointer {
+    cursor: pointer;
+}
+.underline-hover {
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
 }
 </style>

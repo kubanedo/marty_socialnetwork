@@ -3,32 +3,33 @@
         "first_name": "Jan",
         "last_name": "Novák",
         "sex": "m",
-        "friends": ["me", "eliskasvob"],
-        "photos": ["1","2","3","4","5"],
+        "photos": ["1","2","3","4","5"],        
+        "friends": ["eliskasvob"],
+        "liked-pages": ["malltv", "rady.pana.koziska"],
         "about_info": { "birthday": "15.4.2001", "current_town": "Praha", "study": "VŠE" }
     },
     "eliskasvob": {
         "first_name": "Eliška",
         "last_name": "Svobodová",
         "sex": "f",
-        "friends": ["me", "eliskasvob"]
+        "friends": ["pepino", "jnovak"]
     },
     "dvorakova.nela": {
         "first_name": "Nela",
         "last_name": "Dvořáková",
         "sex": "f",
-        "friends": ["pepino"]
+        "friends": ["pepino", "jakub.cerny"]
     },
     "jakub.cerny": {
         "first_name": "Jakub",
         "last_name": "Černý",
         "sex": "m",
-        "friends": ["pepino"]
+        "friends": ["pepino", "dvorakova.nela"]
     },
     "pepino": {
         "first_name": "Pepíno",
         "last_name": "'Poky' Pokorný",
         "sex": "m",
-        "friends": ["me", "eliskasvob"]
+        "friends": ["eliskasvob", "dvorakova.nela", "jakub.cerny"]
     }   
 }]

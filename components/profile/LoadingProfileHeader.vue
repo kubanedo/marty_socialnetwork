@@ -24,42 +24,40 @@ export default {
 
 <style lang="scss" scoped>
 @import "~/assets/variables.scss";
-@keyframes placeHolderShimmer{
-    0%{
-        background-position: -468px 0
-    }
-    100%{
-        background-position: 468px 0
-    }
-}
+@import "~/assets/loading-animation.scss";
 
-.animated-background {
-    animation-duration: 1.25s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: infinite;
-    animation-name: placeHolderShimmer;
-    animation-timing-function: linear;
-    background: #F6F6F6;
-    background: linear-gradient(to right, #F6F6F6 8%, #F0F0F0 18%, #F6F6F6 33%);
-    background-size: 800px 104px;
-    height: 96px;
-    position: relative;
-}
 .profile__header {
   position: relative;
-  min-height: 280px;
+  background-color: grey;
+  background-size: cover;
+  background-position: center center;
   @extend .animated-background;
-  background-size: 1200px 104px;   
+      min-height: 280px;
+}
+.profile__header-wrapper {
+  position: relative;
+  max-width: 1040px;
+  width: 95%;
+  margin: 0 auto;
+  border-radius: 5px;
+  margin-bottom: 30px;
+  box-shadow: 0px 1px 15px 0px rgba(51, 51, 51, 0.2);
 }
 .profile__header-menu {
   margin-bottom: 20px;
   background: white;
 
+  .container {
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+
   ul {
-    display: flex;
-    padding-left: 0;
+    position: relative;
+    left: 220px;    
+    display: inline-flex;
     margin-bottom: 0;
-    list-style: none;       
+    list-style: none;     
       li {
           @extend .animated-background;
           height: 14px;
@@ -68,7 +66,7 @@ export default {
       padding-bottom: 14px;
             border-top: 4px solid white;
             display: block;  
-            margin-right: 10px;          
+            margin-right: 20px;          
       }
   }
 }

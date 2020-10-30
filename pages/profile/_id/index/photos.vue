@@ -1,6 +1,7 @@
 <template>
     <div class="card">
         <h2>Fotky</h2>
+        {{profileData.photos}}
     </div>   
 </template>
 

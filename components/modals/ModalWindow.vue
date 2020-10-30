@@ -1,6 +1,6 @@
 <template>
     <div class="overlay" @click.self.prevent="closeWindow"> 
-        <div class="card overlay-content">
+        <div class="card overlay-content" :style="`max-width: ${modalData.modalWidth}px;`">
             <component :is="modalData.modalName" :modalData="modalData" @closeWindow="closeWindow" />
         </div>
     </div>    
@@ -10,11 +10,13 @@
 import CreatePost from '~/components/modals/CreatePost';
 import ReportPost from '~/components/modals/ReportPost';
 import Quiz from '~/components/modals/Quiz';
+import FriendsList from '~/components/modals/FriendsList';
 export default {
   components: {
       CreatePost,
       ReportPost,
-      Quiz
+      Quiz,
+      FriendsList
   },  
   props: {
       modalData: {

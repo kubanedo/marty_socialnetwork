@@ -186,6 +186,7 @@ export default {
       color: black;
       text-decoration: none;
       &:hover {
+        text-decoration: underline;
         color: rgba(0, 0, 0, 0.8);
       }
     }
