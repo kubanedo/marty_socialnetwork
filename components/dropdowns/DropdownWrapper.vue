@@ -1,15 +1,16 @@
 <template>
   <div>
-      <div @click="showDropdown=!showDropdown"><slot/></div>
-      <div v-if="showDropdown" class="dropdown-menu" v-click-outside="closeDropdown">
+      <div @click="showDropdown=!showDropdown"><slot/>{{unreadChatsCount}}</div>
+      <div v-show="showDropdown" class="dropdown-menu">
           <div class="dropdown-menu__content">
-              <component :is="dropName"></component>
+              <component :is="dropName" @unreadChatsCount="unreadChatsCount = $event"></component>
           </div>
       </div>
   </div>
 </template>
 
 <script>
+/*v-click-outside="closeDropdown"*/
 import Messages from "~/components/dropdowns/Messages";
 import Notifications from "~/components/dropdowns/Notifications";
 export default {
@@ -26,7 +27,8 @@ export default {
     data() {
         return {
             dropName: this.dropdownName,
-            showDropdown: false
+            showDropdown: false,
+            unreadChatsCount: 0
         }
     },
     methods: {

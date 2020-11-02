@@ -1,9 +1,12 @@
 <template>
-    <div class="overlay" @click.self.prevent="closeWindow"> 
-        <div class="card overlay-content" :style="`max-width: ${modalData.modalWidth}px;`">
-            <component :is="modalData.modalName" :modalData="modalData" @closeWindow="closeWindow" />
-        </div>
-    </div>    
+    <div>
+      <PhotoLightbox v-if="modalData.modalName=='PhotoLightbox'" :modalData="modalData" @closeWindow="closeWindow"/>
+      <div v-else class="overlay" @click.self.prevent="closeWindow"> 
+          <div class="card overlay-content" :style="`max-width: ${modalData.modalWidth}px;`">
+              <component :is="modalData.modalName" :modalData="modalData" @closeWindow="closeWindow" />
+          </div>
+      </div>
+    </div>       
 </template>
 
 <script>
@@ -11,6 +14,7 @@ import CreatePost from '~/components/modals/CreatePost';
 import ReportPost from '~/components/modals/ReportPost';
 import Quiz from '~/components/modals/Quiz';
 import FriendsList from '~/components/modals/FriendsList';
+import PhotoLightbox from '~/components/modals/PhotoLightbox';
 export default {
   components: {
       CreatePost,

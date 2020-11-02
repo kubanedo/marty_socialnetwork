@@ -1,6 +1,7 @@
 <template>
 <div>
-  <div class="chat__wrapper" @click="resetNewIncomingMessagesCount()">
+  <LoadingChat v-if="isLoading"/>  
+  <div v-else class="chat__wrapper" @click="resetNewIncomingMessagesCount()">
       <div :class="'chat__header' + ((newIncomingMessagesCount>0) ? ' blinking' : '')" @click="toggleChat()">
           <div class="chat__contact-info">
               <UIProfileImg :userID="contactId" :status="contactData.status" :imgSize="30" statusBorderColor="#d3d3d3" />
@@ -45,6 +46,7 @@ import UIInput from "~/components/ui/UIInput";
 import UILoader from "~/components/ui/UILoader";
 import ChatMessage from "~/components/chat/ChatMessage";
 import ChatTypingDots from "~/components/chat/ChatTypingDots";
+import LoadingChat from "~/components/chat/LoadingChat";
 
 import focusInput from '~/mixins/focusInput.js'
 
@@ -63,6 +65,7 @@ export default {
     },
     data() {
         return {
+            isLoading: true,
             contactData: {},
             isChatMaximized: true,
             areTypingDotsActive: false,
@@ -128,6 +131,7 @@ export default {
                 vm.messages.push(newMessageObj);
                 vm.updateChatInStore(newMessageObj, 'message');
                 vm.newIncomingMessagesCount++;
+                vm.updateChatInStore(vm.newIncomingMessagesCount, 'newMessagesCount');
                 vm.incomingMsgTone.volume = 0.1;
                 vm.incomingMsgTone.play();
             },randomTime(randomTimeBeforeTyping/1000, 15));
@@ -149,6 +153,7 @@ export default {
         },
         resetNewIncomingMessagesCount() {
             this.newIncomingMessagesCount = 0;
+            this.updateChatInStore(0, 'newMessagesCount');
         },
         loadChatMessages() {
             axios.get('https://jakubnedorost.cz/marty/api/?type=messages&contact_id=' + this.contactId)
@@ -171,28 +176,32 @@ export default {
                 .catch(error => console.log(error))
                 .finally(() => {
                     this.getChangesFromStore(); 
+                    this.isLoading = false;
                 })
         },
         updateChatInStore(value, type) {
-            let chatData;
+            let chatData = {
+                contact_id: this.contactId
+            };
             if(type=='message') {
-                chatData = {
-                    contact_id: this.contactData.contactId,
-                    newMessage: value
-                }
+                chatData['newMessage'] = value;
+            } else if(type=='newMessagesCount') {
+                chatData['newMessagesCount'] = value;                
             } else {
-                chatData = {
-                    contact_id: this.contactData.contactId,
-                    preparedMessagesUpdate: value                    
-                }
+                chatData['preparedMessagesUpdate'] = value;                 
             }
             this.$store.commit('updateChat', chatData);
         },
         getChangesFromStore() {
-            let storeData = this.$store.state.chats[0][this.contactData.contactId];
+            let storeData = this.$store.state.chats[0][this.contactId];
             if(storeData!==undefined) {
                 this.messages = [...this.messages, ...storeData.old_messages];
                 this.preparedMessages = storeData.preparedMessages;
+                if(storeData.new_messages_count) {
+                    this.newIncomingMessagesCount = storeData.new_messages_count;
+                } else {
+                    this.newIncomingMessagesCount = 0;                
+                }   
             }
         },
         getContactData() {
@@ -215,6 +224,7 @@ export default {
            /* a aktualizuj zprávy */
            this.loadChatMessages();
            this.getContactData();
+           this.newIncomingMessagesCount = 0;
         },
         messages() {
             /* při aktualizaci zpráv */
@@ -280,8 +290,8 @@ export default {
 }
 .chat__content {
     padding: 10px;
-    max-height: 350px;
-    min-height: 100px;
+    max-height: 280px;
+    min-height: 200px;
     overflow-y: scroll; 
 }
 .chat__input {

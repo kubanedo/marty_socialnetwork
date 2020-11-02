@@ -1,7 +1,7 @@
 <template>
   <div class="newpost__wrapper">
     <div class="newpost__profile-img-wrapper">
-      <nuxt-link to="/profile/me"><UIProfileImg userID="me"/></nuxt-link>
+      <nuxt-link to="/profile/me"><UIProfileImg userID="me" imgBorderColor="#f1f1f1"/></nuxt-link>
     </div>
     <div class="newpost__input">
       <div class="newpost__fakeinput" @click="openCreatePostInput">Co se vám honí hlavou?</div>

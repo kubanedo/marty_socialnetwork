@@ -24,8 +24,9 @@ export default {
                 modalName: 'PhotoLightbox',
                 lightboxData: {
                     type: 'profile_photos',
+                    profile_type: 'page',
                     profile_id: this.$route.params.id,
-                    profile_name: this.profileData.first_name + ' ' + this.profileData.last_name,
+                    profile_name: this.profileData.name,
                     photos: this.profileData.photos,
                     enter_photo_id: enterPhotoId
                 }
@@ -34,7 +35,7 @@ export default {
     },
     head () {
             return {
-                title: "Fotky uživatele " + ((this.profileData.first_name) ? (this.profileData.first_name + ' ' + this.profileData.last_name) : this.$route.params.id)
+                title: "Fotky stránky " + ((this.profileData.name) ? (this.profileData.name) : this.$route.params.id)
             }
     }    
 }

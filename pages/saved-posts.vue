@@ -6,7 +6,7 @@
                             
             </aside>
             <div class="main-content">
-               <h3>Uložené příspěvky</h3> <br/>
+               <h2>Uložené příspěvky</h2> <br/>
                <LoadingPost v-if="loadingPosts"/>
                <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData" @postLoaded="loadingPosts=false"/>
                <div v-if="noPosts && !loadingPosts">

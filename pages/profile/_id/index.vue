@@ -2,7 +2,7 @@
   <div>
       <div class="main-wrapper">
           <div class="profile-header">
-            <ProfileHeader v-if="dataLoaded" :profileData="{profile_id: $route.params.id, ...profileData}"/>
+            <ProfileHeader v-if="dataLoaded" :profileData="profileData" :profileId="$route.params.id"/>
             <LoadingProfileHeader v-else />
           </div>
           <div class="container grid">
@@ -23,14 +23,14 @@
                     <ProfileSidebarPhoto 
                       v-for="(photo, index) in profileData.photos.slice(0,3)" :key="index" 
                       :imageURL="`https://jakubnedorost.cz/marty/images/profiles/${$route.params.id}/photos/${photo}.jpg`"
-                      @click="console.log(photo)" />
+                      @click.native="openPhotoLightbox(index)" />
                   </div>
-                  <nuxt-link :to="`/profile/${$route.params.id}/photos`" tag="button" class="sidebar__btn">Všechny fotky</nuxt-link>
+                  <nuxt-link v-if="profileData.photos.length > 3" :to="`/profile/${$route.params.id}/photos`" tag="button" class="sidebar__btn">Všechny fotky</nuxt-link>
                 </div>
                 <div class="card" v-if="friendsLoaded">
                   <h3>Přátelé<small v-if="commonFriendsCount > 0"> ({{commonFriendsCount}} společných)</small></h3>
                   <div class="sidebar__friends">
-                    <ProfileSidebarFriend v-for="friend in friendsData" :key="friend.profile_id" :friendData="friend" :commonFriends="getCommonFriendsList(friend.friends)"/>
+                    <ProfileSidebarFriend v-for="friend in friendsData.slice(0,3)" :key="friend.profile_id" :friendData="friend" :commonFriends="getCommonFriendsList(friend.friends)"/>
                   </div>                  
                   <nuxt-link :to="`/profile/${$route.params.id}/friends`" tag="button" class="sidebar__btn">Všichni přátelé</nuxt-link>
                 </div>
@@ -42,7 +42,7 @@
               </div>                             
             </aside>
             <div class="main-content">
-              <nuxt-child :profileData="profileData"/>            
+              <nuxt-child :profileData="profileData" :friendsData="friendsData"/>            
             </div>
           </div>
       </div>
@@ -72,12 +72,27 @@ export default {
     }
   },
   computed: {
-        commonFriendsCount() {
+      commonFriendsCount() {
           let commonFriends = this.getCommonFriendsList(this.profileData.friends);
           return commonFriends.length;
-      }      
+      },
+      friendWithMe() {
+          return (this.$store.state.loggedUser.friends) ? this.$store.state.loggedUser.friends.includes(this.profileData.userId) : false;
+      }            
   },
   methods: {
+    openPhotoLightbox(enterPhotoId) {
+        this.$store.state.modalWindow = {
+            modalName: 'PhotoLightbox',
+            lightboxData: {
+                type: 'profile_photos',
+                profile_id: this.$route.params.id,
+                profile_name: this.profileData.first_name + ' ' + this.profileData.last_name,
+                photos: this.profileData.photos,
+                enter_photo_id: enterPhotoId
+            }
+        };        
+    },    
     getBirthdayDate(dayOfBirth) {
       dayOfBirth = new Date(dayOfBirth);
       return (dayOfBirth.getDate()) + '. ' + (dayOfBirth.getMonth() + 1) + '.';  
@@ -90,10 +105,12 @@ export default {
     },
     getCommonFriendsList(friendsArray) {
           let result = [];
-          if(this.$store.state.myFriends && friendsArray) {
-              result = this.$store.state.myFriends.filter((item) => {
-                  return friendsArray.indexOf(item) > -1;
-              });
+          if(this.$route.params.id!=="me") {
+            if(this.$store.state.loggedUser.friends && friendsArray) {
+                result = this.$store.state.loggedUser.friends.filter((item) => {
+                    return friendsArray.indexOf(item) > -1;
+                });
+            }
           }
           return result;
     },
@@ -102,6 +119,7 @@ export default {
           this.profileData = {
             ...this.$store.state.loggedUser
           }
+          this.getFriendsData();
           this.dataLoaded = true
         } else {  
           axios.get('https://jakubnedorost.cz/marty/api/?type=profiles&profile_id=' + this.$route.params.id)
@@ -117,17 +135,49 @@ export default {
         } 
     },
     getFriendsData() {
-          let friends = this.profileData.friends;
+        let friends;
+        if(this.$route.params.id=="me") {
+          friends = this.$store.state.loggedUser.friends;
+        } else {
+          friends = this.profileData.friends;
+        }        
           axios.get('https://jakubnedorost.cz/marty/api/?type=profiles&profile_ids=' + friends.join())
             .then(response => {
               this.friendsData = [...response.data];
               this.friendsLoaded = true;
             })
-            .catch(error => console.log(error))      
+            .catch(error => console.log(error))
+            .finally(() => {
+              if(this.friendWithMe) {
+                this.getMyData()
+              }
+            })      
+    },
+    getMyData(addOrRemove = 'add') {
+      if(addOrRemove=='remove') {
+        this.friendsData = this.friendsData.filter((item) => item.profile_id!=='me')
+      } else {
+        const {first_name, last_name} = this.$store.state.loggedUser;
+        const myData = {
+          first_name,
+          last_name,
+          profile_id: 'me'
+        }
+        this.friendsData.push(myData);
+      }  
     }  
   },
+  watch: {
+    friendWithMe(value) {
+      if(value) {
+        this.getMyData();
+      } else {
+        this.getMyData('remove');
+      }
+    }
+  },
   mounted() {
-      this.getProfileData();   
+      this.getProfileData(); 
   },
   head () {
         return {

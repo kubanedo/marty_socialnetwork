@@ -5,12 +5,16 @@
             <aside class="left-sidebar">
                 <div class="card">
                     <h3>Profil</h3>
-                    Počet přátel: 43<br/>
-                    <span>Počet nevyřízených žádostí: 2</span>
-                    <nuxt-link to="/saved-posts">Uložené příspěvky</nuxt-link>
+                    <span v-if="friendsCount > 0">Počet přátel: {{friendsCount}}</span><br/>
+                    <span>Počet nevyřízených žádostí: 2</span><br/>
+                    <span>Nepřečtené zprávy: 2</span>
+                    {{storeChats}}
+                    
                 </div>  
                 <div class="card">
-                    <button><i class="las la-user-friends"></i> Lidé</button>
+                    <nuxt-link to="/explore/people"><i class="las la-user-friends"></i> Lidé</nuxt-link><br/>
+                    <nuxt-link to="/explore/pages"><i class="las la-flag"></i> Stránky</nuxt-link><br/>
+                    <nuxt-link to="/saved-posts"><i class="las la-bookmark"></i>Uložené příspěvky</nuxt-link>
                 </div>                             
             </aside>
             <div class="main-content">
@@ -40,6 +44,14 @@ export default {
     components: {
         PostsLoop,
         Contacts
+    },
+    computed: {
+        storeChats() {
+            return this.$store.state.chats[0];
+        },
+        friendsCount() {
+            return this.$store.state.loggedUser.friends.length
+        }
     },
     head () {
         return {

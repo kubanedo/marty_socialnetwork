@@ -2,7 +2,7 @@
 <div>
     <div class="contact__wrapper" v-for="(contact, contactId) in contacts" :key="contactId"
         @click="openChat(contactId)">
-        <div><UIProfileImg :userID="contactId" :status="contact.status"/></div>
+        <div><UIProfileImg :userID="contactId" :status="contact.status" imgBorderColor="#f1f1f1"/></div>
         <div class="contact__name"><div>{{contact.first_name + " " + contact.last_name}}</div></div>
     </div>
 </div>    

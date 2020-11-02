@@ -7,6 +7,7 @@
       class="mr-5"
       :userID="message.userId"
       :imgSize="25"
+      imgBorderColor="#f1f1f1"
     />
     <UiTooltip :text="dateTime" :position="((message.userId == 'me') ? 'left' : 'right')" class="message__body-wrapper">
       <div class="message__body">

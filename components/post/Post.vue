@@ -1,9 +1,9 @@
 <template>
-    <div v-if="nameLoaded && !isDeleted" class="post">
+    <div v-if="!isDeleted" class="post">
         <div class="post__head">
-                <nuxt-link :to="'/profile/' + postData.posted_by"><UIProfileImg :userID="postData.posted_by" statusBorderColor="grey" /></nuxt-link>
+                <nuxt-link :to="((postData.first_name || postData.posted_by =='me') ? '/profile/' : '/page/') + postData.posted_by"><UIProfileImg :userID="postData.posted_by" imgBorderColor="#f1f1f1"/></nuxt-link>
                 <div class="post-wrapper">
-                    <nuxt-link :to="'/profile/' + postData.posted_by" class="profile-name underline-hover">{{postedByName}}</nuxt-link>
+                    <nuxt-link :to="((postData.first_name || postData.posted_by =='me') ? '/profile/' : '/page/') + postData.posted_by" class="profile-name underline-hover">{{postedByName}}</nuxt-link>
                     <div class="post-time"><TimeAgo :time="postData.published"/> · <PrivacySettings :postedBy="postData.posted_by" :privacySetting="postData.privacy_settings" :postID="postData.post_id" @updatePrivacySetting="updatePrivacySetting($event)"/></div>                
                 </div>
                 <div class="post__menu"><PostMenu :postedBy="postData.posted_by" :postID="postData.post_id" @isDeleted="isDeleted=true" @editPost="editPost"/></div>
@@ -89,11 +89,13 @@ export default {
     data() {
         return {
             postData: this.post_data,
-            nameLoaded: false,
+            /*nameLoaded: false,*/
             areCommentsOpened: false,
             isDeleted: false,            
             postText: '',
-            postedByName: this.post_data.posted_by,
+            postedByName: (this.post_data.first_name ? this.post_data.first_name + ' ' + this.post_data.last_name : 
+                                (this.post_data.name ? this.post_data.name : 
+                                (this.post_data.posted_by==='me' ? this.$store.getters.getloggedUserWholeName : this.post_data.posted_by))),
             comments: [],
             privacySetting: this.post_data.privacy_settings,
             animatedLike: false
@@ -162,7 +164,7 @@ export default {
         toggleComments() {
             this.areCommentsOpened = !this.areCommentsOpened;
         },
-        getFullName() {
+ /*       getFullName() {
             if(this.post_data.posted_by=='me') {
                 this.postedByName = this.$store.getters.getloggedUserWholeName;
                 this.nameLoaded = true;
@@ -183,7 +185,7 @@ export default {
                         this.$emit('postLoaded'); 
                     })                
             }
-        },
+        }, */
         loadComments() {
                 axios.get('https://jakubnedorost.cz/marty/api/?type=comments&post_id=' + this.post_data.post_id)
                     .then(response => {
@@ -196,7 +198,8 @@ export default {
                             this.commentsCount = (this.comments && this.comments.length) ? this.comments.length : 0;
                             if(this.commentsCount > 0) {
                                 this.areCommentsOpened = true;
-                            }                        
+                            }  
+                            this.$emit('postLoaded');                       
                     });        
         },
         updatePost(updatedProperty) {
@@ -244,7 +247,9 @@ export default {
     mounted() {
         this.getChangesFromStore();
         this.postText = this.makeLinksClickable(this.replaceSmileys(this.postData.post_text));
-        this.getFullName();
+        /*if(!this.post_data.first_name || !this.post_data.name) {
+            this.getFullName();
+        }    */
         this.loadComments();
     }
 }

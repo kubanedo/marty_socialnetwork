@@ -4,19 +4,19 @@
                     
         <div class="grid">
             <UILoadingContent v-if="loadingLikedPages"/>
-            <FriendlistItem v-for="likedPage in likedPages" :key="likedPage.profile_id" :friendData="likedPage"/>
+            <PagelistItem v-for="likedPage in likedPages" :key="likedPage.profile_id" :pageData="likedPage"/>
         </div>
     </div>   
 </template>
 
 <script>
 import axios from 'axios';
-import FriendlistItem from '~/components/profile/FriendlistItem'
+import PagelistItem from '~/components/profile/PagelistItem'
 import UILoadingContent from '~/components/ui/UILoadingContent'
 
 export default {
     components: {
-        FriendlistItem,
+        PagelistItem,
         UILoadingContent
     },
     props: {

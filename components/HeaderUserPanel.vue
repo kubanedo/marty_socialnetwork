@@ -2,7 +2,7 @@
 <div class="user-panel__wrapper">
     <div class="user-panel" @click="showMenu = !showMenu">
         <div class="user-panel__profile-img-wrapper">
-            <UIProfileImg userID="me" />
+            <UIProfileImg userID="me" imgBorderColor="#f1f1f1"/>
         </div>
         <div>
             <strong>{{wholeUsername}}</strong><br/>

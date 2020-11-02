@@ -1,14 +1,13 @@
 <template>
     <div class="card">
         <h2>Přátelé</h2>
-        <ul class="friends-submenu">
-            <nuxt-link :to="{hash:'#all'}" tag="li">Všichni přátelé</nuxt-link>
-            <nuxt-link :to="{hash:'#mutual-friends'}" tag="li">Společní přátelé</nuxt-link>
+        <ul class="friends-submenu" v-if="commonFriendsCount > 0">
+            <nuxt-link :to="'/profile/' + profileData.userId + '/friends'" tag="li">Všichni přátelé</nuxt-link>
+            <nuxt-link :to="'/profile/' + profileData.userId + '/friends/mutual'" tag="li">Společní přátelé ({{commonFriendsCount}})</nuxt-link>
         </ul>  
                     
-        <div class="grid">
-            <UILoadingContent v-if="loadingFriends"/>
-            <FriendlistItem v-for="friend in friends" :key="friend.profile_id" :friendData="friend"/>
+        <div>
+            <nuxt-child :allFriends="friendsData" :mutualFriends="commonFriendsData" :profileName="profileData.first_name + ' ' + profileData.last_name" />
         </div>
     </div>   
 </template>
@@ -26,34 +25,37 @@ export default {
     props: {
         profileData: {
             type: Object
+        },
+        friendsData: {
+            type: Object
         }
     },
     data() {
         return {
-            loadingFriends: true,
-            friends: []
+            mutualFriendsData: []
         }
     },
-    methods: {
-        getFriends() {
-          let friends = this.profileData.friends;
-          if(friends) {
-            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles&profile_ids=' + friends.join())
-                .then(response => {
-                this.friends = [...response.data];
-                this.loadingFriends = false;
-                })
-                .catch(error => console.log(error))   
-          }           
-        }
-    },
-    watch: {
-        profileData() {
-            this.getFriends();
-        }
-    },
-    mounted() {
-        this.getFriends();
+    computed: {
+        commonFriends() {
+            let result = [];
+            if(this.$route.params.id!=="me") {
+                let friendsOfUser = this.profileData.friends;
+                if(this.$store.state.loggedUser.friends && friendsOfUser) {
+                    result = this.$store.state.loggedUser.friends.filter((item) => {
+                        return friendsOfUser.indexOf(item) > -1;
+                    });
+                }
+            }
+            return result;
+        },
+        commonFriendsCount() {
+            return this.commonFriends.length;
+        },
+        commonFriendsData() {
+            return this.friendsData.filter((item) => {
+                return (this.commonFriends.indexOf(item.profile_id) > -1)
+            });
+        }         
     },
     head () {
             return {
@@ -67,11 +69,6 @@ export default {
 @import "~/assets/variables.scss";
 h2 {
     margin-bottom: 10px;
-}
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
 }
 ul.friends-submenu {
     display: inline-flex;

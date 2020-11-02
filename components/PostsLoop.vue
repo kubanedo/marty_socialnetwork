@@ -7,7 +7,7 @@
       <LoadingPost v-for="item in 3" :key="item"/>
     </div>
     <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData" @postLoaded="loadingPosts=false"/>
-
+    <!--<div class="" v-if="!(Array.isArray(postsData) && postsData.length)">Uživatel zatím nenapsal žádný příspěvek.</div>-->
     <NoMorePosts v-if="noMorePosts" />     
   </div>    
 </template>
@@ -88,6 +88,7 @@ export default {
             if(this.filterByAuthor!=='all') {
                 queryUrl += '&posted_by=' + this.filterByAuthor;                
             }
+            console.log(queryUrl);
             axios.get(queryUrl)
                     .then(response => { 
                         if(Array.isArray(response.data) && response.data.length) {
@@ -95,14 +96,16 @@ export default {
                             console.log(response.data)
                         } else {
                             this.noMorePosts = true;
-                        }
-                        this.isLoading = false;                        
+                        }                       
                     })
                     .catch(error => console.log(error))
                     .finally(() => {
-                        if(from == 0) {
-                            this.loadMyPostsFromStore();
-                        }
+                        this.loadingPosts = false; 
+                        if(this.filterByAuthor=='all'||this.filterByAuthor=='me') {
+                            if(from == 0) {
+                                this.loadMyPostsFromStore();
+                            }
+                        }    
                     }) 
         },
         loadMyPostsFromStore() {

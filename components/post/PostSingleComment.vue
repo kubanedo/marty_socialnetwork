@@ -7,6 +7,7 @@
             :userID="commentData.commented_by"
             :imgSize="35"
             class="mr-5"
+            imgBorderColor="#f1f1f1"
           />
         </nuxt-link>
       </div>
