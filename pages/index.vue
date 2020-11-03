@@ -5,16 +5,17 @@
             <aside class="left-sidebar">
                 <div class="card">
                     <h3>Profil</h3>
-                    <span v-if="friendsCount > 0">Počet přátel: {{friendsCount}}</span><br/>
-                    <span>Počet nevyřízených žádostí: 2</span><br/>
+                    <span v-if="friendsCount > 0">Počet přátel: <nuxt-link :to="'/profile/me/friends'">{{friendsCount}}</nuxt-link></span><br/>
+                    <span v-if="receivedFriendsReqCount > 0"><nuxt-link to="/friend-requests">Počet nevyřízených žádostí: {{receivedFriendsReqCount}}</nuxt-link></span><br/>
                     <span>Nepřečtené zprávy: 2</span>
+                    {{state}}<br/>
                     {{storeChats}}
                     
                 </div>  
                 <div class="card">
                     <nuxt-link to="/explore/people"><i class="las la-user-friends"></i> Lidé</nuxt-link><br/>
                     <nuxt-link to="/explore/pages"><i class="las la-flag"></i> Stránky</nuxt-link><br/>
-                    <nuxt-link to="/saved-posts"><i class="las la-bookmark"></i>Uložené příspěvky</nuxt-link>
+                    <nuxt-link to="/saved-posts"><i class="las la-bookmark"></i> Uložené příspěvky<span v-if="savedPostsCount > 0"> ({{savedPostsCount}})</span></nuxt-link>
                 </div>                             
             </aside>
             <div class="main-content">
@@ -26,7 +27,7 @@
                     <Contacts />
                 </div>
                 <div class="card">
-                    <h3>Stránky</h3>
+                    <h3>Reklamy</h3>
                 </div>                
             </aside>
           </div>
@@ -46,11 +47,20 @@ export default {
         Contacts
     },
     computed: {
+        state() {
+            return this.$store.state;
+        },        
         storeChats() {
-            return this.$store.state.chats[0];
+            return (this.$store.state ? this.$store.state.chats : [{}]);
         },
         friendsCount() {
             return this.$store.state.loggedUser.friends.length
+        },
+        receivedFriendsReqCount() {
+            return this.$store.state.pendingRecievedFriendReq.length
+        },        
+        savedPostsCount() {
+            return this.$store.state.savedPosts.length;
         }
     },
     head () {

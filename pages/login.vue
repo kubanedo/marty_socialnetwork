@@ -77,7 +77,11 @@ export default {
     } 
   },
   mounted() {
-    console.log(this.$route.query['game-not-found'])
+    console.log(this.$route.query['game-not-found']);
+    console.log('routequery', this.$route.query['logged-out']);
+    if(this.$route.query['logged-out']!==undefined && this.$route.query['logged-out']==null) {
+        this.$store.commit('resetState'); 
+    }
   },
   head () {
       return {

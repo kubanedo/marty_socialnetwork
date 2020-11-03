@@ -1,10 +1,10 @@
 <template>
   <div class="messages__wrapper">
             <h3>Zprávy<span v-if="unreadChatsCount"> ({{unreadChatsCount}})</span></h3>
-            <div v-if="contentLoading">
+            <div v-show="contentLoading">
                 <LoadingDropdownContent v-for="item in 3" :key="item" />
             </div>
-            <div v-else>
+            <div v-show="!contentLoading">
                 {{chatsStore}}
                 <div v-for="(latestMessage) in latestMessages" :key="latestMessage.chat_id" :class="'latest-message' + (latestMessage.new_messages_count ? ' unread' :  '' )"
                         @click="openChat(latestMessage.chat_id)">
@@ -52,7 +52,8 @@ export default {
             return[...this.latestFromStore, ...notUpdatedMessagesFromApi]
         },
         chatsStore() {
-            return this.$store.state.chats
+            let chats = ((this.$store.state && this.$store.state.chats) ? this.$store.state.chats : [])
+            return chats
         },
         latestFromStore() {
             let latestFromStore = [];
@@ -79,7 +80,7 @@ export default {
     },
     watch: {
         unreadChatsCount(value) {
-            this.$emit('unreadChatsCount', value);
+            this.$emit('unreadCount', value);
         }
     },
     methods: {
@@ -96,7 +97,7 @@ export default {
                 })    
         },
         shortenMessage(message) {
-            if(message.length > 30) {
+            if(message && message.length > 30) {
                 message = message.slice(0, 30) + '...';
             }
             return message;

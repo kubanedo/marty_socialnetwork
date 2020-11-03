@@ -140,7 +140,9 @@ export default {
           friends = this.$store.state.loggedUser.friends;
         } else {
           friends = this.profileData.friends;
-        }        
+        }  
+        
+        if(Array.isArray(friends) && friends.length) {   
           axios.get('https://jakubnedorost.cz/marty/api/?type=profiles&profile_ids=' + friends.join())
             .then(response => {
               this.friendsData = [...response.data];
@@ -151,7 +153,8 @@ export default {
               if(this.friendWithMe) {
                 this.getMyData()
               }
-            })      
+            })
+        }          
     },
     getMyData(addOrRemove = 'add') {
       if(addOrRemove=='remove') {

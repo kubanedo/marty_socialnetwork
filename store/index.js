@@ -6,47 +6,79 @@ const saveGame = (gameId, state) => {
         .then(response => console.log(response))  
 }
 
+const defaultState = () => {
+    return {
+    startTimestamp: new Date().getTime(),
+    gameVersion: 0,
+    loggedUser: {
+        game_id: 0,
+        userId: "me",
+        profileImg: 'http://jakubnedorost.cz/marty/images/profiles/me/profileimg.jpg',
+        first_name: 'Nezalogovaný',
+        last_name: 'Uživatel',
+        sex: 'm',
+        points: 0,
+        friends: ['eliskasvob', 'jnovak'],
+        liked_pages: ['malltv']
+    },
+    chats: [{}],
+    myPosts: [],
+    othersPosts: [],
+    myComments: {},
+    othersComments: {},
+    savedPosts: [],
+    pendingRecievedFriendReq: ['dvorakova.nela'],
+    pendingSentFriendReq: [],
+    notifications: [{
+        notif_id: 2,
+        user_id: 'jnovak',
+        type: 'like',
+        what: 'post',
+        excerpt: 'Nezahrál by si někdo',
+        post_id: '1jnovak',
+        time: {
+            minutesAgo: 50
+        },
+        unread: 1
+    },
+    {
+        notif_id: 1,
+        user_id: 'eliskasvob',
+        type: 'comment',
+        what: 'comment',
+        excerpt: 'Nezahrál by si někdo',
+        post_id: 'me123',
+        time: {
+            daysAgo: 2
+        },
+        unread: 0
+    }],
+    reportedPosts: [],
+    answeredQuizActions: [],
+    /* App components state */
+    openedChat: null,
+    modalWindow: null
+}
+}
+
 const createStore = () => {
     return new Vuex.Store({
-        state: () => ({
-            startTimestamp: new Date().getTime(),
-            gameVersion: 0,
-            loggedUser: {
-                game_id: 0,
-                userId: "me",
-                profileImg: 'http://jakubnedorost.cz/marty/images/profiles/me/profileimg.jpg',
-                first_name: 'Nezalogovaný',
-                last_name: 'Uživatel',
-                sex: 'm',
-                points: 0,
-                friends: ['eliskasvob', 'jnovak'],
-                liked_pages: ['malltv'],
-                pending_friend_requests: []
-            },
-            chats: [{}],
-            myPosts: [],
-            othersPosts: [],
-            myComments: {},
-            othersComments: {},            
-            savedPosts: [],
-            reportedPosts: [],
-            answeredQuizActions: [],
-            /* App components state */
-            openedChat: null,
-            modalWindow: null            
-        }),
+        state: () => (Object.assign({}, defaultState())),
         getters: {
             getloggedUserWholeName: state => {
               return state.loggedUser.first_name + " " + state.loggedUser.last_name;
             }
         },        
         mutations: {
+            resetState: (state) => {
+                Object.assign(state, defaultState());
+            },            
             login: (state, payload) => {
                 state.loggedUser = {
-                    /*...state.loggedUser,*/
-                    userId: "me",
+                    ...state.loggedUser,
+                    /*userId: "me",
                     profileImg: 'http://jakubnedorost.cz/marty/images/profiles/me/profileimg.jpg',
-                    points: 0,
+                    points: 0,*/
                     ...payload
                 }
             },
@@ -125,6 +157,7 @@ const createStore = () => {
                 } else {
                     delete state.chats[0][contactID].preparedMessages;
                 }
+                console.log("chaty1", state.chats);
                 console.log("chaty", state.chats[0][contactID]);
                 saveGame(state.loggedUser.game_id, state);                 
             },
@@ -174,23 +207,25 @@ const createStore = () => {
 
                 let storeProperty;
                 if(connectionType=='person') {
-                    storeProperty = 'friends'; 
+                    storeProperty = state.loggedUser.friends; 
                 } else if (connectionType=='page') {
-                    storeProperty = 'liked_pages';
-                } else if (connectionType=='person-request') {
-                    storeProperty = 'pending_friend_requests'
+                    storeProperty = state.loggedUser.liked_pages;
+                } else if (connectionType=='person:sent-request') {
+                    storeProperty = state.pendingSentFriendReq;
+                } else if (connectionType == 'person:received-request') {
+                    storeProperty = state.pendingRecievedFriendReq;                    
                 }
 
-                if(state.loggedUser[storeProperty].includes(profileId)) {
+                if(storeProperty.includes(profileId)) {
                     let arrayPos;
-                    state.loggedUser[storeProperty].forEach((item, index) => {
+                    storeProperty.forEach((item, index) => {
                         if(item==profileId) {
                             arrayPos = index;
                         }
                     });
-                    state.loggedUser[storeProperty].splice(arrayPos, 1)
+                    storeProperty.splice(arrayPos, 1)
                 } else {
-                    state.loggedUser[storeProperty].push(profileId) 
+                    storeProperty.push(profileId) 
                 }   
                 saveGame(state.loggedUser.game_id, state);                          
             },                                                                        
@@ -207,16 +242,15 @@ const createStore = () => {
         },
         actions: {
             waitForFriendRequestApproval(context, payload) {
-                console.log('reqDispatched', payload)
-                if(!context.state.loggedUser.friends.includes(payload.profile_id) && !context.state.loggedUser.pending_friend_requests.includes(payload.profile_id) ) {
+                if (!context.state.loggedUser.friends.includes(payload.profile_id) && !context.state.pendingSentFriendReq.includes(payload.profile_id) ) {
                     const randomTime = (minTimeInSec, maxTimeInSecs) => { 
                         let randomTime = Math.floor(Math.random() * maxTimeInSecs) * 1000;
                         return (randomTime > (minTimeInSec * 1000)) ? randomTime : (minTimeInSec * 1000);
                     } 
-                    context.commit('changeConnection', {...payload, connection_type: 'person-request'}); /* add to request queue */
+                    context.commit('changeConnection', { ...payload, connection_type: 'person:sent-request'}); /* add to request queue */
                     setTimeout(() => {
                         context.commit('changeConnection', payload);
-                        context.commit('changeConnection', {...payload, connection_type: 'person-request'}); /* remove from queue */
+                        context.commit('changeConnection', { ...payload, connection_type: 'person:sent-request'}); /* remove from queue */
                         this._vm.$toast(`${payload.user_name} přijal/a žádost o přátelství.`);
                     }, randomTime(4, 10));
                 } else {
@@ -229,7 +263,7 @@ const createStore = () => {
                         let loadedState = response.data;
                         console.log(loadedState);
                         if (loadedState && (loadedState.loggedUser.game_id === gameId)) {
-                            loadedState.loggedUser.pending_friend_requests = [];
+                            loadedState.loggedUser.pending_sent_friend_req = [];
                             context.commit('loadGame', loadedState); 
                            /* $nuxt.$router.push('/') */
                         } else {

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!isDeleted" class="post">
+    <div v-if="!(isDeleted || isPostReported)" class="post">
         <div class="post__head">
                 <nuxt-link :to="((postData.first_name || postData.posted_by =='me') ? '/profile/' : '/page/') + postData.posted_by"><UIProfileImg :userID="postData.posted_by" imgBorderColor="#f1f1f1"/></nuxt-link>
                 <div class="post-wrapper">
@@ -122,6 +122,9 @@ export default {
         },        
         commentsCount() {
             return ((this.comments && this.comments.length) ? this.comments.length : 0);
+        },
+        isPostReported() {
+            return (this.$store.state.reportedPosts) ? this.$store.state.reportedPosts.includes(this.postData.post_id) : false;
         }
     },
     methods: {

@@ -8,7 +8,7 @@
             <div class="main-content">
                 <div class="card">
                 <h2>Objevte lidi #fejkbuku</h2> <br/>
-                <UILoadingContent v-if="!peopleLoaded"/>
+                <UILoadingContent v-if="!peopleLoaded" :title="false"/>
                 <div class="grid" v-else>                        
                         <FriendlistItem v-for="(person, person_id) in peopleData" :key="person_id" :friendData="{...person, profile_id: person_id}"/>
                 </div>                
@@ -27,6 +27,10 @@ import axios from 'axios'
 import UILoadingContent from '~/components/ui/UILoadingContent'
 import FriendlistItem from '~/components/profile/FriendlistItem'
 export default {
+    components: {
+        UILoadingContent,
+        FriendlistItem
+    },    
     data() {
         return {
             peopleData: {},

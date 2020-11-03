@@ -10,11 +10,19 @@
                     {{commonFriendsCount}} společných přátel
                 </small>
             </div>
-            <div v-if="friendData.profile_id!=='me'">                
+            <div v-if="friendData.profile_id!=='me' && !personHasSentMeRequest">                
                 <button v-if="friendWithMe" @click="changeConnection" class="friend-with-me"><i class="las la-check-circle"></i> Jste přáteli</button>
                 <button v-else-if="isPendingRequest" class="pending" disabled><i class="las la-clock"></i> Čeká na vyřízení</button>
                 <button v-else @click="changeConnection"><i class="las la-plus-circle"></i> Přidat do přátel</button>
             </div> 
+            <div v-else-if="friendData.profile_id!=='me'">
+                  <button @click="changeConnection('accept')" class="profile__header-btn">
+                    <span class="pending"><i class="las la-check-circle"></i> Přijmout</span>
+                  </button>                 
+                  <button @click="changeConnection('decline')" class="profile__header-btn">
+                    <span><i class="las la-times-circle"></i> Zamítnout</span>
+                  </button>                 
+            </div>    
             <div v-else>
                 <i><small>S uživatelem {{profileName}} jste přátelé.</small></i>
             </div>    
@@ -41,8 +49,11 @@ export default {
             return (this.$store.state.loggedUser.friends) ? this.$store.state.loggedUser.friends.includes(this.friendData.profile_id) : false;
         },
         isPendingRequest() {
-            return (this.$store.state.loggedUser.pending_friend_requests) ? this.$store.state.loggedUser.pending_friend_requests.includes(this.friendData.profile_id) : false;
-        },        
+            return (this.$store.state.loggedUser.pendingSentFriendReq) ? this.$store.state.loggedUser.pendingSentFriendReq.includes(this.friendData.profile_id) : false;
+        },  
+        personHasSentMeRequest() {
+            return (this.$store.state.pendingRecievedFriendReq) ? this.$store.state.pendingRecievedFriendReq.includes(this.friendData.profile_id) : false;
+        },                 
         commonFriends() {
             let result = [];
             let friendsOfUser = this.friendData.friends;
@@ -58,12 +69,23 @@ export default {
         }        
     },
     methods: {
-      changeConnection() {
-        this.$store.dispatch('waitForFriendRequestApproval', {
-          connection_type: 'person', 
-          profile_id: this.friendData.profile_id, 
-          user_name: this.friendData.first_name + ' ' + this.friendData.last_name
-          });          
+      changeConnection(value) {
+        if(this.personHasSentMeRequest) {
+            let payload = {
+              connection_type: 'person', 
+              profile_id: this.friendData.profile_id
+            }
+            if(value=='accept') {
+              this.$store.commit('changeConnection', payload); /*Přidat mezi přátele*/
+            } 
+            this.$store.commit('changeConnection', {...payload, connection_type: 'person:received-request'}); /*Odstranit z received requestů*/            
+        } else {          
+            this.$store.dispatch('waitForFriendRequestApproval', {
+            connection_type: 'person', 
+            profile_id: this.friendData.profile_id, 
+            user_name: this.friendData.first_name + ' ' + this.friendData.last_name
+            }); 
+        }           
       },
         openCommonFriendsList() {
             this.$store.state.modalWindow = {

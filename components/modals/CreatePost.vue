@@ -85,7 +85,10 @@ export default {
       }, 1000);
       this.newPost = "";
       this.closeWindow();
-      this.$toast.success("Nový příspěvek publikován.");
+      this.$toast.success(
+        "Nový příspěvek publikován.",
+        { icon: 'las la-check-circle' }
+      );
     }, 
     closeWindow() {
         this.$emit('closeWindow');

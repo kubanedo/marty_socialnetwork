@@ -8,7 +8,8 @@ import UICloseBtn from "~/components/ui/UICloseBtn";
 const options = {
     position: 'bottom-left',
     container: document.body,
-    closeButton: UICloseBtn
+    closeButton: UICloseBtn,
+    icon: false
 };
 
 

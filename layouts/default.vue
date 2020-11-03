@@ -4,8 +4,8 @@
           <div class="container">
             <nav class="header__nav">                 
                 <ul>
-                    <li><DropdownWrapper dropdownName="Messages"><button><i class="las la-sms"></i><br/> Zprávy</button></DropdownWrapper></li> 
-                    <li><DropdownWrapper dropdownName="Notifications"><button><i class="las la-bell"></i><br/>  Upozornění</button></DropdownWrapper></li>  
+                    <li><DropdownWrapper dropdownName="Messages" @unreadCount="unreadChatsCount = $event"><button><i class="las la-sms"></i><br/> Zprávy <span class="count" v-if="unreadChatsCount > 0">{{unreadChatsCount}}</span></button></DropdownWrapper></li> 
+                    <li><DropdownWrapper dropdownName="Notifications" @unreadCount="unreadNotifCount = $event"><button><i class="las la-bell"></i><br/>  Upozornění <span class="count"  v-if="unreadNotifCount > 0">{{unreadNotifCount}}</span></button></DropdownWrapper></li>                    
                 </ul>
             </nav>
             <div class="header__logo-wrapper">
@@ -32,6 +32,12 @@ export default {
      Chat,
      DropdownWrapper,
      ModalWindow
+  },
+  data() {
+      return {
+        unreadChatsCount: 0,
+        unreadNotifCount: 0
+      }
   },
   computed: {
     chatContactId() {
@@ -87,7 +93,7 @@ header {
 
   .header__nav ul li {
       display: inline-block;
-      margin-right: 30px;
+      margin-right: 10px;
   }
   .header__user-panel {
       text-align: right;
@@ -136,6 +142,26 @@ header {
     text-decoration: none;
     &:hover {
         text-decoration: underline;
+    }
+}
+.header__nav {
+    font-size: 12px;
+    button {
+        position: relative;
+        padding: 5px 10px;
+        i {
+            font-size: 20px;
+        }        
+        .count {
+            position: absolute;
+            display: inline-block;
+            background: red;
+            border-radius: 50%;
+            color: white;
+            width: 20px;
+            top: 0;
+            right: 0;
+        }
     }
 }
 </style>

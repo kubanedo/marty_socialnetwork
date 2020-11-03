@@ -6,6 +6,7 @@
     <div v-if="loadingPosts">
       <LoadingPost v-for="item in 3" :key="item"/>
     </div>
+    {{showOnlyPublicPosts}}
     <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData" @postLoaded="loadingPosts=false"/>
     <!--<div class="" v-if="!(Array.isArray(postsData) && postsData.length)">Uživatel zatím nenapsal žádný příspěvek.</div>-->
     <NoMorePosts v-if="noMorePosts" />     

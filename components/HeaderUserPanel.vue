@@ -14,7 +14,7 @@
         <li>Nastavení</li>
         <hr>
         <li @click="saveGame">Uložit hru</li>
-        <li><nuxt-link to="/login">Odhlásit se</nuxt-link></li>
+        <li @click="logOut">Odhlásit se</li>
     </ul>    
 </div>    
 </template>
@@ -45,6 +45,11 @@ export default {
             axios.post("https://jakubnedorost.cz/marty/api/save/?game_id=" + gameId, this.$store.state)
                     .then(response => console.log(response))  
           this.$toast.success("Hra uložena.");                
+      },
+      logOut() {
+          localStorage.removeItem('gameID');
+          console.log('locStor', localStorage);
+          this.$router.push('/login?logged-out');         
       }
   }
 }

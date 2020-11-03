@@ -8,7 +8,7 @@
             <div class="main-content">
                 <div class="card">
                 <h2>Objevte stránky #fejkbuku</h2> <br/>
-                <UILoadingContent v-if="!pagesLoaded"/>
+                <UILoadingContent v-if="!pagesLoaded" :title="false"/>
                 <div class="grid" v-else>                        
                         <PagelistItem v-for="(page, page_id) in pagesData" :key="page_id" :pageData="{...page, profile_id: page_id}"/>
                 </div>                
@@ -27,6 +27,10 @@ import axios from 'axios'
 import UILoadingContent from '~/components/ui/UILoadingContent'
 import PagelistItem from '~/components/profile/PagelistItem'
 export default {
+    components: {
+        UILoadingContent,
+        PagelistItem
+    },    
     data() {
         return {
             pagesData: {},

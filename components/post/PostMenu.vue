@@ -51,9 +51,9 @@ export default {
         },
         reportPost() {
             this.$store.state.modalWindow = {
-                modalName: 'ReportPost'
-            };
-            this.$store.commit('reportPost', this.postID);            
+                modalName: 'ReportPost',
+                post_id: this.postID
+            };                    
         }                
     },
     mounted() {

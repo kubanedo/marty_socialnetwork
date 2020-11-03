@@ -1,9 +1,9 @@
 <template>
   <div>
-      <div @click="showDropdown=!showDropdown"><slot/>{{unreadChatsCount}}</div>
+      <div @click="showDropdown=!showDropdown"><slot/></div>
       <div v-show="showDropdown" class="dropdown-menu">
           <div class="dropdown-menu__content">
-              <component :is="dropName" @unreadChatsCount="unreadChatsCount = $event"></component>
+              <component :is="dropName" @unreadCount="unreadCount($event)"></component>
           </div>
       </div>
   </div>
@@ -34,7 +34,10 @@ export default {
     methods: {
         closeDropdown() {
             this.showDropdown = false;
-        }
+        },
+        unreadCount(value) {
+            this.$emit('unreadCount', value);
+        }        
     }
 }
 </script>
