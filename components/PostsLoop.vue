@@ -52,6 +52,12 @@ export default {
         },
         storeLikes() {
             return this.$store.state.likes;
+        },
+        myFriends() {
+            return (this.$store.state.loggedUser.friends) ? this.$store.state.loggedUser.friends : [];
+        },
+        myLikedPages() {
+            return (this.$store.state.loggedUser.liked_pages) ? this.$store.state.loggedUser.liked_pages : [];
         }
     },
     watch: {
@@ -66,9 +72,24 @@ export default {
         },
         store(value) {
             this.store = value;
+        },
+        myFriends() {
+           if(Array.isArray(this.postsData) && this.postsData.length > 0) {
+                this.reloadPosts();
+           } 
+        },
+        myLikedPages() {
+           if(Array.isArray(this.postsData) && this.postsData.length > 0) {
+                this.reloadPosts();
+           } 
         }
     },
     methods: {
+        reloadPosts() {
+                this.postsData = [];
+                this.loadingPosts = true;
+                this.loadPosts();
+        },
         addScrollListener() {
             window.addEventListener('scroll', this.loadNewPostsOnScroll);
         },
@@ -87,7 +108,13 @@ export default {
         loadPosts(from = 0, count = 3) {
             let queryUrl = 'https://jakubnedorost.cz/marty/api/?type=posts&from='+ from +'&count='+ count;
             if(this.filterByAuthor!=='all') {
-                queryUrl += '&posted_by=' + this.filterByAuthor;                
+                queryUrl += '&posted_by=' + this.filterByAuthor; 
+                if(!(this.myFriends.includes(this.filterByAuthor) || this.myLikedPages.includes(this.filterByAuthor))) {
+                    queryUrl += '&privacy_settings=all';
+                }               
+            }
+            if(this.filterByAuthor=='all') {
+                queryUrl += '&posted_by_ids=' + this.myFriends.join() + ',' + this.myLikedPages.join();
             }
             console.log(queryUrl);
             axios.get(queryUrl)
