@@ -1,11 +1,10 @@
 <template>
   <div class="messages__wrapper">
             <h3>Zprávy<span v-if="unreadChatsCount"> ({{unreadChatsCount}})</span></h3>
-            <div v-show="contentLoading">
+            <div v-if="contentLoading">
                 <LoadingDropdownContent v-for="item in 3" :key="item" />
             </div>
-            <div v-show="!contentLoading">
-                {{chatsStore}}
+            <div v-else>
                 <div v-for="(latestMessage) in latestMessages" :key="latestMessage.chat_id" :class="'latest-message' + (latestMessage.new_messages_count ? ' unread' :  '' )"
                         @click="openChat(latestMessage.chat_id)">
                     <div class="latest-message__img"><UIProfileImg :userID="latestMessage.chat_id" /></div>
@@ -49,13 +48,13 @@ export default {
     computed: {
         latestMessages() {
             let notUpdatedMessagesFromApi = this.latestMessagesFromApi.filter((item) => !this.chatIdsFromStore.includes(item.chat_id));
-            return[...this.latestFromStore, ...notUpdatedMessagesFromApi]
+            let latestFromStore = this.getLatestFromStore();
+            return[...latestFromStore, ...notUpdatedMessagesFromApi]
         },
         chatsStore() {
-            let chats = ((this.$store.state && this.$store.state.chats) ? this.$store.state.chats : [])
-            return chats
+            return this.$store.getters.getChatData;
         },
-        latestFromStore() {
+  /*      latestFromStore() {
             let latestFromStore = [];
             let chats = this.$store.state.chats[0];
             Object.keys(chats).forEach((userId) => {
@@ -70,9 +69,9 @@ export default {
 
             latestFromStore.sort(compareTimestamp);
             return latestFromStore;
-        },
+        }, */
         chatIdsFromStore() {
-            return Object.keys(this.$store.state.chats[0]);
+            return (this.$store.state.chats[0] ? Object.keys(this.$store.state.chats[0]) : []);
         },
         unreadChatsCount() {
             return this.latestMessages.filter((item) => item.new_messages_count > 0).length;
@@ -96,6 +95,23 @@ export default {
                     this.contentLoading = false;  
                 })    
         },
+        getLatestFromStore() {
+            let latestFromStore = [];
+            if(this.$store.state.chats[0]) {
+                let chats = this.$store.state.chats[0];
+                Object.keys(chats).forEach((userId) => {
+                    let userMsgs = chats[userId].old_messages;
+                    let latestMessage = {
+                        ...userMsgs[userMsgs.length-1],
+                        new_messages_count: (chats[userId].new_messages_count) ? (chats[userId].new_messages_count) : 0,
+                        chat_id: userId
+                        }
+                    latestFromStore.push(latestMessage)
+                });
+            }
+            latestFromStore.sort(compareTimestamp);
+            return latestFromStore;
+        },        
         shortenMessage(message) {
             if(message && message.length > 30) {
                 message = message.slice(0, 30) + '...';
@@ -104,7 +120,7 @@ export default {
         },
         openChat(contactId) {
             this.$store.commit('openChat', contactId);
-        }        
+        }  
     },
     mounted() {
         this.loadLatestMessages();

@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import Vuex from 'vuex'
 import axios from 'axios'
 
@@ -65,6 +66,9 @@ const createStore = () => {
     return new Vuex.Store({
         state: () => (Object.assign({}, defaultState())),
         getters: {
+            getChatData: state => {
+                return state.chats[0];
+            },           
             getloggedUserWholeName: state => {
               return state.loggedUser.first_name + " " + state.loggedUser.last_name;
             }
@@ -143,9 +147,9 @@ const createStore = () => {
             updateChat: (state, payload) => {
                 let contactID = payload.contact_id;
                 if(state.chats[0][contactID]==undefined) {
-                    state.chats[0][contactID] = {
+                    Vue.set(state.chats[0], contactID, {
                         "old_messages": []
-                    }
+                    })
                 }
 
                 if(payload.newMessage) {
@@ -153,7 +157,8 @@ const createStore = () => {
                 } else if(payload.preparedMessagesUpdate) {
                     state.chats[0][contactID].preparedMessages = payload.preparedMessagesUpdate;
                 } else if(payload.newMessagesCount!==undefined) {
-                    state.chats[0][contactID].new_messages_count = payload.newMessagesCount;
+                    Vue.set(state.chats[0][contactID], 'new_messages_count', payload.newMessagesCount)                    
+                    /*state.chats[0][contactID].new_messages_count = payload.newMessagesCount;*/
                 } else {
                     delete state.chats[0][contactID].preparedMessages;
                 }

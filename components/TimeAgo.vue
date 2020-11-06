@@ -76,6 +76,12 @@ export default {
            }    
        }
    },
+   watch: {
+       time() {
+        this.timeAgo = this.getTimeAgo().output;
+        this.reloadTimeAgo();           
+       }
+   },
    mounted() {
        this.timeAgo = this.getTimeAgo().output;
        this.reloadTimeAgo();

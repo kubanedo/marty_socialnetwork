@@ -4,6 +4,7 @@
 .Vue-Toastification__toast {
     padding: 15px 15px;
     font-family: "Roboto", Arial, sans-serif;
+    min-height: 56px;
 }
 .Vue-Toastification__container {
     max-width: 1430px;
@@ -15,4 +16,7 @@
         left: 50%;
         transform: translateX(-50%);
     }
+}
+.Vue-Toastification__icon {
+    font-size: 26px;    
 }

@@ -4,11 +4,11 @@
   <div v-else class="chat__wrapper" @click="resetNewIncomingMessagesCount()">
       <div :class="'chat__header' + ((newIncomingMessagesCount>0) ? ' blinking' : '')" @click="toggleChat()">
           <div class="chat__contact-info">
-              <UIProfileImg :userID="contactId" :status="contactData.status" :imgSize="30" statusBorderColor="#d3d3d3" />
+              <UIProfileImg :userID="chatId" :status="contactData.status" :imgSize="30" statusBorderColor="#d3d3d3" />
               <div class="chat__contact-name"><div>{{contactData.first_name + ' ' + contactData.last_name}}</div></div>
               <div class="chat__new-msg-count-wrapper"><div v-if="newIncomingMessagesCount>0" class="chat__new-msg-count">{{newIncomingMessagesCount}}</div></div>
           </div>
-          <div class="chat__close-btn"><button @click="deactivateChat()"><i class="las la-times"></i></button></div>
+          <div class="chat__close-btn" v-if="!lockChat"><button @click="deactivateChat()"><i class="las la-times"></i></button></div>
       </div>
       <div class="chat__body" v-show="isChatMaximized">
         <div class="chat__content">
@@ -66,6 +66,7 @@ export default {
     data() {
         return {
             isLoading: true,
+            chatId: this.contactId,
             contactData: {},
             isChatMaximized: true,
             areTypingDotsActive: false,
@@ -74,7 +75,8 @@ export default {
             messages: [],
             preparedMessages: null,
             showPreparedMessagesInput: true,
-            incomingMsgTone: new Audio('swiftly.mp3')
+            incomingMsgTone: new Audio('swiftly.mp3'),
+            lockChat: false
         }
     },
     methods: {
@@ -82,9 +84,9 @@ export default {
             this.isChatMaximized = !this.isChatMaximized;
             this.scrollToEnd();
         },
-        deactivateChat() {
-            this.$store.commit('closeChat');
-            this.$destroy();
+        deactivateChat() { 
+                this.$store.commit('closeChat');
+                this.$destroy();
         },
         scrollToEnd() {
                 /* bez timeoutu nescrolovalo úplně dolů */
@@ -109,6 +111,7 @@ export default {
             }
         },
         getReply(reply) {
+            this.lockChat = true;
             const vm = this;
             const randomTime = (minTimeInSec, maxTimeInSecs) => { 
                let randomTime = Math.floor(Math.random() * maxTimeInSecs) * 1000;
@@ -123,8 +126,9 @@ export default {
             setTimeout(() => {
                 vm.areTypingDotsActive=false;
                 vm.showPreparedMessagesInput=true;
+                vm.lockChat = false;
                 let newMessageObj = {
-                    userId: this.contactId,  
+                    userId: vm.chatId,  
                     time: Date.now(),
                     text: reply  
                 }
@@ -152,11 +156,13 @@ export default {
             }
         },
         resetNewIncomingMessagesCount() {
-            this.newIncomingMessagesCount = 0;
-            this.updateChatInStore(0, 'newMessagesCount');
+            if(this.newIncomingMessagesCount > 0) {
+                this.newIncomingMessagesCount = 0;
+                this.updateChatInStore(0, 'newMessagesCount');
+            }
         },
         loadChatMessages() {
-            axios.get('https://jakubnedorost.cz/marty/api/?type=messages&contact_id=' + this.contactId)
+            axios.get('https://jakubnedorost.cz/marty/api/?type=messages&contact_id=' + this.chatId)
                 .then(response => {
                     const chatData = response.data;
                     if(chatData) {
@@ -181,7 +187,7 @@ export default {
         },
         updateChatInStore(value, type) {
             let chatData = {
-                contact_id: this.contactId
+                chatId: this.chatId
             };
             if(type=='message') {
                 chatData['newMessage'] = value;
@@ -193,7 +199,7 @@ export default {
             this.$store.commit('updateChat', chatData);
         },
         getChangesFromStore() {
-            let storeData = this.$store.state.chats[0][this.contactId];
+            let storeData = this.$store.state.chats[0][this.chatId];
             if(storeData!==undefined) {
                 this.messages = [...this.messages, ...storeData.old_messages];
                 this.preparedMessages = storeData.preparedMessages;
@@ -205,7 +211,7 @@ export default {
             }
         },
         getContactData() {
-            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_id=' + this.contactId)
+            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_id=' + this.chatId)
                 .then(response => {
                     this.contactData = response.data;
                 })
@@ -214,17 +220,26 @@ export default {
     },
     watch: {
         isActive() {
-           /* při aktivování chatu, vždy maximalizuj */ 
-           this.isChatMaximized=true;
-           this.scrollToEnd();
+            if(this.lockChat==false) {
+                /* při aktivování chatu, vždy maximalizuj */ 
+                this.isChatMaximized=true;
+                this.scrollToEnd();
+            }
         },
-        contactId() {
-           /* při změně uživatele chatu, vždy maximalizuj */ 
-           this.isChatMaximized=true;
-           /* a aktualizuj zprávy */
-           this.loadChatMessages();
-           this.getContactData();
-           this.newIncomingMessagesCount = 0;
+        contactId(value) {
+             if(this.lockChat==false) {
+                 this.chatId = value;
+             } else {
+                this.$store.state.openedChat = this.chatId;
+             } 
+        },
+        chatId() {
+                /* při změně uživatele chatu, vždy maximalizuj */ 
+                this.isChatMaximized=true;
+                /* a aktualizuj zprávy */
+                this.loadChatMessages();
+                this.getContactData();
+                this.newIncomingMessagesCount = 0;
         },
         messages() {
             /* při aktualizaci zpráv */
@@ -281,7 +296,7 @@ export default {
     width: 328px;
     bottom: 0;
     right: 20px;
-    z-index: 5;
+    z-index: 4;
    
 }
 .chat__body {

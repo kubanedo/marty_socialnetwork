@@ -78,7 +78,10 @@ export default {
       },
       friendWithMe() {
           return (this.$store.state.loggedUser.friends) ? this.$store.state.loggedUser.friends.includes(this.profileData.userId) : false;
-      }            
+      },
+      myProfileData() {
+        return this.$store.state.loggedUser
+      }           
   },
   methods: {
     openPhotoLightbox(enterPhotoId) {
@@ -117,7 +120,7 @@ export default {
     getProfileData() {
         if(this.$route.params.id=="me") {
           this.profileData = {
-            ...this.$store.state.loggedUser
+            ...this.myProfileData
           }
           this.getFriendsData();
           this.dataLoaded = true
@@ -157,6 +160,7 @@ export default {
         }          
     },
     getMyData(addOrRemove = 'add') {
+      /*pokud se staneme se přáteli s jiným profilem, zobrazíme se mezi jeho přáteli */
       if(addOrRemove=='remove') {
         this.friendsData = this.friendsData.filter((item) => item.profile_id!=='me')
       } else {
@@ -176,6 +180,11 @@ export default {
         this.getMyData();
       } else {
         this.getMyData('remove');
+      }
+    },
+    myProfileData() {
+      if(this.$route.params.id=="me") {
+        this.getProfileData();
       }
     }
   },
