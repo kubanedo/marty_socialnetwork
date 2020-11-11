@@ -6,12 +6,13 @@
         </div>
         <div class="quiz__content">
             <h2>{{quizData.question}}</h2>
+            {{rightAnswer}}
+            {{rightAnswerPosition}}
             <button v-for="(answer, index) in quizData.answers" :key="index" 
                     :class="(buttonsState[index]) ? buttonsState[index] : ''" 
                     @click="checkAnswer(index)" 
                     :disabled="isQuestionAnswered">
             {{answer}}</button>
-            {{result}}
         </div>
   </div>
 </template>
@@ -33,6 +34,7 @@ export default {
             quizData: this.modalData.quizData,  
             rightAnswerPosition: this.modalData.quizData.right_answer_position,
             points: this.modalData.quizData.max_points,
+            answers: this.modalData.quizData.answers,
             rightAnswer: '',
             result: '',
             isQuestionAnswered: false,
@@ -43,7 +45,12 @@ export default {
         closeWindow() {
             this.$emit('closeWindow');
         }, 
-        showQuestion() {
+        prepareQuestion() {
+            this.rightAnswer = this.answers[+this.rightAnswerPosition-1];
+            this.answers = this.shuffleAnswers(this.answers);
+            this.rightAnswerPosition = this.answers.indexOf(this.rightAnswer);
+        },
+     /*   showQuestion() {
             // get the right answer value and store it
             this.rightAnswer = this.answers[+this.rightAnswerPosition-1];
             // shuffle answers
@@ -56,9 +63,11 @@ export default {
         },
         closeQuestion() {
             this.isQuestionVisible=false;
-        },
+        },*/
         shuffleAnswers(array) {
-            array.sort(() => Math.random() - 0.5);
+            let answers = [...array];
+            answers.sort(() => Math.random() - 0.5);
+            return answers
         },
         checkAnswer(index) {
             if(this.rightAnswerPosition==index) {
@@ -77,12 +86,15 @@ export default {
                 };
                 this.buttonsState = {
                     [index]: ['animate', 'not-correct', 'chosen'],
-                    [this.rightAnswerPosition]: 'correct'
+                    [this.rightAnswerPosition]: ['animate','correct']
                 }                
                 this.$store.state.loggedUser.points += -this.points/2;
             }
             this.isQuestionAnswered = true;
         }           
+    },
+    mounted() {
+        this.prepareQuestion();
     }
 }
 </script>
@@ -137,13 +149,12 @@ export default {
             }
             &.correct {
                 background-color: green;
+                transform: scale(1.1);
             }
             &.not-correct {
                 background-color: red;
             }
-            &.chosen {
-                transform: scale(1.1)
-            }            
+           
         }
     }
     .rotate-scale-up {

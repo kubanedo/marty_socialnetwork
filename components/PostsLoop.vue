@@ -60,13 +60,15 @@ export default {
         }
     },
     watch: {
-        myPosts(value) {
-            if(this.filterByAuthor=='all'||this.filterByAuthor=='me') {
-                if(value.length > this.myPostsCount) {
-                    //jen pokud přibylo
-                    this.postsData.unshift(value[0]); 
+        myPosts(value, oldvalue) {
+            if(oldvalue.length > 0) {
+                if(this.filterByAuthor=='all'||this.filterByAuthor=='me') {
+                    if(value.length > this.myPostsCount) {
+                        //jen pokud přibylo
+                        this.postsData.unshift(value[0]); 
+                    }
+                    this.myPostsCount = value.length;
                 }
-                this.myPostsCount = value.length;
             }
         },
        /* store(value) {
@@ -133,8 +135,6 @@ export default {
         loadMyPostsFromStore() {
             if(this.filterByAuthor=='all'||this.filterByAuthor=='me') {
                 let myPosts = [...this.$store.state.myPosts];
-                /*console.log('myposts', myPosts)
-                myPosts.reverse();*/
                 this.postsData = [...myPosts, ...this.postsData]
             }      
         }
