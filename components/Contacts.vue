@@ -6,10 +6,9 @@
             <input type="text" v-model="search" placeholder="Najít přítele ..." class="nice-input mb-10"/>
             <div class="search-delete smaller-onclick" v-if="search.length > 0" @click="search = ''"><i class="las la-times"></i></div>
         </div>
-        {{contactLoop}}
-        <div class="contact__wrapper" v-for="contact in contactLoop" :key="contact.contact_id"
-            @click="openChat(contact.contact_id)">
-            <div><UIProfileImg :userID="contact.contact_id" :status="contact.status" imgBorderColor="#f1f1f1"/></div>
+        <div class="contact__wrapper" v-for="contact in contactLoop" :key="contact.profile_id"
+            @click="openChat(contact.profile_id)">
+            <div><UIProfileImg :userID="contact.profile_id" :status="contact.status" imgBorderColor="#f1f1f1"/></div>
             <div class="contact__name"><div>{{contact.first_name + " " + contact.last_name}}</div></div>
         </div>
         <div v-if="search.length > 0 && filteredContacts.length==0" class="text-center mt-10">
@@ -89,17 +88,12 @@ export default {
             let friends = this.myFriends;
             axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_ids=' + friends.join())
                 .then(response => {
-                    console.log(response.data)
-                let data = Object.entries(response.data);
-                let contacts = [];
-                    data.forEach((item) => {
-                        let newItem = {...item[1], contact_id: item[0]};
-                        contacts.push(newItem);
-                    });
-                this.contactsLoading = false;
-                this.contacts = contacts;
+                    let contacts = [];
+                    let data = response.data;
+                    this.contactsLoading = false;
+                    this.contacts = data;                    
                 })
-                .catch(error => console.log(error))             
+                .catch(error => console.log(error))            
         }
     },
     watch: {
