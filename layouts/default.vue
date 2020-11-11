@@ -68,7 +68,7 @@
             <aside class="right-sidebar">
                 <div class="card">
                     <h3>Mé kontakty</h3>
-                    <Contacts />
+                    <Contacts placement="sidebar"/>
                 </div>
                 <div class="card">
                     <h3>Reklamy</h3>

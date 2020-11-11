@@ -14,13 +14,15 @@ import CreatePost from '~/components/modals/CreatePost';
 import ReportPost from '~/components/modals/ReportPost';
 import Quiz from '~/components/modals/Quiz';
 import FriendsList from '~/components/modals/FriendsList';
+import ContactList from '~/components/modals/ContactList';
 import PhotoLightbox from '~/components/modals/PhotoLightbox';
 export default {
   components: {
       CreatePost,
       ReportPost,
       Quiz,
-      FriendsList
+      FriendsList,
+      ContactList
   },  
   props: {
       modalData: {
