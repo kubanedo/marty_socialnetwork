@@ -5,7 +5,8 @@ export default {
                 "<3": "\u2764\uFE0F",
                 "</3": "\uD83D\uDC94",
                 ":D": "\uD83D\uDE00",
-                ":)": "\uD83D\uDE03",
+                "O:)": "\ud83d\ude07",                
+                ":)": "\ud83d\ude0a",
                 ";)": "\uD83D\uDE09",
                 ":(": "\uD83D\uDE12",
                 ":p": "\uD83D\uDE1B",
@@ -13,6 +14,7 @@ export default {
                 ":'(": "\uD83D\uDE22",
                 ":P": "\ud83d\ude0b",
                 ":-*": "\ud83d\ude18",
+                ":O": "\ud83d\ude32",
             }; 
             function escapeSpecialChars(regex) {
                 return regex.replace(/([()[{*+.$^\\|?])/g, '\\$1');

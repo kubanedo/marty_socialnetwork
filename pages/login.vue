@@ -1,7 +1,7 @@
 <template>
-  <div class="login__page">
-    <div class="login__wrapper">
-      <h1>#fejkbuk</h1>
+  <div class="login__page">      
+    <h1>#fejkbuk</h1>
+    <div class="login__wrapper card">
       <p>Přihlašte se do naší nepravé sociální sítě a ověřte si, že víte, jak se na sociálních sítích správně chovat. Za každou správně provedenou akci/odpovězenou otázku, získáte určitý počet bodů. Za špatně provedené akce či odpovězené otázky je odebrána polovina bodů, které bylo možno získat. Provedete všechny úkoly a získáte největší počet bodů?</p>
       <div class="login__form">
           <div class="login__newgame" v-if="!showloadGameInput">
@@ -25,7 +25,6 @@
               Hra nenalezena
             </div>  
           </div>  
-        <button @click="$router.push('/')">zpět</button>
       </div>
     </div>
   </div>
@@ -92,10 +91,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~/assets/variables.scss";
 h1 {
-  color: white;
-  font-size: 62px;
+  font-size: 52px;
+  color: $primary-color;
   text-align: center;
+  margin-bottom: 15px;
 }
 label {
   display: inline-block;
@@ -105,7 +106,6 @@ label {
 input {
   border: 1px black solid;
   border-radius: 5px;
-  background: white;
 }
 .login__page {
   width: 100vw;
@@ -115,8 +115,7 @@ input {
   justify-content: center;
 }
 .login__wrapper {
-  color: white;
-  max-width: 600px;
+  max-width: 500px;
   width: 95%;
   margin: 0 auto;
 }

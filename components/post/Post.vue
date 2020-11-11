@@ -95,7 +95,7 @@ export default {
             postText: '',
             postedByName: (this.post_data.first_name ? this.post_data.first_name + ' ' + this.post_data.last_name : 
                                 (this.post_data.name ? this.post_data.name : 
-                                (this.post_data.posted_by==='me' ? this.$store.getters.getloggedUserWholeName : this.post_data.posted_by))),
+                                (this.post_data.posted_by==='me' ? this.$store.getters.getMyWholeName : this.post_data.posted_by))),
             comments: [],
             privacySetting: this.post_data.privacy_settings,
             animatedLike: false
@@ -169,7 +169,7 @@ export default {
         },
  /*       getFullName() {
             if(this.post_data.posted_by=='me') {
-                this.postedByName = this.$store.getters.getloggedUserWholeName;
+                this.postedByName = this.$store.getters.getMyWholeName;
                 this.nameLoaded = true;
                 this.$emit('postLoaded'); 
             } else {

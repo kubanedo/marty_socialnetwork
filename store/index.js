@@ -69,9 +69,12 @@ const createStore = () => {
             getChatData: state => {
                 return state.chats[0];
             },           
-            getloggedUserWholeName: state => {
+            getMyWholeName: state => {
               return state.loggedUser.first_name + " " + state.loggedUser.last_name;
-            }
+            },
+            getMyFriends: state => {
+                return state.loggedUser.friends;
+            }            
         },        
         mutations: {
             resetState: (state) => {
@@ -80,9 +83,6 @@ const createStore = () => {
             login: (state, payload) => {
                 state.loggedUser = {
                     ...state.loggedUser,
-                    /*userId: "me",
-                    profileImg: 'http://jakubnedorost.cz/marty/images/profiles/me/profileimg.jpg',
-                    points: 0,*/
                     ...payload
                 }
             },

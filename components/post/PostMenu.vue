@@ -5,12 +5,12 @@
         <ul v-if="postedBy=='me'">
             <li @click="editPost"><i class="las la-edit"></i> Upravit příspěvek</li>
             <li @click="deletePost"><i class="las la-trash"></i> Smazat příspěvek</li> 
-            <li><nuxt-link :to="'/post/' + postID"><i class="las la-eye"></i> Zobrazit příspěvek</nuxt-link></li>                                   
+            <li @click="$router.push('/post/' + postID)"><i class="las la-eye"></i> Zobrazit příspěvek</li>                                    
         </ul>    
         <ul v-else>
             <li @click="savePost"><i class="las la-bookmark"></i> {{isSaved ? 'Odstranit z uložených' : 'Uložit'}}</li>
-            <li @click="reportPost"><i class="las la-exclamation-triangle"></i> Nahlásit příspěvek</li>
-            <li><nuxt-link :to="'/post/' + postID"><i class="las la-eye"></i> Zobrazit příspěvek</nuxt-link></li>                     
+            <li @click="reportPost" v-if="!isSaved"><i class="las la-exclamation-triangle"></i> Nahlásit příspěvek</li>
+            <li @click="$router.push('/post/' + postID)"><i class="las la-eye"></i> Zobrazit příspěvek</li>                     
         </ul>
     </div>    
   </div>

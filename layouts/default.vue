@@ -15,8 +15,67 @@
                 <HeaderUserPanel />
             </div>            
           </div>     
-      </header>     
-    <Nuxt />
+      </header> 
+      <div class="main-wrapper">
+          <div class="container homepage-grid">
+            <aside class="left-sidebar">
+                <div class="card">
+
+                    <div class="sidebarprofile__header-wrapper" style="background-image: url('http://jakubnedorost.cz/marty/images/profiles/me/cover.jpg');">
+                        <div class="sidebarprofile__header">
+                            <nuxt-link to="/profile/me">
+                                <UIProfileImg userID="me" :imgSize="70" class="ui-profile-img" imgBorderColor="white"/>
+                            </nuxt-link>
+                            <nuxt-link to="/profile/me" class="underline-hover">
+                                <h3>{{wholeUsername}}</h3>
+                            </nuxt-link>                           
+                        </div>
+                    </div>
+
+                    <span v-if="friendsCount > 0">Počet přátel: <nuxt-link :to="'/profile/me/friends'">{{friendsCount}}</nuxt-link></span><br/>
+                    <span v-if="receivedFriendsReqCount > 0"><nuxt-link to="/friend-requests">Počet nevyřízených žádostí: {{receivedFriendsReqCount}}</nuxt-link></span>                   
+                </div>  
+                <div class="card">
+                    <nuxt-link to="/" class="menu-item">
+                        <div class="menu-circle">
+                            <i class="las la-home"></i>
+                        </div>
+                         Hlavní stránka
+                    </nuxt-link>                    
+                    <nuxt-link to="/explore/people" class="menu-item">
+                        <div class="menu-circle">
+                            <i class="las la-user-friends"></i>
+                        </div>
+                         Lidé
+                    </nuxt-link>
+                    <nuxt-link to="/explore/pages" class="menu-item">
+                        <div class="menu-circle">
+                            <i class="las la-flag"></i>
+                        </div>                   
+                         Stránky
+                    </nuxt-link>
+                    <nuxt-link to="/saved-posts" class="menu-item">
+                        <div class="menu-circle">
+                            <i class="las la-bookmark"></i>
+                        </div>                     
+                        Uložené příspěvky<span v-if="savedPostsCount > 0"> ({{savedPostsCount}})</span>
+                    </nuxt-link>
+                </div>                             
+            </aside>
+            <div class="main-content">
+                <Nuxt />
+            </div>
+            <aside class="right-sidebar">
+                <div class="card">
+                    <h3>Mé kontakty</h3>
+                    <Contacts />
+                </div>
+                <div class="card">
+                    <h3>Reklamy</h3>
+                </div>                
+            </aside>
+          </div>
+      </div>          
     <ModalWindow v-if="modalData!==null && modalData.modalName" :modalData="modalData"/>
     <Chat v-if="chatContactId!==null" :contactId="chatContactId"/>
   </div>
@@ -26,12 +85,18 @@
 import Chat from "~/components/Chat";
 import DropdownWrapper from "~/components/dropdowns/DropdownWrapper";
 import ModalWindow from '~/components/modals/ModalWindow';
+
+import Contacts from "~/components/Contacts";
+import UIProfileImg from '~/components/ui/UIProfileImg'
+
 export default {
   middleware: ['login'],
   components: {
      Chat,
      DropdownWrapper,
-     ModalWindow
+     ModalWindow,
+     Contacts,
+     UIProfileImg     
   },
   data() {
       return {
@@ -40,6 +105,24 @@ export default {
       }
   },
   computed: {
+    wholeUsername() {
+        return this.$store.getters.getMyWholeName;
+    },
+/*       state() {
+        return this.$store.state;
+    },        
+    storeChats() {
+        return (this.$store.state ? this.$store.state.chats : [{}]);
+    },*/
+    friendsCount() {
+        return this.$store.state.loggedUser.friends.length
+    },
+    receivedFriendsReqCount() {
+        return this.$store.state.pendingRecievedFriendReq.length
+    },        
+    savedPostsCount() {
+        return this.$store.state.savedPosts.length;
+    },     
     chatContactId() {
         return this.$store.state.openedChat;
     },
@@ -51,117 +134,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~/assets/variables.scss";
-body {
-    color: #444444;
-    line-height: 1.7;
-    font-size: 14px;
-    font-weight: 400;
-    background-color: #f1f1f1; 
-    font-family: "Roboto", sans-serif;   
-}
-a {
-   color: $primary-color; 
-}
-a:hover {
-   text-decoration: none; 
-}
-button:active, button:focus, textarea:active {
-    outline: none;
-}
-button:focus {
-    background: lighten($grey-color, 1);
-    border-radius: 5px;
-}
-.container {
-    max-width: 1430px;
-    width: 95%;
-    margin: 0 auto;
-}
-header {
-  width: 100%;
-  position: fixed;
-  box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  background: white;
-  z-index: 5;
-
-  .container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-  }
-
-  .header__nav ul li {
-      display: inline-block;
-      margin-right: 10px;
-  }
-  .header__user-panel {
-      text-align: right;
-  }
-  .header__logo-wrapper {
-      text-align: center;
-
-      a {
-          text-decoration: none;
-      }
-  }
-}
-.main-wrapper {
-    padding-top: 110px;
-    .homepage-grid {
-        display: grid;
-        grid-template-columns: 1fr 2fr 1fr;
-        gap: 30px;
-    }
-}
-.card, .post {
-  background: white;  
-  box-shadow: 0px 1px 15px 0px rgba(51, 51, 51, 0.2);
-  padding: 20px;
-  margin-bottom: 30px; 
-  border-radius: 5px; 
-}
-.card--noshadow {
-    box-shadow: unset;
-}
-.profile-name {
-    font-weight: bold;
-    font-size: 15px;
-    text-decoration: none;
-    color: black;
-}
-.text-center {
-    text-align: center;
-}
-.pointer {
-    cursor: pointer;
-}
-.underline-hover {
-    cursor: pointer;
-    color: black;
-    text-decoration: none;
-    &:hover {
-        text-decoration: underline;
-    }
-}
-.header__nav {
-    font-size: 12px;
-    button {
-        position: relative;
-        padding: 5px 10px;
-        i {
-            font-size: 20px;
-        }        
-        .count {
-            position: absolute;
-            display: inline-block;
-            background: red;
-            border-radius: 50%;
-            color: white;
-            width: 20px;
-            top: 0;
-            right: 0;
-        }
-    }
-}
+@import "~/assets/main.scss";
 </style>

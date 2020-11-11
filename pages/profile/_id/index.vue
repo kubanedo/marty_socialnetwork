@@ -10,12 +10,12 @@
               <div class="sidebar-container" v-if="dataLoaded">
                 <div class="card">
                     <h3>Úvodní informace</h3>
+                    <div v-if="profileData.about_info && profileData.about_info.motto" class="mb-10"><i>"{{ profileData.about_info.motto}}"</i></div>
                     <div v-if="profileData.sex"><strong>Pohlaví: </strong>{{ (profileData.sex=="m") ? "muž" : "žena"}}</div>
                     <div v-if="profileData.about_info && profileData.about_info.day_of_birth"><strong><i class="las la-birthday-cake"></i> Narozeniny: </strong>{{ getBirthdayDate(profileData.about_info.day_of_birth) }}</div>
                     <div v-if="profileData.about_info && profileData.about_info.day_of_birth"><strong><i class="las la-birthday-cake"></i> Věk: </strong>{{ getAge(profileData.about_info.day_of_birth) }} let</div>                    
                     <div v-if="profileData.about_info && profileData.about_info.current_town"><strong><i class="las la-city"></i> Žije ve městě: </strong>{{ profileData.about_info.current_town }}</div>
                     <div v-if="profileData.about_info && profileData.about_info.study"><strong><i class="las la-graduation-cap"></i> Studuje: </strong>{{ profileData.about_info.study }}</div>
-                    {{profileData}}
                 </div> 
                 <div class="card" v-if="Array.isArray(profileData.photos) && profileData.photos.length">
                   <h3>Fotky</h3>
@@ -57,6 +57,7 @@ import ProfileSidebarPhoto from '~/components/profile/ProfileSidebarPhoto'
 import ProfileSidebarFriend from '~/components/profile/ProfileSidebarFriend'
 import UILoadingContent from '~/components/ui/UILoadingContent'
 export default {
+  layout: 'profile',
   components: {
     ProfileHeader,
     LoadingProfileHeader,

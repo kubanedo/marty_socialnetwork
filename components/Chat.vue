@@ -4,8 +4,12 @@
   <div v-else class="chat__wrapper" @click="resetNewIncomingMessagesCount()">
       <div :class="'chat__header' + ((newIncomingMessagesCount>0) ? ' blinking' : '')" @click="toggleChat()">
           <div class="chat__contact-info">
-              <UIProfileImg :userID="chatId" :status="contactData.status" :imgSize="30" statusBorderColor="#d3d3d3" />
-              <div class="chat__contact-name"><div>{{contactData.first_name + ' ' + contactData.last_name}}</div></div>
+              <UIProfileImg :userID="contactImg" :status="contactData.status" :imgSize="30" statusBorderColor="#d3d3d3" />
+              <div class="chat__contact-name">
+                  <div>
+                      <nuxt-link :to="'/profile/' + chatId" class="underline-hover">{{contactData.first_name + ' ' + contactData.last_name}}</nuxt-link>
+                  </div>
+              </div>
               <div class="chat__new-msg-count-wrapper"><div v-if="newIncomingMessagesCount>0" class="chat__new-msg-count">{{newIncomingMessagesCount}}</div></div>
           </div>
           <div class="chat__close-btn" v-if="!lockChat"><button @click="deactivateChat()"><i class="las la-times"></i></button></div>
@@ -68,6 +72,7 @@ export default {
             isLoading: true,
             chatId: this.contactId,
             contactData: {},
+            contactImg: this.contactId,
             isChatMaximized: true,
             areTypingDotsActive: false,
             newIncomingMessagesCount: 0,
@@ -187,7 +192,7 @@ export default {
         },
         updateChatInStore(value, type) {
             let chatData = {
-                chatId: this.chatId
+                contact_id: this.chatId
             };
             if(type=='message') {
                 chatData['newMessage'] = value;
@@ -214,6 +219,7 @@ export default {
             axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_id=' + this.chatId)
                 .then(response => {
                     this.contactData = response.data;
+                    this.contactImg = this.chatId;
                 })
                 .catch(error => console.log(error))
         }    
@@ -268,6 +274,10 @@ export default {
     &.blinking {
         color: white;
         animation: blinking-bg 1s infinite;
+
+        .chat__contact-name a {
+            color: white;
+        }    
     }
 }
 @keyframes blinking-bg {

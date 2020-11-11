@@ -11,7 +11,7 @@
     </div>
     <ul v-if="showMenu" class="user-panel__menu" @mouseleave="showMenu=!showMenu">
         <li><nuxt-link to="/profile/me">Přejít na svůj profil</nuxt-link></li>
-        <li>Nastavení</li>
+        <li><nuxt-link to="/settings">Nastavení</nuxt-link></li>
         <hr>
         <li @click="saveGame">Uložit hru</li>
         <li @click="logOut">Odhlásit se</li>
@@ -36,7 +36,7 @@ export default {
          return this.$store.state.loggedUser.points;
      },
      wholeUsername() {
-         return this.$store.getters.getloggedUserWholeName;
+         return this.$store.getters.getMyWholeName;
      }
   },
   methods: {
@@ -48,7 +48,6 @@ export default {
       },
       logOut() {
           localStorage.removeItem('gameID');
-          console.log('locStor', localStorage);
           this.$router.push('/login?logged-out');         
       }
   }

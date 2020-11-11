@@ -1,6 +1,6 @@
 <template>
     <div class="user__img" :style="{ backgroundImage: 'url(' + imgLink + ')', width: imgSize + 'px', height: imgSize + 'px', border: '1px solid ' + imgBorderColor }">
-        <div v-if="status==1" :class="'user__status status--' + status" :style="{width: imgSize * 0.33 + 'px', height: imgSize * 0.33 + 'px', border: imgSize * 0.067 + 'px solid ' + statusBorderColor}"></div>
+        <div v-if="status==1" :class="'user__status status--' + status" :style="{width: imgSize * 0.33 + 'px', height: imgSize * 0.33 + 'px', border: imgSize * 0.04 + 'px solid ' + statusBorderColor}"></div>
     </div>
 </template>
 

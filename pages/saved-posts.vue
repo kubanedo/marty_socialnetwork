@@ -1,23 +1,18 @@
 <template>
 <div>
-      <div class="main-wrapper">
-          <div class="container homepage-grid">
-            <aside class="left-sidebar">
-                            
-            </aside>
-            <div class="main-content">
-               <h2>Uložené příspěvky</h2> <br/>
-               <LoadingPost v-if="loadingPosts"/>
-               <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData" @postLoaded="loadingPosts=false"/>
-               <div v-if="noPosts && !loadingPosts">
-                   Žádné uložené příspěvky.
-               </div>
+        <div class="card card--title">
+            <h2>Uložené příspěvky</h2>
+        </div>    
+        <div :class="'card' + (noPosts && !loadingPosts ? ' text-center card--noshadow': '')">
+            <LoadingPost v-if="loadingPosts"/>
+            <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData" @postLoaded="loadingPosts=false"/>
+            <div v-if="noPosts && !loadingPosts">
+                <div class="circle-icon">
+                    <i class="las la-bookmark"></i>
+                </div>                    
+                Žádné uložené příspěvky.
             </div>
-            <aside class="right-sidebar">
-               
-            </aside>
-          </div>
-      </div>
+        </div>        
   </div>      
 </template>
 

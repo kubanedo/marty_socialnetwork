@@ -1,21 +1,17 @@
 <template>
 <div>
-      <div class="main-wrapper">
-          <div class="container homepage-grid">
-            <aside class="left-sidebar">
-                            
-            </aside>
-            <div class="main-content">
-               <LoadingPost v-if="loadingPost"/>
-               <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData" @postLoaded="loadingPost=false"/>
-               <div v-if="isPostReported">Tento příspěvek jsi nahlásil/a jako nevhodný. Není jej proto možné zobrazit.</div>
-            </div>
-            <aside class="right-sidebar">
-               
-            </aside>
-          </div>
-      </div>
-  </div>      
+    <div class="card card--title">
+        <h2>Samostatný příspěvek</h2>
+    </div>           
+    <LoadingPost v-if="loadingPost"/>
+    <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData" @postLoaded="loadingPost=false"/>
+    <div class="card text-center card--noshadow" v-if="isPostReported">
+        <div class="circle-icon">
+            <i class="las la-eye-slash"></i>
+        </div>
+        Tento příspěvek jsi nahlásil/a jako nevhodný. Není jej proto možné zobrazit.
+    </div>   
+</div>      
 </template>
 
 <script>

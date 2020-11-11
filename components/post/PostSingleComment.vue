@@ -106,7 +106,7 @@ export default {
     },
     getFullName() {
       if (this.commentData.commented_by == "me") {
-        this.commentedByName = this.$store.getters.getloggedUserWholeName;
+        this.commentedByName = this.$store.getters.getMyWholeName;
         this.nameLoaded = true;
       } else {
         axios

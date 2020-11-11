@@ -37,7 +37,7 @@ export default {
     methods: {
         getFullName() {
             if(this.sharedPost.posted_by=='me') {
-                this.postedByName = this.$store.getters.getloggedUserWholeName;
+                this.postedByName = this.$store.getters.getMyWholeName;
                 this.nameLoaded = true;
             } else {
                 axios.get('http://jakubnedorost.cz/marty/json-cors.php?f=profiles_basic-info')

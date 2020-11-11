@@ -1,24 +1,14 @@
 <template>
   <div>
-      <div class="main-wrapper">
-          <div class="container homepage-grid">
-            <aside class="left-sidebar">
-                            
-            </aside>
-            <div class="main-content">
-                <div class="card">
-                <h2>Objevte stránky #fejkbuku</h2> <br/>
-                <UILoadingContent v-if="!pagesLoaded" :title="false"/>
-                <div class="grid" v-else>                        
-                        <PagelistItem v-for="(page, page_id) in pagesData" :key="page_id" :pageData="{...page, profile_id: page_id}"/>
-                </div>                
-                </div>
-            </div>
-            <aside class="right-sidebar">
-               
-            </aside>
-          </div>
-      </div>      
+    <div class="card card--title">
+        <h2>Objevte stránky #fejkbuku</h2>
+    </div>      
+    <div class="card">
+        <UILoadingContent v-if="!pagesLoaded" :title="false"/>
+        <div class="grid" v-else>                        
+                <PagelistItem v-for="(page, page_id) in pagesData" :key="page_id" :pageData="{...page, profile_id: page_id}"/>
+        </div>                
+    </div>     
   </div>
 </template>
 

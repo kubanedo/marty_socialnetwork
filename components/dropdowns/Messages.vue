@@ -51,9 +51,6 @@ export default {
             let latestFromStore = this.getLatestFromStore();
             return[...latestFromStore, ...notUpdatedMessagesFromApi]
         },
-        chatsStore() {
-            return this.$store.getters.getChatData;
-        },
   /*      latestFromStore() {
             let latestFromStore = [];
             let chats = this.$store.state.chats[0];

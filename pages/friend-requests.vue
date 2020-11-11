@@ -1,28 +1,20 @@
 <template>
   <div>
-      <div class="main-wrapper">
-          <div class="container homepage-grid">
-            <aside class="left-sidebar">
-                            
-            </aside>
-            <div class="main-content">
-                <div class="card">
-                    <h2>Nevyřízené žádosti o přátelství</h2> <br/>
-
-                    <UILoadingContent v-if="!peopleLoaded" :title="false"/>
-                    <div v-else-if="peopleLoaded && !peopleData.length">
-                        Žádné nevyřízené žádosti o přátelství :).
-                    </div>    
-                    <div class="grid" v-else>             
-                            <FriendlistItem v-for="(person) in peopleData" :key="person.profile_id" :friendData="person"/>        
-                    </div>   
-                </div>
-            </div>
-            <aside class="right-sidebar">
-               
-            </aside>
-          </div>
-      </div>      
+        <div class="card card--title">
+            <h2>Nevyřízené žádosti o přátelství</h2>
+        </div>    
+        <div :class="'card' + (peopleLoaded && !peopleData.length ? ' text-center card--noshadow': '')"> 
+            <UILoadingContent v-if="!peopleLoaded" :title="false"/>
+            <div v-else-if="peopleLoaded && !peopleData.length">
+                <div class="circle-icon">
+                    <i class="las la-smile-wink"></i>
+                </div>    
+                Žádné nevyřízené žádosti o přátelství.
+            </div>    
+            <div class="grid" v-else>             
+                    <FriendlistItem v-for="(person) in peopleData" :key="person.profile_id" :friendData="person"/>        
+            </div>   
+        </div>   
   </div>
 </template>
 
@@ -41,9 +33,14 @@ export default {
             peopleLoaded: false            
         }
     },
+    computed: {
+        pendingRequests() {
+            return this.$store.state.pendingRecievedFriendReq;
+        }
+    },
     methods: {
         getPeopleData() { 
-            let recievedFriendReq = this.$store.state.pendingRecievedFriendReq;  
+            let recievedFriendReq = this.pendingRequests;  
             if(Array.isArray(recievedFriendReq) && recievedFriendReq.length) {   
                 axios.get('https://jakubnedorost.cz/marty/api/?type=profiles&profile_ids=' + recievedFriendReq.join())
                     .then(response => {
@@ -54,9 +51,15 @@ export default {
                         this.peopleLoaded = true;
                     })
             }  else {
+                this.peopleData = [];
                 this.peopleLoaded = true;
             }        
         }        
+    },
+    watch: {
+        pendingRequests() {
+            this.getPeopleData();
+        }
     },
     mounted() {
         this.getPeopleData();

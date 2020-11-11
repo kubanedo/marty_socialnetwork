@@ -1,14 +1,14 @@
 <template>
   <div>
         <div class="friendlist__header">
-            <h2 v-if="modalData.type='page'">Přátelé, kterým se líbí stránka <small>{{modalData.userName}}</small></h2>
+            <h2 v-if="modalData.type=='page'">Přátelé, kterým se líbí stránka <small>{{modalData.userName}}</small></h2>
             <h2 v-else>Společní přátelé<br/><small> s&nbsp;{{modalData.userName}}</small></h2>
             <div><UICloseBtn @click.native="closeWindow" /></div>
         </div>
         <div v-if="friendsLoaded" class="friendlist">
             <FriendlistItem v-for="friend in friendsData" :key="friend.profile_id" :friendData="friend" class="friendlist-item" @navigateAway="closeWindow"/>
         </div>
-        <UILoadingContent v-else :title="false" />
+        <UILoadingContent v-else :title="false" :numberOfLines="3" />
   </div>
 </template>
 

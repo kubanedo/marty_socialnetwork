@@ -52,6 +52,7 @@ import LoadingProfileHeader from '~/components/profile/LoadingProfileHeader'
 import ProfileSidebarPhoto from '~/components/profile/ProfileSidebarPhoto'
 import UILoadingContent from '~/components/ui/UILoadingContent'
 export default {
+  layout: 'profile',
   components: {
     PageHeader,
     LoadingProfileHeader,

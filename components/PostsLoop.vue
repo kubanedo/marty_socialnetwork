@@ -42,7 +42,7 @@ export default {
             isLoading: false,
             newPostsToBeLoadedFrom: 3,
             noMorePosts: false,
-            store: this.$store.state
+           /* store: this.$store.state*/
         }
     },
     computed: {
@@ -69,9 +69,9 @@ export default {
                 this.myPostsCount = value.length;
             }
         },
-        store(value) {
+       /* store(value) {
             this.store = value;
-        },
+        },*/
         myFriends() {
            if(Array.isArray(this.postsData) && this.postsData.length > 0) {
                 this.reloadPosts();
@@ -103,12 +103,12 @@ export default {
             let queryUrl = 'https://jakubnedorost.cz/marty/api/?type=posts&from='+ from +'&count='+ count;
             if(this.filterByAuthor!=='all') {
                 queryUrl += '&posted_by=' + this.filterByAuthor; 
-                if(!(this.myFriends.includes(this.filterByAuthor) || this.myLikedPages.includes(this.filterByAuthor))) {
+                if(!(this.myFriends.includes(this.filterByAuthor) || this.myLikedPages.includes(this.filterByAuthor) || this.filterByAuthor=="me")) {
                     queryUrl += '&privacy_settings=all';
                 }               
             }
             if(this.filterByAuthor=='all') {
-                queryUrl += '&posted_by_ids=' + this.myFriends.join() + ',' + this.myLikedPages.join();
+                queryUrl += '&posted_by_ids=' + this.myFriends.join() + ',' + this.myLikedPages.join() + ',me';
             }
             console.log(queryUrl);
             axios.get(queryUrl)

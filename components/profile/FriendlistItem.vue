@@ -49,7 +49,7 @@ export default {
             return (this.$store.state.loggedUser.friends) ? this.$store.state.loggedUser.friends.includes(this.friendData.profile_id) : false;
         },
         isPendingRequest() {
-            return (this.$store.state.loggedUser.pendingSentFriendReq) ? this.$store.state.loggedUser.pendingSentFriendReq.includes(this.friendData.profile_id) : false;
+            return (this.$store.state.pendingSentFriendReq) ? this.$store.state.pendingSentFriendReq.includes(this.friendData.profile_id) : false;
         },  
         personHasSentMeRequest() {
             return (this.$store.state.pendingRecievedFriendReq) ? this.$store.state.pendingRecievedFriendReq.includes(this.friendData.profile_id) : false;
@@ -96,7 +96,6 @@ export default {
             };
         },
         navigateAway() {
-            console.log('navigate')
             this.$emit('navigateAway');
         }       
     }      
