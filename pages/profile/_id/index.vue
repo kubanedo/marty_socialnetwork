@@ -25,14 +25,14 @@
                       :imageURL="`https://jakubnedorost.cz/marty/images/profiles/${$route.params.id}/photos/${photo}.jpg`"
                       @click.native="openPhotoLightbox(index)" />
                   </div>
-                  <nuxt-link v-if="profileData.photos.length > 3" :to="`/profile/${$route.params.id}/photos`" tag="button" class="sidebar__btn">Všechny fotky</nuxt-link>
+                  <nuxt-link v-if="profileData.photos.length > 3" :to="`/profile/${$route.params.id}/photos`" tag="button" class="grey w100 mt-10">Všechny fotky</nuxt-link>
                 </div>
                 <div class="card" v-if="friendsLoaded">
                   <h3>Přátelé<small v-if="commonFriendsCount > 0"> ({{commonFriendsCount}} společných)</small></h3>
                   <div class="sidebar__friends">
                     <ProfileSidebarFriend v-for="friend in friendsData.slice(0,3)" :key="friend.profile_id" :friendData="friend" :commonFriends="getCommonFriendsList(friend.friends)"/>
                   </div>                  
-                  <nuxt-link :to="`/profile/${$route.params.id}/friends`" tag="button" class="sidebar__btn">Všichni přátelé</nuxt-link>
+                  <nuxt-link :to="`/profile/${$route.params.id}/friends`" tag="button" class="grey w100 mt-10">Všichni přátelé</nuxt-link>
                 </div>
               </div> 
               <div class="sidebar-container" v-else>
@@ -202,42 +202,5 @@ export default {
 
 <style lang="scss" scoped>
 @import "~/assets/variables.scss";
-.main-wrapper {
-    padding-top: 90px;
-    .container.grid {
-        max-width: 1040px;
-        padding: 0;
-        display: grid;
-        grid-template-columns: 2fr 3fr !important;
-        gap: 30px;
-    }
-}
-.profile-header {
-
-  min-height: 270px;
-}
-.card h3 {
-  margin-bottom: 10px;
-}
-.sidebar__photos, .sidebar__friends {
-  display: grid;
-  gap: 5px;
-  grid-template-columns: repeat(3, 1fr);
-}
-.sidebar__btn {
-  background: $page-background;
-  color: $primary-color;
-  border-radius: 5px;
-  width: 100%;
-  margin-top: 10px;
-  padding: 5px;
-  font-weight: bold;
-
-  &:hover {
-  background: lighten($page-background, 1);    
-  }
-              &:active {
-                transform: scale(0.97);
-            }  
-}
+@import "~/assets/profile-page.scss";
 </style>

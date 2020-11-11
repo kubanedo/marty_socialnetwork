@@ -32,8 +32,8 @@
                         </div>
                     </div>
 
-                    <span v-if="friendsCount > 0">Počet přátel: <nuxt-link :to="'/profile/me/friends'">{{friendsCount}}</nuxt-link></span><br/>
-                    <span v-if="receivedFriendsReqCount > 0"><nuxt-link to="/friend-requests">Počet nevyřízených žádostí: {{receivedFriendsReqCount}}</nuxt-link></span>                   
+                    <div v-if="friendsCount > 0"  class="mb-10">Počet přátel: <nuxt-link :to="'/profile/me/friends'">{{friendsCount}}</nuxt-link></div>
+                    <div v-if="receivedFriendsReqCount > 0"><nuxt-link to="/friend-requests">Počet nevyřízených žádostí: {{receivedFriendsReqCount}}</nuxt-link></div>                   
                 </div>  
                 <div class="card">
                     <nuxt-link to="/" class="menu-item">

@@ -28,7 +28,7 @@ export default {
 <style lang="scss" scoped>
 @import "~/assets/loading-animation.scss";
 .loading-content {
-    min-height: 300px;
+    min-height: 150px;
 }
 .text-line {
     height: 16px;

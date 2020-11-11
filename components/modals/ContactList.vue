@@ -1,10 +1,12 @@
 <template>
   <div>
-        <div class="friendlist__header">
+        <div class="contactlist__header">
             <h2>Všechny kontakty</h2>
             <div><UICloseBtn @click.native="closeWindow" /></div>
         </div>
-        <Contacts @chatOpened="closeWindow"/>
+        <div class="contactlist">
+            <Contacts @chatOpened="closeWindow"/>
+        </div>
   </div>
 </template>
 
@@ -33,7 +35,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "~/assets/variables.scss";
-    .friendlist {
+    .contactlist {
         max-height: 500px;
         overflow-y: auto;
     }
@@ -41,17 +43,11 @@ export default {
         font-size: 18px;
         line-height: 1.1;
     }
-    .friendlist__header {
+    .contactlist__header {
       display: flex;
       justify-content: space-between;
       border-bottom: 1px solid $grey-color;
       padding-bottom: 10px;
       margin-bottom: 20px;
-    }
-    .friendlist-item {
-        margin-bottom: 10px;
-        &:last-child {
-            margin-bottom: 0;
-        }
     }
 </style>

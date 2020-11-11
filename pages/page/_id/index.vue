@@ -28,7 +28,7 @@
                       :imageURL="`https://jakubnedorost.cz/marty/images/profiles/${$route.params.id}/photos/${photo}.jpg`"
                       @click.native="openPhotoLightbox(index)" />
                   </div>
-                  <nuxt-link v-if="profileData.photos.length > 3" :to="`/page/${$route.params.id}/photos`" tag="button" class="sidebar__btn">Všechny fotky</nuxt-link>
+                  <nuxt-link v-if="profileData.photos.length > 3" :to="`/page/${$route.params.id}/photos`" tag="button" class="grey w100 mt-10">Všechny fotky</nuxt-link>
                 </div>
               </div> 
               <div class="sidebar-container" v-else>

@@ -175,6 +175,9 @@ header {
 .mb-10 {
     margin-bottom: 10px;
 }
+.mb-20 {
+    margin-bottom: 20px;
+}
 .mt-10 {
     margin-top: 10px;
 }
@@ -198,5 +201,22 @@ header {
     cursor: pointer;
     &:active {
         transform: scale(0.95);
+    }
+}
+.w100 {
+    width: 100%;
+}
+button.grey {
+    color: $primary-color;
+    background: $grey-color;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 5px;
+
+    &:hover {
+        background: lighten($grey-color, 1);
+    }
+    &:active {
+        transform: scale(0.97);
     }
 }
