@@ -6,19 +6,22 @@
         </div>
         <div class="quiz__content">
             <h2>{{quizData.question}}</h2>
-            {{rightAnswer}}
-            {{rightAnswerPosition}}
-            <button v-for="(answer, index) in quizData.answers" :key="index" 
+            <button v-for="(answer, index) in answers" :key="index" 
                     :class="(buttonsState[index]) ? buttonsState[index] : ''" 
                     @click="checkAnswer(index)" 
                     :disabled="isQuestionAnswered">
             {{answer}}</button>
+             <div v-if="result && quizData.right_answer_comment" class="result-comment">
+                 <small><i class="las la-sms"></i> <strong>Komentář ke správné odpovědi:</strong></small><br/>
+                 {{quizData.right_answer_comment}}
+             </div>           
         </div>
   </div>
 </template>
 
 <script>
 import UICloseBtn from "~/components/ui/UICloseBtn";
+import UIHtmlToast from "~/components/ui/UIHtmlToast";
 export default {
     components: {
         UICloseBtn
@@ -34,9 +37,9 @@ export default {
             quizData: this.modalData.quizData,  
             rightAnswerPosition: this.modalData.quizData.right_answer_position,
             points: this.modalData.quizData.max_points,
-            answers: this.modalData.quizData.answers,
-            rightAnswer: '',
-            result: '',
+            answers: [...this.modalData.quizData.answers],
+            rightAnswer: null,
+            result: null,
             isQuestionAnswered: false,
             buttonsState: {}     
         }
@@ -47,27 +50,11 @@ export default {
         }, 
         prepareQuestion() {
             this.rightAnswer = this.answers[+this.rightAnswerPosition-1];
-            this.answers = this.shuffleAnswers(this.answers);
-            this.rightAnswerPosition = this.answers.indexOf(this.rightAnswer);
-        },
-     /*   showQuestion() {
-            // get the right answer value and store it
-            this.rightAnswer = this.answers[+this.rightAnswerPosition-1];
-            // shuffle answers
             this.shuffleAnswers(this.answers);
-            // get the position of right answer
             this.rightAnswerPosition = this.answers.indexOf(this.rightAnswer);
-
-            //show questions and answer
-            this.isQuestionVisible=!this.isQuestionVisible;
         },
-        closeQuestion() {
-            this.isQuestionVisible=false;
-        },*/
         shuffleAnswers(array) {
-            let answers = [...array];
-            answers.sort(() => Math.random() - 0.5);
-            return answers
+            array.sort(() => Math.random() - 0.5);
         },
         checkAnswer(index) {
             if(this.rightAnswerPosition==index) {
@@ -79,6 +66,14 @@ export default {
                     [index]: ['animate', 'correct', 'chosen']
                 }
                 this.$store.state.loggedUser.points += this.points;
+                this.$toast.success({
+                    component: UIHtmlToast, 
+                    props: {
+                        html_content: `Správně! Do konta bylo připsáno <strong>${this.points} bodů</strong>.`
+                        }
+                    },
+                    { icon: 'las la-coins' }
+                ); 
             } else {
                 this.result = {
                     isCorrect: false,
@@ -89,6 +84,14 @@ export default {
                     [this.rightAnswerPosition]: ['animate','correct']
                 }                
                 this.$store.state.loggedUser.points += -this.points/2;
+                this.$toast.error({
+                    component: UIHtmlToast, 
+                    props: {
+                        html_content: `Špatně! Z konta bylo odepsáno <strong>${this.points/2} bodů</strong>.`
+                        }
+                    },
+                    { icon: 'las la-coins' }
+                );               
             }
             this.isQuestionAnswered = true;
         }           
@@ -133,28 +136,32 @@ export default {
             margin-bottom: 10px;
         }
         button {
-            background-color: grey;
-            color: white;
+            background-color: darken($page-background, 3);
+            color: black;
             width: 100%;
             font-size: 18px;
             border-radius: 5px;
             padding: 5px 10px;
             margin-bottom: 10px;
+            &:active {
+                transform: scale(0.97);
+            }
 
-            &:hover {
-                background-color: lighten(grey, 5);
+            &:hover:enabled {
+                background-color: $page-background;
             }
             &.animate {
-                transition: background-color ease-in-out 2s, transform ease-in-out 2s;                
+                transition: background-color ease-in-out 2s, transform ease-in-out 2s, color ease-in-out 2s;                
             }
             &.correct {
-                background-color: green;
-                transform: scale(1.1);
+                color: white;
+                background-color: #4caf50;
+                transform: scale(1.025);
             }
             &.not-correct {
-                background-color: red;
-            }
-           
+                color: white;
+                background-color: #ff5252;
+            }           
         }
     }
     .rotate-scale-up {
@@ -171,5 +178,11 @@ export default {
             transform: scale(1) rotateZ(360deg);
         }
     }
-
+    .result-comment {
+      border-radius: 5px; 
+      border: 1px dotted black; 
+      color: black;
+      padding: 10px 20px;
+      margin-top: 20px;  
+    }
 </style>
