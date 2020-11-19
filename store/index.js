@@ -55,7 +55,7 @@ const defaultState = () => {
         unread: 0
     }],
     reportedPosts: [],
-    answeredQuizActions: [],
+    answeredQuizes: [],
     /* App components state */
     openedChat: null,
     modalWindow: null
@@ -72,9 +72,15 @@ const createStore = () => {
             getMyWholeName: state => {
               return state.loggedUser.first_name + " " + state.loggedUser.last_name;
             },
+            getMyUserData: state => {
+                return state.loggedUser;
+            },
             getMyFriends: state => {
                 return state.loggedUser.friends;
-            }            
+            },
+            getAnsweredQuiz: state => id => {
+                return state.answeredQuizes.find(answeredQuiz => answeredQuiz.quiz_id === id);
+            }           
         },        
         mutations: {
             resetState: (state) => {
@@ -84,6 +90,12 @@ const createStore = () => {
                 state.loggedUser = {
                     ...state.loggedUser,
                     ...payload
+                }
+            },
+            changeUserInfo(state, payload) {
+                state.loggedUser = {
+                    ...state.loggedUser,
+                    ...payload                    
                 }
             },
             loadGame: (state, loadedState) => {
@@ -205,6 +217,9 @@ const createStore = () => {
                     delete state[storeProperty][postID][newArrayPos].post_id;                    
                 }  
                 saveGame(state.loggedUser.game_id, state);
+            },
+            makeQuizAnswered: (state, payload) => {
+                state.answeredQuizes.push(payload);
             },    
             changeConnection: (state, payload) => {
                 const connectionType = payload.connection_type;
@@ -237,6 +252,9 @@ const createStore = () => {
             changePoints: (state, payload) => {
                 state.loggedUser.points = state.loggedUser.points + payload;
                 saveGame(state.loggedUser.game_id, state);
+            },          
+            pushNotification(state, payload) {
+                state.notifications.unshift(payload);
             },
             openChat: (state, payload) => {
                 state.openedChat = payload;

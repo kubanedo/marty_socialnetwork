@@ -51,22 +51,6 @@ export default {
             let latestFromStore = this.getLatestFromStore();
             return[...latestFromStore, ...notUpdatedMessagesFromApi]
         },
-  /*      latestFromStore() {
-            let latestFromStore = [];
-            let chats = this.$store.state.chats[0];
-            Object.keys(chats).forEach((userId) => {
-                let userMsgs = chats[userId].old_messages;
-                let latestMessage = {
-                    ...userMsgs[userMsgs.length-1],
-                    new_messages_count: (chats[userId].new_messages_count) ? (chats[userId].new_messages_count) : 0,
-                    chat_id: userId
-                    }
-                latestFromStore.push(latestMessage)
-            });
-
-            latestFromStore.sort(compareTimestamp);
-            return latestFromStore;
-        }, */
         chatIdsFromStore() {
             return (this.$store.state.chats[0] ? Object.keys(this.$store.state.chats[0]) : []);
         },

@@ -52,7 +52,6 @@ import LoadingProfileHeader from '~/components/profile/LoadingProfileHeader'
 import ProfileSidebarPhoto from '~/components/profile/ProfileSidebarPhoto'
 import UILoadingContent from '~/components/ui/UILoadingContent'
 export default {
-  layout: 'profile',
   components: {
     PageHeader,
     LoadingProfileHeader,
@@ -98,8 +97,12 @@ export default {
           axios.get('https://jakubnedorost.cz/marty/api/?type=pages&profile_id=' + this.$route.params.id)
             .then(response => {
               const data = response.data;
-              this.profileData = {...data, userId: this.$route.params.id}
-              this.dataLoaded = true
+              if(data===null) {
+                return this.$nuxt.error({ statusCode: 404, message: 'Fanouškovská stránka neexistuje' })
+              } else {              
+                this.profileData = {...data, userId: this.$route.params.id}
+                this.dataLoaded = true
+              }
             })
             .catch(error => console.log(error))
     }, 

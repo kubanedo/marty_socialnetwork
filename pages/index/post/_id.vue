@@ -53,7 +53,7 @@ export default {
                                     if(Array.isArray(response.data) && response.data.length) {
                                         this.postsData = [...response.data]
                                     } else {
-                                        
+                                        return this.$nuxt.error({ statusCode: 404, message: 'Příspěvek neexistuje' })                                   
                                     }                       
                                 })
                                 .catch(error => console.log(error))

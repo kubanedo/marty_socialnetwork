@@ -52,8 +52,8 @@ export default {
         let generatedGameId = this.createGameId();
         this.$store.commit('login', {
           game_id: generatedGameId,
-          first_name: this.first_name,
-          last_name: this.last_name,
+          first_name: this.capitalize(this.first_name),
+          last_name: this.capitalize(this.last_name),
           sex: this.sex
         });
         localStorage.setItem("gameID", generatedGameId);
@@ -73,7 +73,10 @@ export default {
             result += characters.charAt(Math.floor(Math.random() * characters.length));
         }
         return result;      
-    } 
+    },
+    capitalize(value) {
+      return value[0].toUpperCase() + value.slice(1);
+    }  
   },
   mounted() {
     console.log(this.$route.query['game-not-found']);

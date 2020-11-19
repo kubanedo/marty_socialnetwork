@@ -34,8 +34,8 @@
             </div>    
         </div>
         <div class="chat__input" v-else>
-            <UIInput ref="addMessage" v-model="newMessage" placeholder="Aa" @keydown.enter.prevent.native="sendMessage()" />
-            <UIButton text="Odeslat" @click.native="sendMessage()" />
+            <UIInput ref="addMessage" v-model="newMessage" placeholder="Aa" @keydown.enter.prevent.native="sendMessage()"/>
+            <div><UIButton text="Odeslat" @click.native="sendMessage()" class="send-btn"/></div>
         </div>
       </div>
   </div>
@@ -348,5 +348,8 @@ export default {
         margin-right: 5px; 
         border-radius: 10px;
     }
+}
+.send-btn {
+    margin-left: 10px;
 }
 </style>

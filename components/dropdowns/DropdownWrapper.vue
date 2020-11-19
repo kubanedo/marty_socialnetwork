@@ -1,6 +1,6 @@
 <template>
-  <div>
-      <div @click="showDropdown=!showDropdown" v-click-outside="closeDropdown"><slot/></div>
+  <div v-click-outside="closeDropdown">
+      <div @click="showDropdown=!showDropdown"><slot/></div>
       <div v-show="showDropdown" class="dropdown-menu">
           <div class="dropdown-menu__content">
               <component :is="dropName" @unreadCount="unreadCount($event)"></component>
@@ -10,7 +10,6 @@
 </template>
 
 <script>
-/*v-click-outside="closeDropdown"*/
 import Messages from "~/components/dropdowns/Messages";
 import Notifications from "~/components/dropdowns/Notifications";
 export default {

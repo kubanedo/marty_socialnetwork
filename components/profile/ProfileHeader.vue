@@ -6,6 +6,8 @@
               <div class="profile__header-name"><strong>{{profileData.first_name + " " + profileData.last_name}}</strong></div>
               <div class="profile__header-btns">
 
+                <button v-if="friendWithMe" :class="'profile__header-btn'" @click="openChat($route.params.id)"><i class="las la-comment-dots"></i> Napsat zprávu</button>
+
                 <button @click="changeConnection" v-if="profileData.userId!=='me' && !personHasSentMeRequest" :class="'profile__header-btn' + ((friendWithMe)?' friend-with-me':'')" :disabled="(isPendingRequest && !friendWithMe)">
                   <span v-if="friendWithMe && !isPendingRequest"><i class="las la-user-check"></i> Jste přátelé</span>
                   <span v-else-if="isPendingRequest && !friendWithMe" class="pending"><i class="las la-user-clock"></i> Čeká na vyřízení</span>
@@ -61,6 +63,9 @@ export default {
         }
     },
     methods: {
+      openChat(contactId) {
+          this.$store.commit('openChat', contactId);
+      },      
       changeConnection(value) {
         if(this.personHasSentMeRequest) {
             let payload = {

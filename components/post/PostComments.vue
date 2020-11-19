@@ -1,15 +1,15 @@
 <template>
     <div class="post__comments">
         <div>
-            <PostSingleComment v-for="comment in commentsToDisplay" class="post__comment" :key="comment.comment_id" :commentData="comment" :postID="postID" @addReplyReference="addReplyReference"/>
-            <div v-if="showLessComments && commentsData.length > 3" @click="showLessComments=false" class="post__show-all-comments">Zobrazit další komentáře</div>
             <div class="post__new-comment-wrapper">
                 <div><UIProfileImg userID="me" :imgSize="35" class="mr-5"/></div>
                 <div class="post__new-comment-textarea">
                     <div v-if="replyingTo"><small>Odpovídáte na <strong>{{replyingTo}}</strong>  <i @click="replyingTo=''" class="las la-times replyto-close"></i></small></div>
-                    <UIInput v-model="newComment" ref="addComment" placeholder="Napište komentář..." @keydown.enter.prevent.native="addComment()"/>
+                    <UIInput v-model="newComment" ref="addComment" placeholder="Napište komentář..." @keydown.enter.prevent.native="addComment()" :focusOnShow="openedByUser"/>
                 </div>
-            </div>    
+            </div>              
+            <PostSingleComment v-for="comment in commentsToDisplay" class="post__single-comment" :key="comment.comment_id" :commentData="comment" :postID="postID" @addReplyReference="addReplyReference"/>
+            <button v-if="showLessComments && commentsData.length > 3" @click="showLessComments=false" class="post__show-all-comments grey w100 mt-10">Zobrazit další komentáře</button>  
         </div>
     </div>  
 </template>
@@ -19,13 +19,11 @@ import UIProfileImg from '~/components/ui/UIProfileImg';
 import PostSingleComment from '~/components/post/PostSingleComment';
 import UIInput from "~/components/ui/UIInput";
 
-import focusInput from '~/mixins/focusInput.js'
-
 export default {
-    mixins: [focusInput],
     props: {
         comments: Array,
-        postID: String
+        postID: String,
+        openedByUser: Boolean
     },
     components: {
         PostSingleComment,
@@ -82,10 +80,7 @@ export default {
             });
         }
 
-    }/*,
-    mounted() {
-        this.focusInput('addComment') 
-    } */  
+    }
 }
 </script>
 
@@ -106,13 +101,16 @@ export default {
     .post__new-comment-wrapper {
         display: flex;
     }
+    .post__new-comment-wrapper + .post__single-comment {
+        padding-top: 20px;
+        margin-top: 15px;
+        border-top: 1px solid lighten(grey, 45);
+    }
     .post__new-comment-textarea {
         width: 100%;
     }
     .post__show-all-comments {
-        color: $primary-color;
-        cursor: pointer;
-        padding-bottom: 20px;
+        display: inline;
         text-align: center;
     }
     .replyto-close {

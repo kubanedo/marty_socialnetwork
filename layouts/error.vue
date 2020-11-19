@@ -1,15 +1,17 @@
 <template>
-  <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/">
-      Home page
-    </NuxtLink>
-  </v-app>
+  <div class="main-wrapper">
+    <div class="container grid">
+      <h1 v-if="error.statusCode === 404">
+        {{pageNotFound}}
+      </h1>
+      <h1 v-else>
+        {{otherError}}
+      </h1>
+      <NuxtLink to="/">
+        Vrátit se na úvodní stránku
+      </NuxtLink>
+    </div>    
+  </div>
 </template>
 
 <script>
@@ -23,8 +25,8 @@ export default {
   },
   data () {
     return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
+      pageNotFound: (this.error.message) ? this.error.message : 'Stránka nenalezena',
+      otherError: 'Nastala chyba'
     }
   },
   head () {

@@ -197,6 +197,9 @@ header {
 .left-sidebar h3, .right-sidebar h3 {
     margin-bottom: 10px;
 }
+.click {
+    cursor: pointer;
+}
 .smaller-onclick {
     cursor: pointer;
     &:active {

@@ -4,7 +4,7 @@
               <h2>{{(modalData.shareData) ? 'Sdílejte příspěvek' : 'Vytvořte příspěvek'}}</h2>
               <UICloseBtn @click.native="closeWindow" />
             </div>
-            <UIInput ref="addNewPost" v-model="newPost" :placeholder="(modalData.shareData) ? 'Něco k tomu napište...' : 'Co se vám honí hlavou?'" @keydown.enter.prevent.native="postNewPost()" />
+            <UIInput ref="addNewPost" v-model="newPost" :rows="3" :placeholder="(modalData.shareData) ? 'Něco k tomu napište...' : 'Co se vám honí hlavou?'" @keydown.enter.prevent.native="postNewPost()" />
             <div class="link__preview" v-if="!modalData.shareData && firstLinkData && firstLinkData.status=='found'">
                <LinkPreview :linkData="firstLinkData" :deletablePreview="true" @deleteLinkPreview="deleteLinkPreview"/>
             </div>

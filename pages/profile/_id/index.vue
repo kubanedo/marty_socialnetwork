@@ -16,6 +16,7 @@
                     <div v-if="profileData.about_info && profileData.about_info.day_of_birth"><strong><i class="las la-birthday-cake"></i> Věk: </strong>{{ getAge(profileData.about_info.day_of_birth) }} let</div>                    
                     <div v-if="profileData.about_info && profileData.about_info.current_town"><strong><i class="las la-city"></i> Žije ve městě: </strong>{{ profileData.about_info.current_town }}</div>
                     <div v-if="profileData.about_info && profileData.about_info.study"><strong><i class="las la-graduation-cap"></i> Studuje: </strong>{{ profileData.about_info.study }}</div>
+                    <nuxt-link v-if="$route.params.id=='me'" to="/settings" tag="button" class="grey w100 mt-10"><i class="las la-user-edit"></i> Upravit informace</nuxt-link>                
                 </div> 
                 <div class="card" v-if="Array.isArray(profileData.photos) && profileData.photos.length">
                   <h3>Fotky</h3>
@@ -28,7 +29,7 @@
                   <nuxt-link v-if="profileData.photos.length > 3" :to="`/profile/${$route.params.id}/photos`" tag="button" class="grey w100 mt-10">Všechny fotky</nuxt-link>
                 </div>
                 <div class="card" v-if="friendsLoaded">
-                  <h3>Přátelé<small v-if="commonFriendsCount > 0"> ({{commonFriendsCount}} společných)</small></h3>
+                  <h3>Přátelé<small v-if="commonFriendsCount > 0"> (<nuxt-link :to="`/profile/${$route.params.id}/friends/mutual`" class="underline-hover">{{commonFriendsCount}} společných</nuxt-link>)</small></h3>
                   <div class="sidebar__friends">
                     <ProfileSidebarFriend v-for="friend in friendsData.slice(0,3)" :key="friend.profile_id" :friendData="friend" :commonFriends="getCommonFriendsList(friend.friends)"/>
                   </div>                  
@@ -57,7 +58,6 @@ import ProfileSidebarPhoto from '~/components/profile/ProfileSidebarPhoto'
 import ProfileSidebarFriend from '~/components/profile/ProfileSidebarFriend'
 import UILoadingContent from '~/components/ui/UILoadingContent'
 export default {
-  layout: 'profile',
   components: {
     ProfileHeader,
     LoadingProfileHeader,
@@ -129,8 +129,12 @@ export default {
           axios.get('https://jakubnedorost.cz/marty/api/?type=profiles&profile_id=' + this.$route.params.id)
             .then(response => {
               const data = response.data;
-              this.profileData = {...data, userId: this.$route.params.id}
-              this.dataLoaded = true
+              if(data===null) {
+                return this.$nuxt.error({ statusCode: 404, message: 'Profil neexistuje' })
+              } else {
+                this.profileData = {...data, userId: this.$route.params.id}
+                this.dataLoaded = true
+              }
             })
             .catch(error => console.log(error))
             .finally(() => {

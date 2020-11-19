@@ -1,11 +1,12 @@
 export default {
     methods: {
         focusInput(refName) {
-            const input = this.$refs[refName].$el;
-            console.log(input);
+            console.log(refName)
+            const input = this.$refs[refName];
             if(typeof input !== "undefined" && input !== null) {
                input.focus(); 
             }
+            console.log('aaa')
         }
     }
   }

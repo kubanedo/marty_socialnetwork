@@ -46,11 +46,11 @@
                 </div>
             </div>
             <div class="post__footer-buttons">
-                <button @click="likePost" :class="(islikedByMe) ? 'liked' : ''"><i :class="'las la-heart' + ((animatedLike) ? ' animated-like' : '')"></i> To se mi líbí</button>
+                <button @click="likePost" :class="{liked: islikedByMe}"><i :class="'las la-heart' + ((animatedLike) ? ' animated-like' : '')"></i> To se mi líbí</button>
                 <button @click="toggleComments"><i class="las la-comment"></i> Okomentovat</button>
                 <button @click="sharePost" v-if="(postData.posted_by=='me') ? true : (privacySetting=='all' ? true : false)"><i class="las la-share-square"></i> Sdílet</button>
             </div>
-            <PostComments v-if="areCommentsOpened" :postID="postData.post_id" :comments="comments" />
+            <PostComments v-if="areCommentsOpened" :postID="postData.post_id" :comments="comments" :openedByUser="commentsOpenedByUser" />
         </div>
     </div>  
 </template>
@@ -91,6 +91,7 @@ export default {
             postData: this.post_data,
             /*nameLoaded: false,*/
             areCommentsOpened: false,
+            commentsOpenedByUser: false,
             isDeleted: false,            
             postText: '',
             postedByName: (this.post_data.first_name ? this.post_data.first_name + ' ' + this.post_data.last_name : 
@@ -166,6 +167,9 @@ export default {
         },
         toggleComments() {
             this.areCommentsOpened = !this.areCommentsOpened;
+            if(this.areCommentsOpened==true) {
+                this.commentsOpenedByUser = true;
+            }
         },
  /*       getFullName() {
             if(this.post_data.posted_by=='me') {
