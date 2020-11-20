@@ -49,6 +49,12 @@ export default {
             }            
         }
     },
+    watch: {
+        privacySetting(value) {
+            this.currentSetting = value;
+            this.setTextAndIcon();
+        }
+    },
     mounted() {
         this.setTextAndIcon();
     }

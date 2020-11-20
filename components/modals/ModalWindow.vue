@@ -12,6 +12,7 @@
 <script>
 import CreatePost from '~/components/modals/CreatePost';
 import ReportPost from '~/components/modals/ReportPost';
+import EditPost from '~/components/modals/EditPost';
 import Quiz from '~/components/modals/Quiz';
 import FriendsList from '~/components/modals/FriendsList';
 import ContactList from '~/components/modals/ContactList';
@@ -20,6 +21,7 @@ export default {
   components: {
       CreatePost,
       ReportPost,
+      EditPost,
       Quiz,
       FriendsList,
       ContactList

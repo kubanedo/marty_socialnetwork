@@ -6,7 +6,7 @@
         </div> 
     </nuxt-link>
     <nuxt-link :to="`/profile/${friendData.profile_id}`" class="underline-hover"> 
-        <h4>{{friendData.first_name + ' ' + friendData.last_name}}</h4>
+        <h4>{{friendData.first_name + ' ' + friendData.last_name}}<span v-if="friendData.profile_id=='me'"> (já)</span></h4>
     </nuxt-link>
     <small v-if="commonFriends.length > 0" @click="openCommonFriendsList" class="underline-hover">{{commonFriends.length}} společných přátel</small>    
 </div>         

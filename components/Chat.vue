@@ -297,6 +297,13 @@ export default {
     flex-direction: column;
     justify-content: center;
 }
+.chat__close-btn button {
+    padding: 0 3px;
+    border-radius: 50%;
+    &:hover, &:active {
+    background: $input-color;
+    }
+}
 .chat__contact-name {
     font-weight: bold;
     padding-left: 5px;

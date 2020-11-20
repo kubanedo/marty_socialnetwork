@@ -5,7 +5,7 @@
         </div>
         <div>
             <div class="friendlist-item-text">
-                <nuxt-link :to="'/profile/' + friendData.profile_id" class="underline-hover"><strong  @click="navigateAway()">{{friendData.first_name + ' ' + friendData.last_name}}</strong></nuxt-link>
+                <nuxt-link :to="'/profile/' + friendData.profile_id" class="underline-hover"><strong  @click="navigateAway()">{{friendData.first_name + ' ' + friendData.last_name}}<span v-if="friendData.profile_id=='me'"> (já)</span></strong></nuxt-link>
                 <small v-if="commonFriendsCount > 0" @click="openCommonFriendsList" class="underline-hover">
                     {{commonFriendsCount}} společných přátel
                 </small>
@@ -38,7 +38,7 @@ export default {
             type: Object
         },
         profileName: {
-            type: Object
+            type: String
         }        
     },
     components: {
@@ -83,7 +83,8 @@ export default {
             this.$store.dispatch('waitForFriendRequestApproval', {
             connection_type: 'person', 
             profile_id: this.friendData.profile_id, 
-            user_name: this.friendData.first_name + ' ' + this.friendData.last_name
+            user_name: this.friendData.first_name + ' ' + this.friendData.last_name,
+            sex: this.friendData.sex
             }); 
         }           
       },

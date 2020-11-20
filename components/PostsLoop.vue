@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import UIFriendedToast from '~/components/ui/UIFriendedToast';
 import axios from 'axios'
 import CreateNewPost from "~/components/CreateNewPost";
 import Post from "~/components/post/Post";
@@ -28,6 +29,7 @@ export default {
         }
     },
     components: {
+        UIFriendedToast,
         Post,
         CreateNewPost,
         UILoader,

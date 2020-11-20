@@ -5,10 +5,17 @@
             <nuxt-link :to="'/profile/' + profileData.userId + '/friends'" tag="li">Všichni přátelé</nuxt-link>
             <nuxt-link :to="'/profile/' + profileData.userId + '/friends/mutual'" tag="li">Společní přátelé ({{commonFriendsCount}})</nuxt-link>
         </ul>  
-                    
-        <div>
+            
+        <div v-if="friendsData.length > 0">
             <nuxt-child :allFriends="friendsData" :mutualFriends="commonFriendsData" :profileName="profileData.first_name + ' ' + profileData.last_name" />
         </div>
+        <div v-else class="text-center">
+            <div class="circle-icon">
+                <i class="las la-user-slash"></i>
+            </div>   
+                Žádní přátelé
+        </div>
+
     </div>   
 </template>
 

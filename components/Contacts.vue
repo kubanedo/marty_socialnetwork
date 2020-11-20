@@ -56,10 +56,14 @@ export default {
             return this.$store.getters.getMyFriends;
         },
         contactLoop() {
-            if(this.placement=='sidebar') {
-                return this.contacts.slice(0,3);
+            if(this.contacts.length) {
+                if(this.placement=='sidebar') {
+                    return this.contacts.slice(0,3);
+                } else {
+                    return this.filteredContacts;
+                }
             } else {
-                return this.filteredContacts;
+                return []
             }
         },
         filteredContacts() {
@@ -86,14 +90,19 @@ export default {
         },
         getContacts() {
             let friends = this.myFriends;
-            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_ids=' + friends.join())
-                .then(response => {
-                    let contacts = [];
-                    let data = response.data;
-                    this.contactsLoading = false;
-                    this.contacts = data;                    
-                })
-                .catch(error => console.log(error))            
+            if(friends.length) {
+                axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_ids=' + friends.join())
+                    .then(response => {
+                        let data = response.data;
+                        this.contactsLoading = false;
+
+                        this.contacts = (data!==null) ? [...data] : [];                 
+                    })
+                    .catch(error => console.log(error))  
+            } else {
+                this.contactsLoading = false;
+                this.contacts = [];
+            }              
         }
     },
     watch: {
@@ -136,6 +145,7 @@ export default {
 .search-icon-input {
     position: relative;
     input {
+        background: white;
         padding-left: 40px;
         padding-right: 30px;
     }

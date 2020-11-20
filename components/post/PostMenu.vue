@@ -35,17 +35,20 @@ export default {
         deletePost() {
             this.$emit('isDeleted') 
             this.$store.commit('deletePost', this.postID);
-            this.$toast("Příspěvek smazán.");
+            this.$toast("Příspěvek smazán.", {icon: 'las la-trash'});
         },
         editPost() {
-            this.$emit('editPost') 
+            this.$store.state.modalWindow = {
+                modalName: 'EditPost',
+                post_id: this.postID
+            };
         },
         savePost() {
             this.isSaved = !this.isSaved;
             if(this.isSaved) {
-                this.$toast("Příspěvek uložen.");
+                this.$toast("Příspěvek uložen.", {icon: 'las la-bookmark'});
             } else {
-                this.$toast("Příspěvek smazán z uložených.");
+                this.$toast("Příspěvek smazán z uložených.", {icon: 'las la-minus-circle'});
             }
             this.$store.commit('savePost', this.postID); 
         },

@@ -6,14 +6,14 @@
             <LoadingProfileHeader v-else />
           </div>
           <div class="container grid">
-            <aside class="left-sidebar">
+            <aside class="left-sidebar">        
               <div class="sidebar-container" v-if="dataLoaded">
                 <div class="card">
                     <h3>Úvodní informace</h3>
                     <div v-if="profileData.about_info && profileData.about_info.motto" class="mb-10"><i>"{{ profileData.about_info.motto}}"</i></div>
                     <div v-if="profileData.sex"><strong>Pohlaví: </strong>{{ (profileData.sex=="m") ? "muž" : "žena"}}</div>
                     <div v-if="profileData.about_info && profileData.about_info.day_of_birth"><strong><i class="las la-birthday-cake"></i> Narozeniny: </strong>{{ getBirthdayDate(profileData.about_info.day_of_birth) }}</div>
-                    <div v-if="profileData.about_info && profileData.about_info.day_of_birth"><strong><i class="las la-birthday-cake"></i> Věk: </strong>{{ getAge(profileData.about_info.day_of_birth) }} let</div>                    
+                    <div v-if="profileData.about_info && profileData.about_info.day_of_birth"><strong><i class="las la-portrait"></i> Věk: </strong>{{ getAge(profileData.about_info.day_of_birth) }} let</div>                    
                     <div v-if="profileData.about_info && profileData.about_info.current_town"><strong><i class="las la-city"></i> Žije ve městě: </strong>{{ profileData.about_info.current_town }}</div>
                     <div v-if="profileData.about_info && profileData.about_info.study"><strong><i class="las la-graduation-cap"></i> Studuje: </strong>{{ profileData.about_info.study }}</div>
                     <nuxt-link v-if="$route.params.id=='me'" to="/settings" tag="button" class="grey w100 mt-10"><i class="las la-user-edit"></i> Upravit informace</nuxt-link>                
@@ -28,7 +28,7 @@
                   </div>
                   <nuxt-link v-if="profileData.photos.length > 3" :to="`/profile/${$route.params.id}/photos`" tag="button" class="grey w100 mt-10">Všechny fotky</nuxt-link>
                 </div>
-                <div class="card" v-if="friendsLoaded">
+                <div class="card" v-if="friendsLoaded && userFriends.length > 0">
                   <h3>Přátelé<small v-if="commonFriendsCount > 0"> (<nuxt-link :to="`/profile/${$route.params.id}/friends/mutual`" class="underline-hover">{{commonFriendsCount}} společných</nuxt-link>)</small></h3>
                   <div class="sidebar__friends">
                     <ProfileSidebarFriend v-for="friend in friendsData.slice(0,3)" :key="friend.profile_id" :friendData="friend" :commonFriends="getCommonFriendsList(friend.friends)"/>
@@ -82,6 +82,13 @@ export default {
       },
       myProfileData() {
         return this.$store.state.loggedUser
+      },
+      userFriends() {
+        if(this.$route.params.id=="me") {
+          return this.$store.state.loggedUser.friends;
+        } else {
+          return this.profileData.friends;
+        }          
       }           
   },
   methods: {
@@ -143,12 +150,7 @@ export default {
         } 
     },
     getFriendsData() {
-        let friends;
-        if(this.$route.params.id=="me") {
-          friends = this.$store.state.loggedUser.friends;
-        } else {
-          friends = this.profileData.friends;
-        }  
+        let friends = this.userFriends; 
         
         if(Array.isArray(friends) && friends.length) {   
           axios.get('https://jakubnedorost.cz/marty/api/?type=profiles&profile_ids=' + friends.join())
@@ -162,7 +164,10 @@ export default {
                 this.getMyData()
               }
             })
-        }          
+        } else {
+          this.friendsData = [];
+          this.friendsLoaded = true;         
+        }         
     },
     getMyData(addOrRemove = 'add') {
       /*pokud se staneme se přáteli s jiným profilem, zobrazíme se mezi jeho přáteli */
@@ -191,6 +196,9 @@ export default {
       if(this.$route.params.id=="me") {
         this.getProfileData();
       }
+    },
+    userFriends() {
+      this.getProfileData();
     }
   },
   mounted() {

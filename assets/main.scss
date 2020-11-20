@@ -16,10 +16,10 @@ a:hover {
 button:active, button:focus, textarea:active {
     outline: none;
 }
-button:focus {
+/*button:focus {
     background: lighten($grey-color, 1);
     border-radius: 5px;
-}
+}*/
 .container {
     max-width: 1430px;
     width: 95%;
@@ -181,6 +181,9 @@ header {
 .mt-10 {
     margin-top: 10px;
 }
+.mt-20 {
+    margin-top: 20px;
+}
 .circle-icon {
     width: 50px;
     height: 50px;
@@ -222,4 +225,21 @@ button.grey {
     &:active {
         transform: scale(0.97);
     }
+}
+input, textarea {
+    background: lighten($input-color, 20);
+    padding: 5px 10px;
+    border: 1px lighten($input-color, 10) solid;
+    border-radius: 5px;   
+}
+input:not([type=radio]):not([type=checkbox]) {
+    min-width: 300px; 
+}
+.input-wrapper {
+    label {
+        display: block;
+        margin-top: 5px;
+        font-weight: bold;        
+    }
+    margin-bottom: 10px;
 }

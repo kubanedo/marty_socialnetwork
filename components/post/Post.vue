@@ -6,7 +6,7 @@
                     <nuxt-link :to="((postData.first_name || postData.posted_by =='me') ? '/profile/' : '/page/') + postData.posted_by" class="profile-name underline-hover">{{postedByName}}</nuxt-link>
                     <div class="post-time"><TimeAgo :time="postData.published"/> · <PrivacySettings :postedBy="postData.posted_by" :privacySetting="postData.privacy_settings" :postID="postData.post_id" @updatePrivacySetting="updatePrivacySetting($event)"/></div>                
                 </div>
-                <div class="post__menu"><PostMenu :postedBy="postData.posted_by" :postID="postData.post_id" @isDeleted="isDeleted=true" @editPost="editPost"/></div>
+                <div class="post__menu"><PostMenu :postedBy="postData.posted_by" :postID="postData.post_id" @isDeleted="isDeleted=true"/></div>
         </div>
         <div class="post__body">
             <div class="post__text">
@@ -48,7 +48,7 @@
             <div class="post__footer-buttons">
                 <button @click="likePost" :class="{liked: islikedByMe}"><i :class="'las la-heart' + ((animatedLike) ? ' animated-like' : '')"></i> To se mi líbí</button>
                 <button @click="toggleComments"><i class="las la-comment"></i> Okomentovat</button>
-                <button @click="sharePost" v-if="(postData.posted_by=='me') ? true : (privacySetting=='all' ? true : false)"><i class="las la-share-square"></i> Sdílet</button>
+                <button @click="sharePost" v-if="(postData.posted_by=='me') ? true : (postData.privacy_settings=='all' ? true : false)"><i class="las la-share-square"></i> Sdílet</button>
             </div>
             <PostComments v-if="areCommentsOpened" :postID="postData.post_id" :comments="comments" :openedByUser="commentsOpenedByUser" />
         </div>
@@ -98,7 +98,7 @@ export default {
                                 (this.post_data.name ? this.post_data.name : 
                                 (this.post_data.posted_by==='me' ? this.$store.getters.getMyWholeName : this.post_data.posted_by))),
             comments: [],
-            privacySetting: this.post_data.privacy_settings,
+            /*privacySetting: this.post_data.privacy_settings,*/
             animatedLike: false
         }
     },
@@ -126,7 +126,17 @@ export default {
         },
         isPostReported() {
             return (this.$store.state.reportedPosts) ? this.$store.state.reportedPosts.includes(this.postData.post_id) : false;
-        }
+        },
+ /*       getMyPostData() {
+            if(this.postData.posted_by=="me") {
+               let postID = this.postData.post_id;
+               let thisMyPost = this.$store.getters.getMyPost(postID)
+               console.log('my', thisMyPost, postID)
+               return thisMyPost
+              // 
+            } 
+            //return null
+        } */
     },
     methods: {
         likePost() {
@@ -197,12 +207,16 @@ export default {
                 axios.get('https://jakubnedorost.cz/marty/api/?type=comments&post_id=' + this.post_data.post_id)
                     .then(response => {
                         const data = response.data;
-                        this.comments = [...data];
+                        if(Array.isArray(data) && data.length) {
+                            this.comments = [...data];
+                        } else {
+                            this.comments = [];
+                        }
                     })
                     .catch(error => console.log(error))
                     .then(() => this.loadMyCommentsFromStore()) 
                     .finally(() => {
-                            this.commentsCount = (this.comments && this.comments.length) ? this.comments.length : 0;
+                          /*  this.commentsCount = (this.comments && this.comments.length) ? this.comments.length : 0;*/
                             if(this.commentsCount > 0) {
                                 this.areCommentsOpened = true;
                             }  
@@ -217,12 +231,9 @@ export default {
             };
             this.$store.commit('updatePost', postData);
         },
-        editPost() {
-            console.log('editPost');
-        },
         updatePrivacySetting(value) {
-            this.privacySetting = value;
-            this.updatePost({privacy_settings: this.privacySetting});
+            this.postData.privacy_settings = value;
+            this.updatePost({privacy_settings: this.postData.privacy_settings});
         },
         getChangesFromStore() {
             let storeArrayPos;
@@ -240,7 +251,6 @@ export default {
         },
         loadMyCommentsFromStore() {                     
             let storeData = this.$store.state.myComments[this.postData.post_id];
-            console.log(storeData, "storeData")
             if(storeData!==undefined) {
                 let temporaryArray = []; 
                 storeData.forEach((item) => {
@@ -249,14 +259,32 @@ export default {
                 console.log(temporaryArray)         
                 this.comments = [...temporaryArray, ...this.comments];
             }            
+        },
+        watchForChangesOfMyPost() {
+            if(this.postData.posted_by=="me") {
+                let postID = this.postData.post_id;
+                console.log('watcher activated', postID)
+                this.$store.watch((state, getters) => getters.getMyPost(postID), (newValue, oldValue) => {
+                    if(newValue!==undefined) {
+                        this.postData = newValue;
+                        this.postText = newValue.post_text;
+                    }
+                }, {deep: true})                
+            }
         }
     },
+   /* watch: {
+        getMyPostData(value) {
+            //if my post edited
+            console.log(value);
+            this.postData = value;
+            this.postText = value.post_text;
+        }
+    },*/
     mounted() {
+        this.watchForChangesOfMyPost();
         this.getChangesFromStore();
         this.postText = this.makeLinksClickable(this.replaceSmileys(this.postData.post_text));
-        /*if(!this.post_data.first_name || !this.post_data.name) {
-            this.getFullName();
-        }    */
         this.loadComments();
     }
 }

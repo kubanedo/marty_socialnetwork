@@ -3,16 +3,14 @@
         <div class="card card--title">
             <h2>Uložené příspěvky</h2>
         </div>    
-        <div :class="'card' + (noPosts && !loadingPosts ? ' text-center card--noshadow': '')">
-            <LoadingPost v-if="loadingPosts"/>
-            <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData" @postLoaded="loadingPosts=false"/>
-            <div v-if="noPosts && !loadingPosts">
+        <LoadingPost v-if="loadingPosts"/>
+        <Post v-else-if="!noPosts" v-for="postData in postsData" :key="postData.post_id" :post_data="postData" @postLoaded="loadingPosts=false"/> 
+        <div v-else class="card text-center card--noshadow">
                 <div class="circle-icon">
                     <i class="las la-bookmark"></i>
                 </div>                    
                 Žádné uložené příspěvky.
-            </div>
-        </div>        
+        </div>                       
   </div>      
 </template>
 
@@ -30,7 +28,7 @@ export default {
             loadingPosts: true,
             noPosts: false,
             postsData: [],
-            idsOfSavedPosts: [] 
+            loadedSavedPosts: [] 
         }
     },
     computed: {
@@ -40,10 +38,10 @@ export default {
     },
     watch: {
         savedPosts(value) {
-            if(value.length >= this.idsOfSavedPosts.length) {
+            if(value.length >= this.loadedSavedPosts.length) {
                 this.loadSavedPosts();         
             } else {
-                let difference = this.idsOfSavedPosts.filter(x => !value.includes(x));
+                let difference = this.loadedSavedPosts.filter(x => !value.includes(x));
                 difference.forEach((item) => this.moveFromSaved(item));
                 if (!value.length) {
                     this.noPosts = true;
@@ -54,7 +52,7 @@ export default {
     methods: {
         moveFromSaved(post_id) {
            this.postsData = this.postsData.filter(item => item.post_id !== post_id); 
-           this.idsOfSavedPosts = this.idsOfSavedPosts.filter(item => item !== post_id);
+           this.loadedSavedPosts = this.loadedSavedPosts.filter(item => item !== post_id);
         },
         loadSavedPosts() {
             this.postsData = [];
@@ -66,9 +64,12 @@ export default {
                                             this.postsData.push(...response.data);
                                         }                      
                                     })
-                                    .catch(error => console.log(error)) 
+                                    .catch(error => console.log(error))
+                                    .finally(() => {
+                                       this.loadingPosts = false;
+                                    }) 
                 }); 
-                this.idsOfSavedPosts = [...this.savedPosts];
+                this.loadedSavedPosts = [...this.savedPosts];
                 this.noPosts = false;
             } else {
                 this.loadingPosts = false;

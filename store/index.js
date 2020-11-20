@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex'
 import axios from 'axios'
 
+import UIFriendedToast from "~/components/ui/UIFriendedToast";
+
 const saveGame = (gameId, state) => {
     axios.post("https://jakubnedorost.cz/marty/api/save/?game_id=" + gameId, {...state, modalWindow: null})
         .then(response => console.log(response))  
@@ -9,6 +11,7 @@ const saveGame = (gameId, state) => {
 
 const defaultState = () => {
     return {
+    loadingApp: true,    
     startTimestamp: new Date().getTime(),
     gameVersion: 0,
     loggedUser: {
@@ -80,7 +83,10 @@ const createStore = () => {
             },
             getAnsweredQuiz: state => id => {
                 return state.answeredQuizes.find(answeredQuiz => answeredQuiz.quiz_id === id);
-            }           
+            }, 
+            getMyPost: state => post_id => {
+                return state.myPosts.find(post => post.post_id === post_id);
+            }                                
         },        
         mutations: {
             resetState: (state) => {
@@ -91,6 +97,7 @@ const createStore = () => {
                     ...state.loggedUser,
                     ...payload
                 }
+                state.loadingApp = false;
             },
             changeUserInfo(state, payload) {
                 state.loggedUser = {
@@ -100,6 +107,7 @@ const createStore = () => {
             },
             loadGame: (state, loadedState) => {
                 Object.assign(state, loadedState);
+                state.loadingApp = false;
                /* $nuxt.$router.push('/')*/
             },          
             postNewPost: (state, newPostObj) => {
@@ -127,10 +135,10 @@ const createStore = () => {
                     }
                 });
                 if(arrayPos !== undefined) {
-                    state[storeProperty][arrayPos] = {
+                    Object.assign(state[storeProperty][arrayPos], {
                         ...state[storeProperty][arrayPos],
                         ...payload
-                    };
+                    });
                 } else {
                     state[storeProperty].push({
                         ...payload
@@ -274,7 +282,16 @@ const createStore = () => {
                     setTimeout(() => {
                         context.commit('changeConnection', payload);
                         context.commit('changeConnection', { ...payload, connection_type: 'person:sent-request'}); /* remove from queue */
-                        this._vm.$toast(`${payload.user_name} přijal/a žádost o přátelství.`);
+                        this._vm.$toast({
+                            component: UIFriendedToast,
+                            props: {
+                                user_info: {
+                                    user_id: payload.profile_id,
+                                    user_name: payload.user_name,
+                                    sex: payload.sex
+                                }
+                            }
+                        });                        
                     }, randomTime(4, 10));
                 } else {
                     context.commit('changeConnection', payload);

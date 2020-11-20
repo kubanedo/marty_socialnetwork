@@ -16,7 +16,7 @@
                     </div>
 
                     <div v-if="friendsCount > 0">Počet přátel: <nuxt-link :to="'/profile/me/friends'">{{friendsCount}}</nuxt-link></div>
-                    <div v-if="receivedFriendsReqCount > 0" class="mt-10"><nuxt-link to="/friend-requests">Počet nevyřízených žádostí: {{receivedFriendsReqCount}}</nuxt-link></div>                   
+                    <div v-if="receivedFriendsReqCount > 0" class="mt-10"><nuxt-link to="/friend-requests">Nevyřízené žádosti o přátelství: {{receivedFriendsReqCount}}</nuxt-link></div>                   
                 </div>  
                 <div class="card">
                     <nuxt-link to="/" class="menu-item">

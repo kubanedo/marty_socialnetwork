@@ -5,22 +5,33 @@
       <p>Přihlašte se do naší nepravé sociální sítě a ověřte si, že víte, jak se na sociálních sítích správně chovat. Za každou správně provedenou akci/odpovězenou otázku, získáte určitý počet bodů. Za špatně provedené akce či odpovězené otázky je odebrána polovina bodů, které bylo možno získat. Provedete všechny úkoly a získáte největší počet bodů?</p>
       <div class="login__form">
           <div class="login__newgame" v-if="!showloadGameInput">
-            <label>Křestní jméno</label><br/>
-            <input type="text" v-model="first_name"/><br/>
-            <label>Příjmení</label><br/>
-            <input type="text" v-model="last_name"/><br/>
-            <label>Pohlaví</label><br/>
-            <input type="radio" v-model="sex" value="m"> Muž
-            <input type="radio" v-model="sex" value="f"> Žena<br/><br/>
+
+            <div class="input-wrapper">
+              <label>Křestní jméno</label>
+              <input type="text" class="w100" v-model="first_name"/>
+            </div>
+            <div class="input-wrapper">
+              <label>Příjmení</label>
+              <input type="text" class="w100" v-model="last_name"/>
+            </div> 
+            <div class="input-wrapper">             
+              <label>Pohlaví</label>
+              <input type="radio" v-model="sex" value="m"> Muž
+              <input type="radio" v-model="sex" value="f"> Žena
+            </div>
+
             <UIButton text="Registrovat a přihlásit se" @click.native="logIn()" /><br/>
-            <div @click="showloadGameInput=true">Už jsem registrován/a, chci načíst rozehranou hru</div><br/>
+            <div @click="showloadGameInput=true" class="click underline-hover text-center mt-20">Už jsem registrován/a, chci načíst rozehranou hru</div><br/>
+
           </div>  
           <div class="login__loadgame" v-else>
             <p>Níže zadejte kód rozehrané hry, který vám byl zaslán na email.</p>
-            <label>Kód rozehrané hry</label><br/>
-            <input type="text" v-model="gameId"/><br/>
+            <div class="input-wrapper">
+              <label>Kód rozehrané hry</label>
+              <input type="text" class="w100" v-model="gameId"/>
+            </div>
             <UIButton text="Přihlásit se" @click.native="loadGame()" />
-            <div @click="showloadGameInput=false">Začít hrát novou hru</div>
+            <div @click="showloadGameInput=false" class="click underline-hover text-center mt-20">Začít hrát novou hru</div>
             <div v-if="$route.query['game-not-found']===null">
               Hra nenalezena
             </div>  
@@ -101,15 +112,6 @@ h1 {
   text-align: center;
   margin-bottom: 15px;
 }
-label {
-  display: inline-block;
-  margin-top: 5px;
-  font-weight: bold;
-}
-input {
-  border: 1px black solid;
-  border-radius: 5px;
-}
 .login__page {
   width: 100vw;
   height: 100vh;
@@ -123,6 +125,6 @@ input {
   margin: 0 auto;
 }
 .login__form {
-  margin-top: 10px;
+  margin-top: 30px;
 }
 </style>

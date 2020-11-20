@@ -80,7 +80,8 @@ export default {
           this.$store.dispatch('waitForFriendRequestApproval', {
             connection_type: 'person', 
             profile_id: this.profileData.userId, 
-            user_name: this.profileData.first_name + " " + this.profileData.last_name
+            user_name: this.profileData.first_name + " " + this.profileData.last_name,
+            sex: this.profileData.sex
             });
         }  
       }

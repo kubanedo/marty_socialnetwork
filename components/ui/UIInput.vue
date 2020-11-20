@@ -81,6 +81,10 @@ export default {
             padding: 10px;
             padding-right: 35px;
             color: black;
-            overflow-wrap: break-word;        
+            border: none;
+            overflow-wrap: break-word;       
+    }
+    .input-wrapper {
+            margin-bottom: 0;
     }
 </style>
