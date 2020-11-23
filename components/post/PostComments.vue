@@ -8,7 +8,7 @@
                     <UIInput v-model="newComment" ref="addComment" placeholder="Napište komentář..." @keydown.enter.prevent.native="addComment()" :focusOnShow="openedByUser"/>
                 </div>
             </div>              
-            <PostSingleComment v-for="comment in commentsToDisplay" class="post__single-comment" :key="comment.comment_id" :commentData="comment" :postID="postID" @addReplyReference="addReplyReference"/>
+            <PostSingleComment v-for="comment in commentsToDisplay" class="post__single-comment" :key="comment.comment_id" :commentData="comment" :postID="postID" @addReplyReference="addReplyReference" @deleteMyComment="deleteMyComment"/>
             <button v-if="showLessComments && commentsData.length > 3" @click="showLessComments=false" class="post__show-all-comments grey w100 mt-10">Zobrazit další komentáře</button>  
         </div>
     </div>  
@@ -78,7 +78,14 @@ export default {
                 post_id: this.postID,
                 ...newComment
             });
-        }
+        },
+        deleteMyComment(commentToBeDeleted) {
+            let commentPos = this.commentsData.findIndex(item => item.comment_id === commentToBeDeleted.comment_id);
+            if (commentPos !== undefined) {
+                this.commentsData.splice(commentPos, 1);
+            }         
+            this.$store.commit('deleteMyComment', commentToBeDeleted);      
+        }       
 
     }
 }

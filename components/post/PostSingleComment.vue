@@ -17,7 +17,7 @@
             <nuxt-link :to="'/profile/' + commentData.commented_by">
               {{commentedByName}}
             </nuxt-link>
-            <button v-if="commentData.commented_by=='me'"><i class="las la-trash"></i></button>
+            <button v-if="commentData.commented_by=='me'" @click="deleteMyComment" class="delete"><i class="las la-trash"></i></button>
           </strong>
           <span><strong v-if="commentData.reply_to">@{{commentData.reply_to}} </strong><span v-html="commentText"></span></span>
           <QuizAction
@@ -61,6 +61,7 @@ export default {
       commentText: "",
       commentedByName: this.commentData.commented_by,
       isLiked: false,
+      isDeleted: false
     };
   },
   components: {
@@ -151,7 +152,16 @@ export default {
               } 
           } 
         }   
-    }        
+    },
+    deleteMyComment() {
+      let commentData = {
+            post_id: this.postID,
+            comment_id: this.commentData.comment_id,        
+      } /*
+      this.$store.commit('deleteMyComment', commentData);      
+    */
+    this.$emit('deleteMyComment', commentData); 
+    }       
   },
   mounted() {
     this.getChangesFromStore();
@@ -210,5 +220,12 @@ export default {
 }
 .liked {
   color: red;
+}
+button.delete {
+  opacity: 0.6;
+  &:hover{
+    opacity: 1;
+    color: red;
+  }
 }
 </style>

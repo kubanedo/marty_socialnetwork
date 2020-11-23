@@ -118,26 +118,19 @@ const createStore = () => {
                 saveGame(state.loggedUser.game_id, state);
             },
             deletePost: (state, post_id) => {
-                let arrayPos;
-                state.myPosts.forEach((item, index) => {
-                    if(item.post_id==post_id) {
-                        arrayPos = index;
-                    }
-                });
-                if(arrayPos !== undefined) {
-                    state.myPosts.splice(arrayPos, 1);
-                } 
+                let postPos = state.myPosts.findIndex(item => item.post_id === post_id);
+                if (postPos !== undefined) {
+                    state.myPosts.splice(postPos, 1);
+                }    
                 saveGame(state.loggedUser.game_id, state);  
             }, 
             updatePost: (state, payload) => {
                 let arrayPos;
                 let storeProperty = (payload.posted_by=='me') ? 'myPosts' : 'othersPosts';
-                state[storeProperty].forEach((item, index) => {
-                    if(item.post_id==payload.post_id) {
-                        arrayPos = index;
-                    }
-                });
-                if(arrayPos !== undefined) {
+               
+                arrayPos = state[storeProperty].findIndex(item => item.post_id === payload.post_id);
+
+                if(arrayPos > -1) {
                     Object.assign(state[storeProperty][arrayPos], {
                         ...state[storeProperty][arrayPos],
                         ...payload
@@ -181,12 +174,9 @@ const createStore = () => {
                     state.chats[0][contactID].preparedMessages = payload.preparedMessagesUpdate;
                 } else if(payload.newMessagesCount!==undefined) {
                     Vue.set(state.chats[0][contactID], 'new_messages_count', payload.newMessagesCount)                    
-                    /*state.chats[0][contactID].new_messages_count = payload.newMessagesCount;*/
                 } else {
                     delete state.chats[0][contactID].preparedMessages;
                 }
-                console.log("chaty1", state.chats);
-                console.log("chaty", state.chats[0][contactID]);
                 saveGame(state.loggedUser.game_id, state);                 
             },
             postNewComment: (state, payload) => {
@@ -198,7 +188,14 @@ const createStore = () => {
                 let arrayPos = state.myComments[postID].length - 1;
                 delete state.myComments[postID][arrayPos].post_id;  
                 saveGame(state.loggedUser.game_id, state);                          
-            },             
+            },   
+            deleteMyComment: (state, payload) => {
+                let commentPos = state.myComments[payload.post_id].findIndex(item => item.comment_id === payload.comment_id);
+                if (commentPos !== undefined) {
+                    state.myComments[payload.post_id].splice(commentPos, 1);
+                }
+                saveGame(state.loggedUser.game_id, state);                 
+            },          
             updateComment: (state, payload) => {
                 let arrayPos;
                 let storeProperty = (payload.commented_by=='me') ? 'myComments' : 'othersComments';
