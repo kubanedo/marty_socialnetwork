@@ -167,7 +167,7 @@ export default {
             }
         },
         loadChatMessages() {
-            axios.get('https://jakubnedorost.cz/marty/api/?type=messages&contact_id=' + this.chatId)
+            axios.get(process.env.apiUrl + '/?type=messages&contact_id=' + this.chatId)
                 .then(response => {
                     const chatData = response.data;
                     if(chatData) {
@@ -216,7 +216,7 @@ export default {
             }
         },
         getContactData() {
-            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_id=' + this.chatId)
+            axios.get(process.env.apiUrl + '/?type=profiles-basic&profile_id=' + this.chatId)
                 .then(response => {
                     this.contactData = response.data;
                     this.contactImg = this.chatId;

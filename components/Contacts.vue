@@ -91,7 +91,7 @@ export default {
         getContacts() {
             let friends = this.myFriends;
             if(friends.length) {
-                axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_ids=' + friends.join())
+                axios.get(process.env.apiUrl + '/?type=profiles-basic&profile_ids=' + friends.join())
                     .then(response => {
                         let data = response.data;
                         this.contactsLoading = false;

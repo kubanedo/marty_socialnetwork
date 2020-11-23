@@ -42,7 +42,7 @@ export default {
         getPeopleData() { 
             let recievedFriendReq = this.pendingRequests;  
             if(Array.isArray(recievedFriendReq) && recievedFriendReq.length) {   
-                axios.get('https://jakubnedorost.cz/marty/api/?type=profiles&profile_ids=' + recievedFriendReq.join())
+                axios.get(process.env.apiUrl + '/?type=profiles&profile_ids=' + recievedFriendReq.join())
                     .then(response => {
                     this.peopleData = [...response.data];
                     })

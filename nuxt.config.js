@@ -93,5 +93,8 @@ export default {
   env: {
     /*baseUrl: '',*/
     apiUrl: 'https://jakubnedorost.cz/marty/api'
-  }  
+  },
+  /*router: {
+    base: '/fakebuk/'
+  }  */
 }

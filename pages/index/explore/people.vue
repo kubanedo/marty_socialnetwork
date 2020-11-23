@@ -29,7 +29,7 @@ export default {
     },
     methods: {
         getPeopleData() {      
-            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_type=people')
+            axios.get(process.env.apiUrl + '/?type=profiles-basic&profile_type=people')
                 .then(response => {
                 this.peopleData = {...response.data};
                 })

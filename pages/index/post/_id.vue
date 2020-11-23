@@ -48,7 +48,7 @@ export default {
 
 
                 if(!(Array.isArray(postsData) && postsData.length)) {
-                axios.get('https://jakubnedorost.cz/marty/api/?type=posts&post_id=' + this.$route.params.id)
+                axios.get(process.env.apiUrl + '/?type=posts&post_id=' + this.$route.params.id)
                                 .then(response => { 
                                     if(Array.isArray(response.data) && response.data.length) {
                                         this.postsData = [...response.data]

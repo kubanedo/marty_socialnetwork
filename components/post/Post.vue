@@ -187,7 +187,7 @@ export default {
                 this.nameLoaded = true;
                 this.$emit('postLoaded'); 
             } else {
-                axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic')
+                axios.get(process.env.apiUrl + '/?type=profiles-basic')
                     .then(response => {
                         const data = response.data[this.post_data.posted_by];
                         if(data.first_name) {
@@ -204,7 +204,7 @@ export default {
             }
         }, */
         loadComments() {
-                axios.get('https://jakubnedorost.cz/marty/api/?type=comments&post_id=' + this.post_data.post_id)
+                axios.get(process.env.apiUrl + '/?type=comments&post_id=' + this.post_data.post_id)
                     .then(response => {
                         const data = response.data;
                         if(Array.isArray(data) && data.length) {

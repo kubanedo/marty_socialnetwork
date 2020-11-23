@@ -58,7 +58,7 @@ export default {
             this.postsData = [];
             if(Array.isArray(this.savedPosts) && this.savedPosts.length) {
                 this.savedPosts.forEach((saved_post_id) => {
-                    axios.get('https://jakubnedorost.cz/marty/api/?type=posts&post_id=' + saved_post_id)
+                    axios.get(process.env.apiUrl + '/?type=posts&post_id=' + saved_post_id)
                                     .then(response => { 
                                         if(Array.isArray(response.data) && response.data.length) {
                                             this.postsData.push(...response.data);

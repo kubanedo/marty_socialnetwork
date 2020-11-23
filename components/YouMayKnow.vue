@@ -38,8 +38,8 @@ export default {
             this.allPeopleConnected = false;
 
         let friends = this.myFriends;
-        console.log('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_type=people&except_profile_ids=' + friends.join());
-            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_type=people&except_profile_ids=' + friends.join())
+        console.log(process.env.apiUrl + '/?type=profiles-basic&profile_type=people&except_profile_ids=' + friends.join());
+            axios.get(process.env.apiUrl + '/?type=profiles-basic&profile_type=people&except_profile_ids=' + friends.join())
                         .then(response => {
                             let data = response.data;
                             console.log(data, 'data');

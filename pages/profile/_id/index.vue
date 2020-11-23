@@ -133,7 +133,7 @@ export default {
           this.getFriendsData();
           this.dataLoaded = true
         } else {  
-          axios.get('https://jakubnedorost.cz/marty/api/?type=profiles&profile_id=' + this.$route.params.id)
+          axios.get(process.env.apiUrl + '/?type=profiles&profile_id=' + this.$route.params.id)
             .then(response => {
               const data = response.data;
               if(data===null) {
@@ -153,7 +153,7 @@ export default {
         let friends = this.userFriends; 
         
         if(Array.isArray(friends) && friends.length) {   
-          axios.get('https://jakubnedorost.cz/marty/api/?type=profiles&profile_ids=' + friends.join())
+          axios.get(process.env.apiUrl + '/?type=profiles&profile_ids=' + friends.join())
             .then(response => {
               this.friendsData = [...response.data];
               this.friendsLoaded = true;

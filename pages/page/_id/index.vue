@@ -94,7 +94,7 @@ export default {
         };        
     },    
     getProfileData() {
-          axios.get('https://jakubnedorost.cz/marty/api/?type=pages&profile_id=' + this.$route.params.id)
+          axios.get(process.env.apiUrl + '/?type=pages&profile_id=' + this.$route.params.id)
             .then(response => {
               const data = response.data;
               if(data===null) {

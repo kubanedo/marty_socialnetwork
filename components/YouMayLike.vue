@@ -38,7 +38,7 @@ export default {
             this.allPagesLiked = false;
 
         let likedPages = this.myLikedPages;
-            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_type=pages&except_profile_ids=' + likedPages.join())
+            axios.get(process.env.apiUrl + '/?type=profiles-basic&profile_type=pages&except_profile_ids=' + likedPages.join())
                         .then(response => {
                             let data = response.data;
                             console.log(data, 'data');

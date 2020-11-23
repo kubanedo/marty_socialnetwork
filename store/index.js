@@ -111,7 +111,6 @@ const createStore = () => {
             loadGame: (state, loadedState) => {
                 Object.assign(state, loadedState);
                 state.loadingApp = false;
-               /* $nuxt.$router.push('/')*/
             },          
             postNewPost: (state, newPostObj) => {
                 state.myPosts.unshift(newPostObj);
@@ -298,14 +297,16 @@ const createStore = () => {
                 }   
             },
             loadGame (context, gameId) {
-                axios.get('http://jakubnedorost.cz/marty/api/?load_game=' + gameId)
+                axios.get(process.env.apiUrl + '/?load_game=' + gameId)
                     .then(response => {
                         let loadedState = response.data;
                         console.log(loadedState);
                         if (loadedState && (loadedState.loggedUser.game_id === gameId)) {
                             loadedState.loggedUser.pending_sent_friend_req = [];
                             context.commit('loadGame', loadedState); 
-                           /* $nuxt.$router.push('/') */
+                            if($nuxt.$route.path == "/login") {
+                                $nuxt.$router.push('/')
+                            }
                         } else {
                             console.log('nenalezena hra')
                             $nuxt.$router.push('/login?game-not-found')

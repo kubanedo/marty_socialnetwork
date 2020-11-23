@@ -29,7 +29,7 @@ export default {
     },
     methods: {
         getPagesData() {      
-            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_type=pages')
+            axios.get(process.env.apiUrl + '/?type=profiles-basic&profile_type=pages')
                 .then(response => {
                 this.pagesData = {...response.data};
                 this.pagesLoaded = true;

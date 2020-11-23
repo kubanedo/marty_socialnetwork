@@ -50,7 +50,7 @@ export default {
           let likedPages = this.userLikedPages;
 
           if(Array.isArray(likedPages) && likedPages.length) {
-            axios.get('https://jakubnedorost.cz/marty/api/?type=pages&profile_ids=' + likedPages.join())
+            axios.get(process.env.apiUrl + '/?type=pages&profile_ids=' + likedPages.join())
                 .then(response => {
                 this.likedPages = [...response.data];
                 this.loadingLikedPages = false;

@@ -4,7 +4,7 @@
     <div class="login__wrapper card">
       <p>Přihlašte se do naší nepravé sociální sítě a ověřte si, že víte, jak se na sociálních sítích správně chovat. Za každou správně provedenou akci/odpovězenou otázku, získáte určitý počet bodů. Za špatně provedené akce či odpovězené otázky je odebrána polovina bodů, které bylo možno získat. Provedete všechny úkoly a získáte největší počet bodů?</p>
       <div class="login__form">
-          <div v-if="alertMsg" class="alert"><i class="las la-exclamation-triangle"></i> {{alertMsg}}</div>
+          <div v-if="alertMsg" class="alert"><i class="las la-exclamation-triangle"></i> {{alertMsg}}</div>        
           <div class="login__newgame" v-if="!showloadGameInput">
 
             <div class="input-wrapper">
@@ -26,16 +26,16 @@
 
           </div>  
           <div class="login__loadgame" v-else>
-            <p>Níže zadejte kód rozehrané hry, který vám byl zaslán na email.</p>
+            <div v-if="$route.query['game-not-found']===null" class="alert">
+              <i class="las la-frown"></i> Hra nenalezena. Máte správné ID hry?
+            </div>               
+            <p>Níže zadejte kód rozehrané hry, který vám byl zaslán na email.</p>             
             <div class="input-wrapper">
               <label>Kód rozehrané hry</label>
               <input type="text" class="w100" v-model="gameId"/>
             </div>
             <UIButton text="Přihlásit se" @click.native="loadGame()" />
             <div @click="showloadGameInput=false" class="click underline-hover text-center mt-20">Začít hrát novou hru</div>
-            <div v-if="$route.query['game-not-found']===null">
-              Hra nenalezena
-            </div>  
           </div>  
       </div>
     </div>
@@ -110,11 +110,13 @@ export default {
     }  
   },
   mounted() {
-    console.log(this.$route.query['game-not-found']);
-    console.log('routequery', this.$route.query['logged-out']);
     if(this.$route.query['logged-out']!==undefined && this.$route.query['logged-out']==null) {
         this.$store.commit('resetState'); 
     }
+    if(this.$route.query['load-game']) {
+        this.showloadGameInput = true;
+        this.gameId = this.$route.query['load-game']; 
+    }  
   },
   head () {
       return {
