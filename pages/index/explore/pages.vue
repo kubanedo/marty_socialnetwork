@@ -29,9 +29,9 @@ export default {
     },
     methods: {
         getPagesData() {      
-            axios.get('https://jakubnedorost.cz/marty/api/?type=pages')
+            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_type=pages')
                 .then(response => {
-                this.pagesData = {...response.data[0]};
+                this.pagesData = {...response.data};
                 this.pagesLoaded = true;
                 })
                 .catch(error => console.log(error))     

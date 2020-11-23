@@ -17,7 +17,8 @@
             <nuxt-link :to="'/profile/' + commentData.commented_by">
               {{commentedByName}}
             </nuxt-link>
-          </strong><br />
+            <button v-if="commentData.commented_by=='me'"><i class="las la-trash"></i></button>
+          </strong>
           <span><strong v-if="commentData.reply_to">@{{commentData.reply_to}} </strong><span v-html="commentText"></span></span>
           <QuizAction
             v-if="
@@ -181,7 +182,8 @@ export default {
   overflow-wrap: break-word;
 
   .post__comment-author {
-    margin-right: 10px;
+    display: flex;
+    justify-content: space-between;
 
     a {
       color: black;

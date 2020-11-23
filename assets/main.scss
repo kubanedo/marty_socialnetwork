@@ -80,6 +80,9 @@ header {
 .text-center {
     text-align: center;
 }
+.text-right {
+    text-align: right
+}
 .pointer {
     cursor: pointer;
 }
@@ -230,7 +233,11 @@ input, textarea {
     background: lighten($input-color, 20);
     padding: 5px 10px;
     border: 1px lighten($input-color, 10) solid;
-    border-radius: 5px;   
+    border-radius: 5px; 
+    
+    &.red {
+        border: 1px red solid;        
+    }
 }
 input:not([type=radio]):not([type=checkbox]) {
     min-width: 300px; 
@@ -242,4 +249,17 @@ input:not([type=radio]):not([type=checkbox]) {
         font-weight: bold;        
     }
     margin-bottom: 10px;
+}
+.alert {
+    border-radius: 5px;
+    margin-bottom: 20px;
+    color: #856404;
+    padding: 10px;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+hr.divider {
+    margin: 5px 0;
+    border: 0;
+    border-top: 1px solid darken($grey-color, 5);
 }

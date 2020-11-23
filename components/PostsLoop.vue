@@ -8,6 +8,7 @@
     </div>
     <Post v-for="postData in postsData" :key="postData.post_id" :post_data="postData" @postLoaded="loadingPosts=false"/>
     <!--<div class="" v-if="!(Array.isArray(postsData) && postsData.length)">Uživatel zatím nenapsal žádný příspěvek.</div>-->
+    <UILoader v-if="showLoader"/>
     <NoMorePosts v-if="noMorePosts" />     
   </div>    
 </template>
@@ -41,8 +42,8 @@ export default {
             loadingPosts: true,
             postsData: [],
             myPostsCount: this.$store.state.myPosts.length,
-            isLoading: false,
-            newPostsToBeLoadedFrom: 3,
+            showLoader: false,
+            newPostsToBeLoadedFrom: 0,
             noMorePosts: false,
            /* store: this.$store.state*/
         }
@@ -92,16 +93,20 @@ export default {
             window.addEventListener('scroll', this.loadNewPostsOnScroll);
         },
         loadNewPostsOnScroll() {
+            if(this.showLoader==false) {
                 if(this.noMorePosts==false) {
                     let bottomOfWindow = Math.abs(Math.round(document.documentElement.scrollTop + window.innerHeight) - Math.round(document.documentElement.offsetHeight)) < 2; // odchylka pod 2          
                     if(bottomOfWindow) {
-                        this.isLoading = true;
-                        this.loadPosts(this.newPostsToBeLoadedFrom); 
+                        this.showLoader = true;
+                        let vm = this;
+                        setTimeout(() => vm.loadPosts(vm.newPostsToBeLoadedFrom), 1000)
+                        //this.loadPosts(this.newPostsToBeLoadedFrom); 
                         this.newPostsToBeLoadedFrom += 3;
                     }
                 } else {
                     window.removeEventListener('scroll', this.loadNewPostsOnScroll); 
                 }
+            }    
         },        
         loadPosts(from = 0, count = 3) {
             let queryUrl = 'https://jakubnedorost.cz/marty/api/?type=posts&from='+ from +'&count='+ count;
@@ -114,12 +119,11 @@ export default {
             if(this.filterByAuthor=='all') {
                 queryUrl += '&posted_by_ids=' + this.myFriends.join() + ',' + this.myLikedPages.join() + ',me';
             }
-            console.log(queryUrl);
+
             axios.get(queryUrl)
                     .then(response => { 
                         if(Array.isArray(response.data) && response.data.length) {
                             this.postsData = [...this.postsData, ...response.data]
-                            console.log(response.data)
                         } else {
                             this.noMorePosts = true;
                         }                       
@@ -127,6 +131,7 @@ export default {
                     .catch(error => console.log(error))
                     .finally(() => {
                         this.loadingPosts = false; 
+                        this.showLoader = false;
                         if(this.filterByAuthor=='all'||this.filterByAuthor=='me') {
                             if(from == 0) {
                                 this.loadMyPostsFromStore();

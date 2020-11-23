@@ -40,7 +40,7 @@ export default {
         },
         getFriendsData() {
             let friends = this.modalData.friendsIds;
-            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles&profile_ids=' + friends.join())
+            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_ids=' + friends.join())
                 .then(response => {
                 this.friendsData = [...response.data];
                 this.friendsLoaded = true;

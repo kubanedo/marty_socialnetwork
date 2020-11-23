@@ -43,7 +43,8 @@
                         </div>                     
                         Uložené příspěvky<span v-if="savedPostsCount > 0"> ({{savedPostsCount}})</span>
                     </nuxt-link>
-                </div>                             
+                </div> 
+                <small>© 2020 <strong>#fejkbuk</strong> · <nuxt-link to="/about" target="_blank">O aplikaci</nuxt-link></small>                            
             </aside>
             <div class="main-content">
                 <nuxt-child />
@@ -53,8 +54,10 @@
                     <h3>Mé kontakty</h3>
                     <Contacts placement="sidebar"/>
                 </div>
+                <YouMayKnow />
+                <YouMayLike />                                 
                 <div class="card">
-                    <h3>Reklamy</h3>
+                    <h3>Reklama</h3>
                 </div>                
             </aside>
           </div>
@@ -63,12 +66,16 @@
 
 <script>
 import Contacts from "~/components/Contacts";
-import UIProfileImg from '~/components/ui/UIProfileImg'
+import UIProfileImg from '~/components/ui/UIProfileImg';
+import YouMayKnow from '~/components/YouMayKnow';
+import YouMayLike from '~/components/YouMayLike';
 
 export default {
   components: {
      Contacts,
-     UIProfileImg     
+     UIProfileImg,
+     YouMayKnow,
+     YouMayLike     
   },
   computed: {
     wholeUsername() {
@@ -82,7 +89,7 @@ export default {
     },        
     savedPostsCount() {
         return this.$store.state.savedPosts.length;
-    }   
+    }
   }   
 }
 </script>

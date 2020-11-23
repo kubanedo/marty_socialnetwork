@@ -11,10 +11,11 @@
     </div>
     <ul v-if="showMenu" class="user-panel__menu" @mouseleave="showMenu=!showMenu">
         <li><nuxt-link to="/profile/me">Přejít na svůj profil</nuxt-link></li>
-        <li><nuxt-link to="/settings">Nastavení</nuxt-link></li>
-        <hr>
-        <li @click="saveGame">Uložit hru</li>
-        <li @click="logOut">Odhlásit se</li>
+        <li><nuxt-link to="/settings"><i class="las la-cog"></i> Nastavení</nuxt-link></li>
+        <hr class="divider" />
+        <li><nuxt-link to="/about" target="_blank"><i class="las la-info-circle"></i> O&nbsp;aplikaci</nuxt-link></li>
+        <li @click="saveGame"><i class="las la-save"></i> Uložit hru</li>
+        <li @click="logOut"><i class="las la-sign-out-alt"></i> Odhlásit se</li>
     </ul>    
 </div>    
 </template>
@@ -41,10 +42,16 @@ export default {
   },
   methods: {
       saveGame() {
-            let gameId = this.$store.state.loggedUser.game_id;
-            axios.post("https://jakubnedorost.cz/marty/api/save/?game_id=" + gameId, this.$store.state)
-                    .then(response => console.log(response))  
-          this.$toast.success("Hra uložena.");                
+        let gameId = this.$store.state.loggedUser.game_id;
+        axios.post("https://jakubnedorost.cz/marty/api/save/?game_id=" + gameId, this.$store.state)
+                .then(response => console.log(response))  
+        this.$toast(
+            "Hra uložena.",
+            { icon: 'las la-save' }            
+            );  
+        this.$store.state.modalWindow = {
+            modalName: 'GameSaved'
+        };                        
       },
       logOut() {
           localStorage.removeItem('gameID');

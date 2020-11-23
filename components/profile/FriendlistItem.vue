@@ -16,6 +16,7 @@
                 <button v-else @click="changeConnection"><i class="las la-plus-circle"></i> Přidat do přátel</button>
             </div> 
             <div v-else-if="friendData.profile_id!=='me'">
+                  <div class="request-msg">poslal{{(friendData.sex=="f") ? 'a' : ''}} žádost o přátelství</div>
                   <button @click="changeConnection('accept')" class="profile__header-btn">
                     <span class="pending"><i class="las la-check-circle"></i> Přijmout</span>
                   </button>                 
@@ -144,5 +145,10 @@ button {
             &:active {
                 transform: scale(0.97);
             }     
+}
+.request-msg {
+    line-height: 1; 
+    font-size: 11px; 
+    margin-bottom: 5px;    
 }
 </style>

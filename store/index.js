@@ -5,13 +5,12 @@ import axios from 'axios'
 import UIFriendedToast from "~/components/ui/UIFriendedToast";
 
 const saveGame = (gameId, state) => {
-    axios.post("https://jakubnedorost.cz/marty/api/save/?game_id=" + gameId, {...state, modalWindow: null})
+    axios.post("https://jakubnedorost.cz/marty/api/save/?game_id=" + gameId, {...state, modalWindow: null, loadingApp: true})
         .then(response => console.log(response))  
 }
 
 const defaultState = () => {
-    return {
-    loadingApp: true,    
+    return {    
     startTimestamp: new Date().getTime(),
     gameVersion: 0,
     loggedUser: {
@@ -61,7 +60,8 @@ const defaultState = () => {
     answeredQuizes: [],
     /* App components state */
     openedChat: null,
-    modalWindow: null
+    modalWindow: null,
+    loadingApp: true    
 }
 }
 
@@ -81,6 +81,9 @@ const createStore = () => {
             getMyFriends: state => {
                 return state.loggedUser.friends;
             },
+            getMyLikedPages: state => {
+                return state.loggedUser.liked_pages;
+            },            
             getAnsweredQuiz: state => id => {
                 return state.answeredQuizes.find(answeredQuiz => answeredQuiz.quiz_id === id);
             }, 

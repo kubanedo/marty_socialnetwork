@@ -17,7 +17,7 @@
               </div>     
             </div> 
             <div class="newpost__privacy-setting">      
-              Kdo může tento příspěvek vidět? <button @click="togglePrivacy"><i :class="'las la-' + privacySetting.icon"></i> {{ (privacySetting.value=='all' ? 'Všichni' : 'Přátelé')}}</button><br/>
+              Kdo může tento příspěvek vidět? <button class="grey" @click="togglePrivacy"><i :class="'las la-' + privacySetting.icon"></i> {{ (privacySetting.value=='all' ? 'Všichni' : 'Přátelé')}}</button><br/>
             </div>
             <UIButton text="Zveřejnit" @click.native="postNewPost()" />
     </div>    

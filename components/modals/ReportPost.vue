@@ -65,12 +65,4 @@ export default {
           background: lighten($grey-color, 0.9);
       }
     }
-    .alert {
-        border-radius: 5px;
-        margin-bottom: 20px;
-        color: #856404;
-        padding: 10px;
-        background-color: #fff3cd;
-        border-color: #ffeeba;
-    }
 </style>

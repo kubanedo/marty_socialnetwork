@@ -17,12 +17,14 @@ import Quiz from '~/components/modals/Quiz';
 import FriendsList from '~/components/modals/FriendsList';
 import ContactList from '~/components/modals/ContactList';
 import PhotoLightbox from '~/components/modals/PhotoLightbox';
+import GameSaved from '~/components/modals/GameSaved';
 export default {
   components: {
       CreatePost,
       ReportPost,
       EditPost,
       Quiz,
+      GameSaved,
       FriendsList,
       ContactList
   },  

@@ -4,15 +4,16 @@
     <div class="login__wrapper card">
       <p>Přihlašte se do naší nepravé sociální sítě a ověřte si, že víte, jak se na sociálních sítích správně chovat. Za každou správně provedenou akci/odpovězenou otázku, získáte určitý počet bodů. Za špatně provedené akce či odpovězené otázky je odebrána polovina bodů, které bylo možno získat. Provedete všechny úkoly a získáte největší počet bodů?</p>
       <div class="login__form">
+          <div v-if="alertMsg" class="alert"><i class="las la-exclamation-triangle"></i> {{alertMsg}}</div>
           <div class="login__newgame" v-if="!showloadGameInput">
 
             <div class="input-wrapper">
               <label>Křestní jméno</label>
-              <input type="text" class="w100" v-model="first_name"/>
+              <input type="text" class="w100" v-model="first_name" @keydown.enter.prevent="logIn()"/>
             </div>
             <div class="input-wrapper">
               <label>Příjmení</label>
-              <input type="text" class="w100" v-model="last_name"/>
+              <input type="text" class="w100" v-model="last_name" @keydown.enter.prevent="logIn()"/>
             </div> 
             <div class="input-wrapper">             
               <label>Pohlaví</label>
@@ -44,7 +45,7 @@
 <script>
 import UIButton from "~/components/ui/UIButton";
 export default {
-  layout: 'login',
+  layout: 'empty',
   components: {
     UIButton
   },
@@ -54,7 +55,8 @@ export default {
       first_name: '',
       last_name: '',
       sex: '',
-      gameId: ''
+      gameId: '',
+      alertMsg: ''
     }
   },
   methods: {
@@ -70,6 +72,24 @@ export default {
         localStorage.setItem("gameID", generatedGameId);
         this.$store.dispatch('saveGame');
         this.$router.push('/')
+      } else {
+        let unfilledFields = [];
+          if(!this.first_name) {
+            unfilledFields.push('křestní jméno')
+          }
+          if(!this.last_name) {
+            unfilledFields.push('příjmení')
+          } 
+          if(!this.last_name) {
+            unfilledFields.push('pohlaví')
+          }
+          
+          if(unfilledFields.length == 1 ) {
+            this.alertMsg = `Nebylo vyplněné pole ${unfilledFields[0]}. Prosím o vyplnění před pokračováním.`;
+          } else {
+            this.alertMsg = `Nebylo vyplněné pole ${unfilledFields.join(', ')}. Prosím o vyplnění před pokračováním.`;
+          }
+
       }
     },
     loadGame() {

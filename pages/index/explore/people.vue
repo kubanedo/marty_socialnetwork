@@ -29,9 +29,9 @@ export default {
     },
     methods: {
         getPeopleData() {      
-            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles')
+            axios.get('https://jakubnedorost.cz/marty/api/?type=profiles-basic&profile_type=people')
                 .then(response => {
-                this.peopleData = {...response.data[0]};
+                this.peopleData = {...response.data};
                 })
                 .catch(error => console.log(error))
                 .finally(() => {
