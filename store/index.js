@@ -5,7 +5,7 @@ import axios from 'axios'
 import UIFriendedToast from "~/components/ui/UIFriendedToast";
 
 const saveGame = (gameId, state) => {
-    axios.post("https://jakubnedorost.cz/marty/api/save/?game_id=" + gameId, {...state, modalWindow: null, loadingApp: true})
+    axios.post(process.env.apiUrl + "/save/?game_id=" + gameId, {...state, modalWindow: null, loadingApp: true})
         .then(response => console.log(response))  
 }
 

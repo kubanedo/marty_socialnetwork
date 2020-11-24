@@ -1,5 +1,5 @@
 <template>
-  <div v-if="nameLoaded">
+  <div>
     <div class="post__comment">
       <div>
         <nuxt-link :to="'/profile/' + commentData.commented_by">
@@ -57,9 +57,10 @@ export default {
   data() {
     return {
       comment_data: this.commentData,
-      nameLoaded: false,
       commentText: "",
-      commentedByName: this.commentData.commented_by,
+      commentedByName: (this.commentData.commented_by == "me") ? 
+                          this.$store.getters.getMyWholeName : 
+                          ((this.commentData.first_name) ? this.commentData.first_name + " " + this.commentData.last_name : this.commentData.commented_by),
       isLiked: false,
       isDeleted: false
     };
@@ -106,7 +107,7 @@ export default {
     replyToComment() {
       this.$emit("addReplyReference", this.commentedByName);
     },
-    getFullName() {
+   /* getFullName() {
       if (this.commentData.commented_by == "me") {
         this.commentedByName = this.$store.getters.getMyWholeName;
         this.nameLoaded = true;
@@ -126,7 +127,7 @@ export default {
           .catch((error) => console.log(error))
           .finally(() => (this.nameLoaded = true));
       }
-    },
+    },*/
     updateComment(updatedProperty) {
         let commentData = {
             post_id: this.postID,
@@ -168,7 +169,6 @@ export default {
     this.commentText = this.makeLinksClickable(
       this.replaceSmileys(this.commentData.comment_text)
     );
-    this.getFullName();
   },
 };
 </script>

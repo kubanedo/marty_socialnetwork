@@ -43,7 +43,7 @@ export default {
   methods: {
       saveGame() {
         let gameId = this.$store.state.loggedUser.game_id;
-        axios.post("https://jakubnedorost.cz/marty/api/save/?game_id=" + gameId, this.$store.state)
+        axios.post(process.env.apiUrl + "/save/?game_id=" + gameId, this.$store.state)
                 .then(response => console.log(response))  
         this.$toast(
             "Hra uložena.",

@@ -94,7 +94,7 @@ export default {
     /*baseUrl: '',*/
     apiUrl: 'https://jakubnedorost.cz/marty/api'
   },
-  /*router: {
-    base: '/fakebuk/'
-  }  */
+  router: {
+    base: '/fejkbuk/'
+  }
 }

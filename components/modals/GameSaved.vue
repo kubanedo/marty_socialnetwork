@@ -54,7 +54,7 @@ export default {
         },        
         sendEmail() {  
             if(this.emailValid && this.email !== "") {
-                axios.post("https://jakubnedorost.cz/marty/api/send_gameid_email.php", {
+                axios.post(process.env.apiUrl + "/send_gameid_email.php", {
                     email: this.email, 
                     game_id: this.gameId})
                 .then(response => console.log(response))  
