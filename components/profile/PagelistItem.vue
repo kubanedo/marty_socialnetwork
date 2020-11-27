@@ -1,7 +1,7 @@
 <template>
     <div class="pagelist-item">
         <div class="flex-column-center mr-10">
-            <nuxt-link :to="'/page/' + pageData.profile_id"><div><UiProfileImg :userID="pageData.profile_id" :imgSize="65" imgBorderColor="#f1f1f1"/></div></nuxt-link>
+            <nuxt-link :to="'/page/' + pageData.profile_id"><div><UiProfileImg :userID="pageData.profile_id" imgBorderColor="#f1f1f1"/></div></nuxt-link>
         </div>
         <div>
             <div class="pagelist-item-text">

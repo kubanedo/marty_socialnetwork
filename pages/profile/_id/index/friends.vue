@@ -34,7 +34,7 @@ export default {
             type: Object
         },
         friendsData: {
-            type: Object
+            type: Array
         }
     },
     data() {

@@ -1,10 +1,10 @@
 <template>
     <div class="card">
         <h2>Stránky, které se uživateli líbí</h2>
-                    
-        <div class="grid">
+                   
+        <div class="friends-pages__list">
             <UILoadingContent v-if="loadingLikedPages"/>
-            <PagelistItem v-for="likedPage in likedPages" :key="likedPage.profile_id" :pageData="likedPage"/>
+            <PagelistItem  class="list-item" v-for="likedPage in likedPages" :key="likedPage.profile_id" :pageData="likedPage"/>
         </div>
         <div v-if="!loadingLikedPages && !likedPages.length" class="text-center">
             <div class="circle-icon">
@@ -85,11 +85,6 @@ export default {
 @import "~/assets/variables.scss";
 h2 {
     margin-bottom: 10px;
-}
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
 }
 ul.friends-submenu {
     display: inline-flex;

@@ -1,6 +1,6 @@
 <template>
-  <div class="grid">
-      <FriendlistItem v-for="friend in allFriends" :key="friend.profile_id" :friendData="friend"  :profileName="profileName"/>
+  <div class="friends-pages__list">
+      <FriendlistItem  class="list-item" v-for="friend in allFriends" :key="friend.profile_id" :friendData="friend"  :profileName="profileName"/>
   </div>    
 </template>
 
@@ -12,19 +12,15 @@ export default {
   },
   props: {
     allFriends: {
-      type: Object
+      type: Array
     },
     profileName: {
-      type: Object
+      type: String
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
+
 </style>

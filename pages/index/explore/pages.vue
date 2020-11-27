@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="explore">
     <div class="card card--title">
         <h2>Objevte stránky #fejkbuku</h2>
     </div>      
     <div class="card">
         <UILoadingContent v-if="!pagesLoaded" :title="false"/>
-        <div class="grid" v-else>                        
-                <PagelistItem v-for="(page, page_id) in pagesData" :key="page_id" :pageData="{...page, profile_id: page_id}"/>
+        <div class="explore__list" v-else>                        
+                <PagelistItem class="list-item" v-for="(page, page_id) in pagesData" :key="page_id" :pageData="{...page, profile_id: page_id}"/>
         </div>                
     </div>     
   </div>

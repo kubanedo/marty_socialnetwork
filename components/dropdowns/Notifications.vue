@@ -28,7 +28,8 @@ export default {
     },
     methods: {
         goTo(where) {
-            this.$router.push('/post/' + where)
+            this.$router.push('/post/' + where);
+            this.$emit('closeDropdown');
         }
     }
 }

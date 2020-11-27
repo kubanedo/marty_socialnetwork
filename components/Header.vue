@@ -3,8 +3,20 @@
           <div class="container">
             <nav class="header__nav">              
                 <ul>
-                    <li><DropdownWrapper dropdownName="Messages" @unreadCount="unreadChatsCount = $event"><button><i class="las la-sms"></i><br/> Zprávy <span class="count" v-if="unreadChatsCount > 0">{{unreadChatsCount}}</span></button></DropdownWrapper></li> 
-                    <li><DropdownWrapper dropdownName="Notifications" @unreadCount="unreadNotifCount = $event"><button><i class="las la-bell"></i><br/>  Upozornění <span class="count"  v-if="unreadNotifCount > 0">{{unreadNotifCount}}</span></button></DropdownWrapper></li>                    
+                    <li>
+                        <DropdownWrapper dropdownName="Messages" @unreadCount="unreadChatsCount = $event">
+                            <button>
+                                <i class="las la-sms"></i><div class="hide-mobile">Zprávy</div> <span class="count" v-if="unreadChatsCount > 0">{{unreadChatsCount}}</span>
+                            </button>
+                        </DropdownWrapper>
+                    </li> 
+                    <li>
+                        <DropdownWrapper dropdownName="Notifications" @unreadCount="unreadNotifCount = $event">
+                            <button>
+                                <i class="las la-bell"></i><div class="hide-mobile">Upozornění</div> <span class="count"  v-if="unreadNotifCount > 0">{{unreadNotifCount}}</span>
+                            </button>
+                        </DropdownWrapper>
+                    </li>                    
                 </ul>
             </nav>
             <div class="header__logo-wrapper">
@@ -32,6 +44,10 @@ export default {
   }    
 }
 </script>
-<style scoped>
-
+<style scoped lang="scss">
+.hide-mobile {
+    @media screen and (min-width: 550px) {
+        display: block;
+    }
+}
 </style>

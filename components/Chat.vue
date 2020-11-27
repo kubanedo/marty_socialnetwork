@@ -310,10 +310,15 @@ export default {
 }
 .chat__wrapper {
     position: fixed;
-    width: 328px;
+    max-width: 328px;
+    width: calc(100% - 20px);
     bottom: 0;
-    right: 20px;
+    right: 10px;
     z-index: 4;
+
+    @media screen and (min-width: 340px) {
+       right: 20px; 
+    }
    
 }
 .chat__body {

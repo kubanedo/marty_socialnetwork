@@ -1,7 +1,7 @@
 <template>
     <div class="friendlist-item">
         <div class="flex-column-center mr-10">
-            <nuxt-link :to="'/profile/' + friendData.profile_id"><div @click="navigateAway()"><UiProfileImg :userID="friendData.profile_id" :imgSize="65" imgBorderColor="#f1f1f1"/></div></nuxt-link>
+            <nuxt-link :to="'/profile/' + friendData.profile_id"><div @click="navigateAway()"><UiProfileImg :userID="friendData.profile_id" imgBorderColor="#f1f1f1"/></div></nuxt-link>
         </div>
         <div>
             <div class="friendlist-item-text">
@@ -17,11 +17,11 @@
             </div> 
             <div v-else-if="friendData.profile_id!=='me'">
                   <div class="request-msg">poslal{{(friendData.sex=="f") ? 'a' : ''}} žádost o přátelství</div>
-                  <button @click="changeConnection('accept')" class="profile__header-btn">
-                    <span class="pending"><i class="las la-check-circle"></i> Přijmout</span>
+                  <button @click="changeConnection('accept')">
+                    <span class="pending"><i class="las la-check-circle"></i><span class="hide-mobile"> Přijmout</span></span>
                   </button>                 
-                  <button @click="changeConnection('decline')" class="profile__header-btn">
-                    <span><i class="las la-times-circle"></i> Zamítnout</span>
+                  <button @click="changeConnection('decline')">
+                    <span><i class="las la-times-circle"></i><span class="hide-mobile"> Zamítnout</span></span>
                   </button>                 
             </div>    
             <div v-else>
@@ -110,6 +110,8 @@ export default {
     display: flex;
     border-radius: 5px;
     padding: 5px;
+    margin-bottom: 5px;
+    align-items: center;
     &:hover {
       background: #f7f7f7;
     }
@@ -135,6 +137,7 @@ button {
     border-radius: 5px;
     color: $primary-color;
     font-size: 12px;
+    margin: 2px 0;
     &.friend-with-me, &:hover {
         background: $primary-color;  
         color: white;      

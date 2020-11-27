@@ -2,7 +2,7 @@
     <div class="profile__header-wrapper">
         <div class="profile__header" :style="{backgroundImage: 'url(http://jakubnedorost.cz/marty/images/profiles/' + profileData.userId + '/cover.jpg)'}">
             <div class="container profile__header-grid">
-              <div class="profile__header-img"><UIProfileImg :userID="$route.params.id" :imgSize="180" class="ui-profile-img" /></div>
+              <div class="profile__header-img"><UIProfileImg :userID="$route.params.id" class="ui-profile-img" /></div>
               <div class="profile__header-name"><strong>{{profileData.first_name + " " + profileData.last_name}}</strong></div>
               <div class="profile__header-btns">
 

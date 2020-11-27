@@ -1,5 +1,5 @@
 <template>
-    <div class="user__img" :style="{ backgroundImage: 'url(' + imgLink + ')', width: imgSize + 'px', height: imgSize + 'px', border: '1px solid ' + imgBorderColor }">
+    <div class="user__img" :style="style">
         <div v-if="status==1" :class="'user__status status--' + status" :style="{width: imgSize * 0.33 + 'px', height: imgSize * 0.33 + 'px', border: imgSize * 0.04 + 'px solid ' + statusBorderColor}"></div>
     </div>
 </template>
@@ -14,8 +14,7 @@ export default {
             type: String,
         },
         imgSize: { 
-            type: Number,
-            default: 45
+            type: Number
         },
         imgBorderColor: {
             type: String
@@ -31,7 +30,8 @@ export default {
     },
     data() {
         return {
-            imgLink: this.imgURL || 'http://jakubnedorost.cz/marty/images/profiles/' + this.userID + '/profileimg.jpg'
+            imgLink: this.imgURL || 'http://jakubnedorost.cz/marty/images/profiles/' + this.userID + '/profileimg.jpg',
+            style: {}
         }
     },
     watch: {
@@ -42,6 +42,12 @@ export default {
     mounted() {
         if(this.userID=='me') {
             this.imgLink = this.$store.state.loggedUser.profileImg
+        }
+        this.style = { 
+                backgroundImage: 'url(' + this.imgLink + ')', 
+                width: this.imgSize + 'px', 
+                height: this.imgSize + 'px', 
+                border: '1px solid ' + this.imgBorderColor 
         }
     }
 }
@@ -56,6 +62,8 @@ export default {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+  width: 45px;
+  height: 45px
 }
 .user__status {
     position: absolute;

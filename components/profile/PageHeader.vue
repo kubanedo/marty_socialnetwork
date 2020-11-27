@@ -2,7 +2,7 @@
     <div class="profile__header-wrapper">
         <div class="profile__header" :style="{backgroundImage: 'url(http://jakubnedorost.cz/marty/images/profiles/' + profileData.userId + '/cover.jpg)'}">
             <div class="container profile__header-grid">
-              <div class="profile__header-img"><UIProfileImg :userID="profileData.profile_id" :imgSize="180" class="ui-profile-img" /></div>
+              <div class="profile__header-img"><UIProfileImg :userID="profileData.profile_id" class="ui-profile-img" /></div>
               <div class="profile__header-name"><div><strong>{{profileData.name}}</strong> <span v-if="is_certified" class="certified"><i class="lar la-check-circle"></i></span></div></div>
               <div class="profile__header-btns">
                 <button @click="changeConnection" :class="'profile__header-btn' + ((likedByMe)?' liked-by-me':'')">

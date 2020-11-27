@@ -72,8 +72,12 @@ const createStore = () => {
             getChatData: state => {
                 return state.chats[0];
             },           
-            getMyWholeName: state => {
-              return state.loggedUser.first_name + " " + state.loggedUser.last_name;
+            getMyWholeName: state => (type = "whole") => {
+              if(type=="shortened") {  
+                return state.loggedUser.first_name + "\u00A0" + state.loggedUser.last_name[0] + ".";
+              } else {
+                return state.loggedUser.first_name + " " + state.loggedUser.last_name;  
+              }
             },
             getMyUserData: state => {
                 return state.loggedUser;

@@ -5,6 +5,7 @@
     padding: 15px 15px;
     font-family: "Roboto", Arial, sans-serif;
     min-height: 56px;
+    border-radius: 5px;
 }
 .Vue-Toastification__container {
     max-width: 1430px;
@@ -22,4 +23,13 @@
 }
 .Vue-Toastification__progress-bar {
     bottom: -1px;
-}    
+}   
+.Vue-Toastification__container {
+    transform: translateX(-50%);
+    left: 50%;
+    @media only screen and (min-width: 600px) {
+        transform: unset;
+        left: unset;
+    }    
+}
+    

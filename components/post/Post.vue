@@ -46,9 +46,9 @@
                 </div>
             </div>
             <div class="post__footer-buttons">
-                <button @click="likePost" :class="{liked: islikedByMe}"><i :class="'las la-heart' + ((animatedLike) ? ' animated-like' : '')"></i> To se mi líbí</button>
-                <button @click="toggleComments"><i class="las la-comment"></i> Okomentovat</button>
-                <button @click="sharePost" v-if="(postData.posted_by=='me') ? true : (postData.privacy_settings=='all' ? true : false)"><i class="las la-share-square"></i> Sdílet</button>
+                <button @click="likePost" :class="{liked: islikedByMe}"><i :class="'las la-heart' + ((animatedLike) ? ' animated-like' : '')"></i> <span>To se mi líbí</span></button>
+                <button @click="toggleComments"><i class="las la-comment"></i> <span>Okomentovat</span></button>
+                <button @click="sharePost" v-if="(postData.posted_by=='me') ? true : (postData.privacy_settings=='all' ? true : false)"><i class="las la-share-square"></i> <span>Sdílet</span></button>
             </div>
             <PostComments v-if="areCommentsOpened" :postID="postData.post_id" :comments="comments" :openedByUser="commentsOpenedByUser" />
         </div>
@@ -96,7 +96,7 @@ export default {
             postText: '',
             postedByName: (this.post_data.first_name ? this.post_data.first_name + ' ' + this.post_data.last_name : 
                                 (this.post_data.name ? this.post_data.name : 
-                                (this.post_data.posted_by==='me' ? this.$store.getters.getMyWholeName : this.post_data.posted_by))),
+                                (this.post_data.posted_by==='me' ? this.$store.getters.getMyWholeName() : this.post_data.posted_by))),
             comments: [],
             /*privacySetting: this.post_data.privacy_settings,*/
             animatedLike: false
@@ -183,7 +183,7 @@ export default {
         },
  /*       getFullName() {
             if(this.post_data.posted_by=='me') {
-                this.postedByName = this.$store.getters.getMyWholeName;
+                this.postedByName = this.$store.getters.getMyWholeName();
                 this.nameLoaded = true;
                 this.$emit('postLoaded'); 
             } else {
@@ -305,10 +305,19 @@ export default {
     }
     .post__text {
         margin-bottom: 10px;
+        word-break: break-all;
+
+        a {
+          word-break: keep-all;  
+        }
     }
     .post__extra-content {
-        margin-right: -20px;
-        margin-left: -20px;
+        margin-right: -15px;
+        margin-left: -15px;
+        @media screen and (min-width: 490px) {
+            margin-left: -20px;
+            margin-right: -20px;           
+        }          
     }
     .post__footer-stats, .post__footer-buttons {
         display: grid;
@@ -326,17 +335,31 @@ export default {
         display: flex;
         justify-content: space-around;
         text-align: center;
-        font-size: 18px;
+        font-size: 14px;
         padding-bottom: 0;
-        margin-left: -20px;
-        margin-right: -20px;
+        margin-left: -15px;
+        margin-right: -15px;
+        @media screen and (min-width: 490px) {
+            margin-left: -20px;
+            margin-right: -20px;           
+        }        
         i.las {
-            font-size: 22px;
+            font-size: 18px;
+                @media screen and (min-width: 490px) {
+                    font-size: 22px;       
+                }            
         }
         button {
+            span {
+                display: block;
+                @media screen and (min-width: 490px) {
+                    display: inline;          
+                }
+            }
             min-width: 33%;
             padding: 5px;
             border-radius: 5px;
+            white-space: nowrap;
             &:hover {
                 background: #f7f7f7;
             }

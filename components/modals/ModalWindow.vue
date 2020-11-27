@@ -62,7 +62,7 @@ export default {
       background: white;
       padding: 20px;
       margin: 0 auto;
-      width: 70%;
+      width: 95%;
       max-width: 650px;
       box-shadow: 0px 1px 15px 5px rgba(51, 51, 51, 0.2);
     }

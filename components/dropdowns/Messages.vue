@@ -101,6 +101,7 @@ export default {
         },
         openChat(contactId) {
             this.$store.commit('openChat', contactId);
+            this.$emit('closeDropdown');
         }  
     },
     mounted() {

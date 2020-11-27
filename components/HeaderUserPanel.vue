@@ -1,12 +1,13 @@
 <template>
 <div class="user-panel__wrapper">
     <div class="user-panel" @click="showMenu = !showMenu">
-        <div class="user-panel__profile-img-wrapper">
+        <div class="user-panel__profile-img-wrapper hide-mobile">
             <UIProfileImg userID="me" imgBorderColor="#f1f1f1"/>
         </div>
         <div>
-            <strong>{{wholeUsername}}</strong><br/>
-            <i class="las la-coins"></i> Skóre: {{getPoints}}
+            <strong class="hide-name-mobile">{{wholeUsername}}</strong>
+            <strong class="hide-name-desktop">{{shortenedUsername}}</strong>
+            <div><i class="las la-coins"></i> Skóre: {{getPoints}}</div>
         </div>
     </div>
     <ul v-if="showMenu" class="user-panel__menu" @mouseleave="showMenu=!showMenu">
@@ -37,7 +38,10 @@ export default {
          return this.$store.state.loggedUser.points;
      },
      wholeUsername() {
-         return this.$store.getters.getMyWholeName;
+         return this.$store.getters.getMyWholeName();
+     },
+     shortenedUsername() {
+         return this.$store.getters.getMyWholeName("shortened");         
      }
   },
   methods: {
@@ -113,5 +117,16 @@ export default {
                 color: $primary-color;
             }
         }
+    } 
+.hide-name-mobile {
+    display: none;
+    @media screen and (min-width: 700px) {
+        display: inherit;
+    }
+}
+.hide-name-desktop {
+    @media screen and (min-width: 700px) {
+        display: none;
     }    
+}       
 </style>

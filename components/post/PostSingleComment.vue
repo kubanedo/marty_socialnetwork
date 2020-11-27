@@ -19,7 +19,7 @@
             </nuxt-link>
             <button v-if="commentData.commented_by=='me'" @click="deleteMyComment" class="delete"><i class="las la-trash"></i></button>
           </strong>
-          <span><strong v-if="commentData.reply_to">@{{commentData.reply_to}} </strong><span v-html="commentText"></span></span>
+          <span><strong v-if="commentData.reply_to">@{{commentData.reply_to}} </strong><span class="post__comment-text" v-html="commentText"></span></span>
           <QuizAction
             v-if="
               commentData.quiz_action &&
@@ -109,7 +109,7 @@ export default {
     },
    /* getFullName() {
       if (this.commentData.commented_by == "me") {
-        this.commentedByName = this.$store.getters.getMyWholeName;
+        this.commentedByName = this.$store.getters.getMyWholeName();
         this.nameLoaded = true;
       } else {
         axios
@@ -214,6 +214,9 @@ export default {
 }
 .post__comment-middle-dot {
   padding: 0 3px;
+}
+.post__comment-text {
+  word-break: break-all;
 }
 .mr-5 {
   margin-right: 5px;

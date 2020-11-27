@@ -5,7 +5,7 @@
             <ProfileHeader v-if="dataLoaded" :profileData="profileData" :profileId="$route.params.id"/>
             <LoadingProfileHeader v-else />
           </div>
-          <div class="container grid">
+          <div :class="'container grid ' + $route.name">
             <aside class="left-sidebar">        
               <div class="sidebar-container" v-if="dataLoaded">
                 <div class="card">

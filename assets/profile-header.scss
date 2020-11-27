@@ -23,6 +23,10 @@
     border-radius: 5px;
     margin-bottom: 30px;
     box-shadow: 0px 1px 15px 0px rgba(51, 51, 51, 0.2);
+    margin-top: -5px;
+        @media screen and (min-width: 550px) {
+              margin-top: 0;
+        }
   }
   .profile__header-menu {
     position: relative;
@@ -37,16 +41,29 @@
     }
   
     ul {
-      position: relative;
-      left: 220px;    
+      position: relative; 
       display: inline-flex;
       margin-bottom: 0;
       list-style: none; 
+      @media screen and (min-width: 610px) {
+        left: 150px;       
+      }        
+      @media screen and (min-width: 700px) {
+        left: 220px;       
+      }        
       
       li {
         display: block;
         cursor: pointer;
-        padding: 10px 20px;
+        white-space: nowrap;
+        padding: 5px 10px;
+        @media screen and (min-width: 700px) {
+          padding: 10px 20px;      
+        }
+        font-size: 13px;        
+        @media screen and (min-width: 400px) {
+          font-size: 14px;      
+        }                 
         padding-bottom: 14px;
         border-top: 4px solid white;
         &.main-page {
@@ -73,24 +90,59 @@
   }
   .profile__header-name {
     color: white;
-    font-size: 24px;
+    font-size: 18px;
+    text-shadow: 0 0 9px rgba(0, 0, 0, 0.78);
+    @media screen and (min-width: 610px) {
+        font-size: 24px;       
+    }      
   }
   .profile__header-btns {
     color: white;
+    position: absolute;
+    top: 10px;
+    right: 0;    
+    @media screen and (min-width: 610px) {
+      position: relative;
+      top: unset;
+      right: unset;
+    } 
+    
+    button {
+      box-shadow: 0 0 9px rgba(0, 0, 0, 0.3);
+    }
   }
   .profile__header-img {
-    margin-bottom: -50px;
+    @media screen and (min-width: 610px) {
+        margin-bottom: -50px;       
+    }  
     .ui-profile-img {
-      width: 200px; 
-      height: 200px;
-      border: 5px solid white;
+      width: 90px; 
+      height: 90px;
+      border: 3px solid white;
       box-shadow: 0px 1px 1px 0px rgba(51, 51, 51, 0.05);
+      @media screen and (min-width: 610px) {
+        width: 130px; 
+        height: 130px;         
+        border: 5px solid white;       
+      } 
+      @media screen and (min-width: 700px) {
+        width: 180px; 
+        height: 180px;     
+      }              
     }
   }
   .profile__header-grid {
     display: grid;
-    min-height: 280px;
-    grid-template-columns: 210px auto 180px;
+    min-height: 170px;
+    grid-template-columns: 100px auto;    
     position: relative;
     z-index: 2;
+      @media screen and (min-width: 610px) {
+          grid-template-columns: 140px auto 180px;
+          min-height: 200px;         
+      }      
+      @media screen and (min-width: 700px) {
+          grid-template-columns: 210px auto 180px;
+          min-height: 280px;         
+      }      
   }

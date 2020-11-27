@@ -5,7 +5,7 @@
             <PageHeader v-if="dataLoaded" :profileData="{profile_id: $route.params.id, ...profileData}" :is_certified="profileData.is_certified"/>
             <LoadingProfileHeader v-else />
           </div>
-          <div class="container grid">
+          <div :class="'container grid ' + $route.name">
             <aside class="left-sidebar">
               <div class="sidebar-container" v-if="dataLoaded">
                 <div class="card">

@@ -1,6 +1,6 @@
 <template>
-  <div class="grid">
-      <FriendlistItem v-for="friend in mutualFriends" :key="friend.profile_id" :friendData="friend"/>
+  <div class="friends-pages__list">
+      <FriendlistItem class="list-item" v-for="friend in mutualFriends" :key="friend.profile_id" :friendData="friend"/>
   </div>    
 </template>
 
@@ -12,16 +12,12 @@ export default {
   },
   props: {
     mutualFriends: {
-      type: Object
+      type: Array
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
+
 </style>

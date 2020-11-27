@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="explore">
         <div class="card card--title">
             <h2>Objevte lidi #fejkbuku</h2>
         </div>
         <div class="card">
             <UILoadingContent v-if="!peopleLoaded" :title="false"/>
-            <div class="grid" v-else>                        
-                    <FriendlistItem v-for="(person, person_id) in peopleData" :key="person_id" :friendData="{...person, profile_id: person_id}"/>
+            <div class="explore__list" v-else>                        
+                    <FriendlistItem class="list-item" v-for="(person, person_id) in peopleData" :key="person_id" :friendData="{...person, profile_id: person_id}"/>
             </div>                
         </div>      
   </div>
@@ -51,9 +51,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
+
 </style>

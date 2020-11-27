@@ -3,7 +3,7 @@
       <div @click="showDropdown=!showDropdown"><slot/></div>
       <div v-show="showDropdown" class="dropdown-menu">
           <div class="dropdown-menu__content">
-              <component :is="dropName" @unreadCount="unreadCount($event)"></component>
+              <component :is="dropName" @unreadCount="unreadCount($event)" @closeDropdown="closeDropdown"></component>
           </div>
       </div>
   </div>
@@ -48,9 +48,14 @@ export default {
     background: white;
     border-radius: 5px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-    width: 360px;
+    width: 70%;
+    max-width: 360px;
     z-index: 3;
     margin-top: 5px;
+    margin-left: -10px;
+    @media screen and (min-width: 550px) {
+        margin-left: 8px;
+    }
     &:before {
         content: " ";
         position: absolute;
