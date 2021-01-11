@@ -18,6 +18,7 @@ import FriendsList from '~/components/modals/FriendsList';
 import ContactList from '~/components/modals/ContactList';
 import PhotoLightbox from '~/components/modals/PhotoLightbox';
 import GameSaved from '~/components/modals/GameSaved';
+import Welcome from '~/components/modals/Welcome';
 export default {
   components: {
       CreatePost,
@@ -25,6 +26,7 @@ export default {
       EditPost,
       Quiz,
       GameSaved,
+      Welcome,
       FriendsList,
       ContactList
   },  

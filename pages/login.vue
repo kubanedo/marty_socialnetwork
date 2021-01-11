@@ -71,7 +71,10 @@ export default {
         });
         localStorage.setItem("gameID", generatedGameId);
         this.$store.dispatch('saveGame');
-        this.$router.push('/')
+        this.$router.push('/');
+        this.$store.state.modalWindow = {
+            modalName: 'Welcome',
+        };        
       } else {
         let unfilledFields = [];
           if(!this.first_name) {
