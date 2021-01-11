@@ -34,21 +34,27 @@ export default {
             style: {}
         }
     },
+    methods: {
+        generateStyle() {
+            this.style = { 
+                    backgroundImage: 'url(' + this.imgLink + ')', 
+                    width: this.imgSize + 'px', 
+                    height: this.imgSize + 'px', 
+                    border: '1px solid ' + this.imgBorderColor 
+            }            
+        }
+    },
     watch: {
         userID(value) {
             this.imgLink = 'http://jakubnedorost.cz/marty/images/profiles/' + value + '/profileimg.jpg';
+            this.generateStyle();
         }
     },
     mounted() {
         if(this.userID=='me') {
             this.imgLink = this.$store.state.loggedUser.profileImg
         }
-        this.style = { 
-                backgroundImage: 'url(' + this.imgLink + ')', 
-                width: this.imgSize + 'px', 
-                height: this.imgSize + 'px', 
-                border: '1px solid ' + this.imgBorderColor 
-        }
+        this.generateStyle();
     }
 }
 </script>

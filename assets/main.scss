@@ -189,7 +189,7 @@ header {
     word-spacing: 100vw;
         @media screen and (min-width: 550px) {
           display: flex;  
-          align-items: flex-start;
+          align-items: center;
           word-spacing: normal;  
           width: 100%;
           text-align: left;        
@@ -203,7 +203,8 @@ header {
     .menu-circle {
         display: block;
         @media screen and (min-width: 550px) {
-          display: inline-flex;        
+          display: inline-flex; 
+          margin: 0 10px 0 0;       
         }       
         width: 30px;
         height: 30px;
@@ -244,6 +245,9 @@ header {
 }
 .mt-20 {
     margin-top: 20px;
+}
+.pb-20 {
+    padding-bottom: 20px;
 }
 .circle-icon {
     width: 50px;
@@ -306,7 +310,7 @@ button.grey {
         transform: scale(0.97);
     }
 }
-input, textarea {
+input, textarea, .input-wrapper input, .input-wrapper textarea {
     background: lighten($input-color, 20);
     padding: 5px 10px;
     border: 1px lighten($input-color, 10) solid;

@@ -95,7 +95,8 @@ export default {
         loadNewPostsOnScroll() {
             if(this.showLoader==false) {
                 if(this.noMorePosts==false) {
-                    let bottomOfWindow = Math.abs(Math.round(document.documentElement.scrollTop + window.innerHeight) - Math.round(document.documentElement.offsetHeight)) < 2; // odchylka pod 2          
+                   // let bottomOfWindow = Math.abs(Math.round(document.documentElement.scrollTop + window.innerHeight) - Math.round(document.documentElement.offsetHeight)) < 5; // odchylka pod 2
+                   let bottomOfWindow = (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 2;          
                     if(bottomOfWindow) {
                         this.showLoader = true;
                         let vm = this;
