@@ -65,7 +65,7 @@ export default {
     },
     methods: {
         loadLatestMessages() {
-            axios.get('http://jakubnedorost.cz/marty/api/?type=messages&latest=1')
+            axios.get(process.env.apiUrl + '/?type=messages&latest=1')
                 .then(response => {
                     if(response.data) {
                         this.latestMessagesFromApi = response.data;
