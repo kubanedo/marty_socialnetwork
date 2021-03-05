@@ -59,7 +59,7 @@ export default {
       comment_data: this.commentData,
       commentText: "",
       commentedByName: (this.commentData.commented_by == "me") ? 
-                          this.$store.getters.getMyWholeName : 
+                          this.$store.getters.getMyWholeName() : 
                           ((this.commentData.first_name) ? this.commentData.first_name + " " + this.commentData.last_name : this.commentData.commented_by),
       isLiked: false,
       isDeleted: false
@@ -87,6 +87,9 @@ export default {
           : 0;
       return knownCount + othersCount;
     },
+    commentedByName() {
+      
+    }
   },
   methods: {
     likeComment() {
